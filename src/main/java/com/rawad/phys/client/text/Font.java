@@ -10,21 +10,24 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.IllegalCharsetNameException;
+import java.nio.charset.UnsupportedCharsetException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.lwjgl.BufferUtils;
 
+import com.rawad.phys.client.graphics.Color;
+import com.rawad.phys.client.graphics.Renderer;
 import com.rawad.phys.client.graphics.Texture;
+import com.sun.istack.internal.logging.Logger;
 
 public class Font {
 	
-	/**
-	 * ASCII 0-31 are control codes so start at 32 to get actual characters.
-	 */
-	private static final int START_ASCII = 32;
-	private static final int MAX_ASCII = 256;
-	private static final int DEL_ASCII = 127;
+	private static final String CHARSET = "IBM037";
 	
 	private static final char NL = '\n';
 	private static final char CARRIAGE_RETURN = '\r';
@@ -57,10 +60,36 @@ public class Font {
 		int imageWidth = 0;
 		int imageHeight = 0;
 		
-		for(int i = START_ASCII; i < MAX_ASCII; i++) {
-			if(i == DEL_ASCII) continue;// Skip delete ASCII.
+		Charset charset = Charset.defaultCharset();
+		
+		try {
+			charset = Charset.forName(CHARSET);
+		} catch(IllegalCharsetNameException ex) {
+			Logger.getLogger(getClass()).log(Level.WARNING, CHARSET + " is not a legal charset name; using default "
+					+ "charset isntead.");
+		} catch(UnsupportedCharsetException ex) {
+			Logger.getLogger(getClass()).log(Level.WARNING, CHARSET + " is not supported by the current JVM; using "
+					+ "default charset instead.");
+		}
+		
+		ArrayList<Character> characters = new ArrayList<Character>();
+		
+		for(int i = Character.MIN_VALUE; i < Character.MAX_VALUE; i++) {
 			
 			char c = (char) i;
+			
+			if(Character.isISOControl(c)) continue;// Could use i directly here, for UTF-16 support.
+			
+			String s = Character.toString(c);
+			
+			byte[] encoded = s.getBytes(charset);
+			String decoded = new String(encoded, charset);
+			
+			if(s.equals(decoded)) characters.add(c);
+			
+		}
+		
+		for(Character c: characters) {
 			
 			BufferedImage charImage = createCharImage(font, c, antialias);
 			if(charImage == null) continue;
@@ -78,10 +107,7 @@ public class Font {
 		
 		int offset = 0;
 		
-		for(int i = START_ASCII; i < MAX_ASCII; i++) {
-			if(i == DEL_ASCII) continue;
-			
-			char c = (char) i;
+		for(Character c: characters) {
 			
 			BufferedImage charImage = createCharImage(font, c, antialias);
 			if(charImage == null) continue;
@@ -217,7 +243,48 @@ public class Font {
 		
 	}
 	
+	public void drawText(Renderer renderer, CharSequence text, float x, float y, Color c) {
+		
+		int textHeight = getHeight(text);
+		
+		float drawX = x;
+		float drawY = y;
+		
+		if(textHeight > fontHeight) drawY += textHeight - fontHeight;
+		
+		texture.bind();
+		renderer.begin();
+		
+		for(int i = 0; i < text.length(); i++) {
+			
+			char ch = text.charAt(i);
+			
+			if(ch == NL) {
+				
+				drawY -= fontHeight;
+				drawX = x;
+				
+				continue;
+				
+			}
+			
+			if(ch == CARRIAGE_RETURN) continue;
+			
+			Glyph glyph = glyphs.get(ch);
+			
+			renderer.drawTextureRegion(texture, drawX, drawY, glyph.x, glyph.y, glyph.width, glyph.height, c);
+			
+			drawX += glyph.width;
+			
+		}
+		
+		renderer.end();
+		
+	}
 	
+	public void drawText(Renderer renderer, CharSequence text, float x, float y) {
+		this.drawText(renderer, text, x, y, Color.WHITE);
+	}
 	
 	public void dispose() {
 		texture.delete();

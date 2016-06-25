@@ -103,7 +103,7 @@ public class ShaderProgram {
 	}
 	
 	private void checkStatus() {
-		int status = GL20.glGetShaderi(id, GL20.GL_LINK_STATUS);
+		int status = GL20.glGetProgrami(id, GL20.GL_LINK_STATUS);
 		if(status != GL11.GL_TRUE) throw new RuntimeException(GL20.glGetProgramInfoLog(id));
 	}
 	

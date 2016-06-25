@@ -1,6 +1,7 @@
 package com.rawad.phys.client.graphics;
 
 import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
+import static org.lwjgl.glfw.GLFW.GLFW_TRUE;
 import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
 import static org.lwjgl.glfw.GLFW.glfwDefaultWindowHints;
@@ -30,13 +31,20 @@ public class Window {
 		GLCapabilities glCaps = GL.createCapabilities();
 		glfwDestroyWindow(tempWindow);
 		
+		glfwDefaultWindowHints();
+		
 		if(glCaps.OpenGL32) {
 			
+			glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MAJOR, 3);
+			glfwWindowHint(GLFW.GLFW_CONTEXT_VERSION_MINOR, 2);
+			glfwWindowHint(GLFW.GLFW_OPENGL_PROFILE, GLFW.GLFW_OPENGL_CORE_PROFILE);
+			glfwWindowHint(GLFW.GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
+			
 		} else {
-			throw new RuntimeException("OpenGL 3.2 was not suppported; try updating graphics driver.");
+			throw new RuntimeException("OpenGL 3.2 is not suppported; try updating graphics driver.");
 		}
 		
-		glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW_FALSE);// TODO: Make resizable.
+		glfwWindowHint(GLFW.GLFW_RESIZABLE, GLFW_FALSE);// TODO: Make multiple screen resolutions.
 		
 		id = glfwCreateWindow(width, height, title, NULL, NULL);
 		if(id == NULL) {
