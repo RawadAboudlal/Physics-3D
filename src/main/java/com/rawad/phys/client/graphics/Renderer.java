@@ -10,8 +10,6 @@ import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glDrawArrays;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
-import static org.lwjgl.opengl.GL20.GL_FRAGMENT_SHADER;
-import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -21,21 +19,14 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
 
-import com.rawad.phys.client.text.Font;
 import com.rawad.phys.math.Matrix4f;
 
-public class Renderer {
+public abstract class Renderer {
 	
-	private VertexArrayObject vao;
-	private VertexBufferObject vbo;
+	protected VertexArrayObject vao;
+	protected VertexBufferObject vbo;
 	
-	private ShaderProgram shaderProgram;
-	
-	private Shader vertexShader;
-	private Shader fragmentShader;
-	
-	private Font font;
-	private Font debugFont;
+	protected ShaderProgram shaderProgram;
 	
 	/**
 	 * For testing.
@@ -60,15 +51,13 @@ public class Renderer {
 		vertexCount = 0;
 		drawing = false;
 		
-		vertexShader = Shader.loadShader(GL_VERTEX_SHADER, getClass(), "shader.vert");
-		fragmentShader = Shader.loadShader(GL_FRAGMENT_SHADER, getClass(), "shader.frag");
+//		vertexShader = Shader.loadShader(GL_VERTEX_SHADER, getClass(), "shader.vert");
+//		fragmentShader = Shader.loadShader(GL_FRAGMENT_SHADER, getClass(), "shader.frag");
 		
 		shaderProgram = new ShaderProgram();
-		shaderProgram.attachShader(vertexShader);
-		shaderProgram.attachShader(fragmentShader);
 		shaderProgram.bindFragmentDataLocation(0, "fragColor");
 		shaderProgram.link();
-		shaderProgram.use();
+		shaderProgram.use();// Should shaders be added before this?
 		
 		long window = GLFW.glfwGetCurrentContext();
 		IntBuffer widthBuff = BufferUtils.createIntBuffer(1);
@@ -99,10 +88,9 @@ public class Renderer {
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
-		font = new Font();
-		debugFont = new Font(false);
-		
 	}
+	
+	public abstract void render();
 	
 	public void clear() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -162,10 +150,6 @@ public class Renderer {
 		
 	}
 	
-	public void drawText(CharSequence text, float x, float y) {
-		font.drawText(this, text, x, y);
-	}
-	
 	public void drawTexture(Texture texture, float x, float y, Color c) {
 		drawTextureRegion(texture, x, y, 0, 0, texture.getWidth(), texture.getHeight(), c);
 	}
@@ -185,14 +169,18 @@ public class Renderer {
 		float s2 = (regX + regWidth) / texture.getWidth();
 		float t2 = (regY + regHeight) / texture.getHeight();
 		
-		drawTextureRegion(x1, y1, x2, y2, s1, t1, s2, t2, c);
+		drawTextureRegion(texture, x1, y1, x2, y2, s1, t1, s2, t2, c);
 		
 	}
 	
-	public void drawTextureRegion(float x1, float y1, float x2, float y2, float s1, float t1, float s2, float t2, 
-			Color c) {
+	public void drawTextureRegion(Texture texture, float x1, float y1, float x2, float y2, float s1, float t1, float s2, 
+			float t2, Color c) {
 		
 		if(vertices.remaining() < 7 * 6) flush();// Need more vbo space.
+		
+		begin();
+		
+		texture.bind();
 		
 		float r = c.getRed();
 		float g = c.getGreen();
@@ -208,19 +196,15 @@ public class Renderer {
 		
 		vertexCount += 6;// Two triangles.
 		
+		end();
+		
 	}
 	
 	public void dispose() {
 		vao.delete();
 		vbo.delete();
 		
-		vertexShader.delete();
-		fragmentShader.delete();
-		
 		shaderProgram.delete();
-		
-		font.dispose();
-		debugFont.dispose();
 		
 	}
 	

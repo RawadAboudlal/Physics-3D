@@ -85,10 +85,8 @@ public class Window {
 	public void setVSync(boolean vsync) {
 		this.vsync = vsync;
 		
-		if(vsync)
-			GLFW.glfwSwapInterval(1);
-		else
-			GLFW.glfwSwapInterval(0);
+		if(vsync) GLFW.glfwSwapInterval(1);
+		else GLFW.glfwSwapInterval(0);
 		
 	}
 	

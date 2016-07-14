@@ -42,7 +42,10 @@ public class Matrix4f {
      * Creates a 4x4 identity matrix.
      */
     public Matrix4f() {
+    	super();
+    	
         setIdentity();
+        
     }
 
     /**
@@ -54,6 +57,8 @@ public class Matrix4f {
      * @param col4 Vector with values of the fourth column
      */
     public Matrix4f(Vector4f col1, Vector4f col2, Vector4f col3, Vector4f col4) {
+    	super();
+    	
         m00 = col1.x;
         m10 = col1.y;
         m20 = col1.z;
@@ -196,6 +201,7 @@ public class Matrix4f {
         float y = this.m10 * vector.x + this.m11 * vector.y + this.m12 * vector.z + this.m13 * vector.w;
         float z = this.m20 * vector.x + this.m21 * vector.y + this.m22 * vector.z + this.m23 * vector.w;
         float w = this.m30 * vector.x + this.m31 * vector.y + this.m32 * vector.z + this.m33 * vector.w;
+        
         return new Vector4f(x, y, z, w);
     }
 
@@ -270,17 +276,19 @@ public class Matrix4f {
      */
     public FloatBuffer getBuffer() {
         FloatBuffer buffer = BufferUtils.createFloatBuffer(16);
+        
         buffer.put(m00).put(m10).put(m20).put(m30);
         buffer.put(m01).put(m11).put(m21).put(m31);
         buffer.put(m02).put(m12).put(m22).put(m32);
         buffer.put(m03).put(m13).put(m23).put(m33);
+        
         buffer.flip();
+        
         return buffer;
     }
 
     /**
-     * Creates a orthographic projection matrix. Similar to
-     * <code>glOrtho(left, right, bottom, top, near, far)</code>.
+     * Creates a orthographic projection matrix. Similar to {@code glOrtho(left, right, bottom, top, near, far)}.
      *
      * @param left   Coordinate for the left vertical clipping pane
      * @param right  Coordinate for the right vertical clipping pane
@@ -293,24 +301,23 @@ public class Matrix4f {
      */
     public static Matrix4f orthographic(float left, float right, float bottom, float top, float near, float far) {
         Matrix4f ortho = new Matrix4f();
-
+        
         float tx = -(right + left) / (right - left);
         float ty = -(top + bottom) / (top - bottom);
         float tz = -(far + near) / (far - near);
-
+        
         ortho.m00 = 2f / (right - left);
         ortho.m11 = 2f / (top - bottom);
         ortho.m22 = -2f / (far - near);
         ortho.m03 = tx;
         ortho.m13 = ty;
         ortho.m23 = tz;
-
+        
         return ortho;
     }
 
     /**
-     * Creates a perspective projection matrix. Similar to
-     * <code>glFrustum(left, right, bottom, top, near, far)</code>.
+     * Creates a perspective projection matrix. Similar to {@code glFrustum(left, right, bottom, top, near, far)}.
      *
      * @param left   Coordinate for the left vertical clipping pane
      * @param right  Coordinate for the right vertical clipping pane
@@ -344,8 +351,7 @@ public class Matrix4f {
     }
 
     /**
-     * Creates a perspective projection matrix. Similar to
-     * <code>gluPerspective(fovy, aspec, zNear, zFar)</code>.
+     * Creates a perspective projection matrix. Similar to {@code gluPerspective(fovy, aspec, zNear, zFar)}.
      *
      * @param fovy   Field of view angle in degrees
      * @param aspect The aspect ratio is the ratio of width to height
@@ -393,7 +399,7 @@ public class Matrix4f {
 
     /**
      * Creates a rotation matrix. Similar to
-     * <code>glRotate(angle, x, y, z)</code>.
+     * {@code glRotate(angle, x, y, z)}.
      *
      * @param angle Angle of rotation in degrees
      * @param x     x coordinate of the rotation vector
@@ -429,7 +435,7 @@ public class Matrix4f {
     }
 
     /**
-     * Creates a scaling matrix. Similar to <code>glScale(x, y, z)</code>.
+     * Creates a scaling matrix. Similar to {@code glScale(x, y, z)}.
      *
      * @param x Scale factor along the x coordinate
      * @param y Scale factor along the y coordinate

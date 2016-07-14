@@ -5,11 +5,19 @@ import static org.lwjgl.glfw.GLFW.glfwTerminate;
 
 import org.lwjgl.opengl.GL11;
 
-import com.rawad.phys.client.graphics.Renderer;
 import com.rawad.phys.client.graphics.Texture;
 import com.rawad.phys.client.graphics.Window;
+import com.rawad.phys.client.states.MenuState;
+import com.rawad.phys.client.states.StateManager;
+import com.rawad.phys.loader.Loader;
 
 public class Physics3DStart {
+	
+	// OpenGL Resources: https://www.opengl.org/documentation/books/ and http://openglbook.com/the-book.html
+	// http://gamedev.stackexchange.com/questions/32876/good-resources-for-learning-modern-opengl-3-0-or-later
+	// http://www.opengl-tutorial.org
+	// Matrices: http://www.matrix44.net/cms/notes/opengl-3d-graphics/basic-3d-math-matrices
+	// Visualizing Matrices: http://www.matrix44.net/cms/notes/opengl-3d-graphics/coordinate-systems-in-opengl
 	
 	private static final String TITLE = "Physics 3D";
 	
@@ -20,29 +28,29 @@ public class Physics3DStart {
 		
 		if(!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW.");
 		
-		Window window = new Window(WIDTH, HEIGHT, TITLE, true);
+		Window window = new Window(WIDTH, HEIGHT, TITLE, false);
 		
-		Renderer renderer = new Renderer();
-		renderer.init();
+		StateManager sm = new StateManager();
 		
-		Texture texture = Texture.loadTexture("res/image.png");
-		texture.bind();
+		sm.addState(new MenuState());
+		
+		sm.setState(MenuState.class);
+		
+		Texture texture = Loader.loadTexture("image");
 		
 		GL11.glClearColor(0.5f, 0.5f, 1f, 1f);
 		
 		while(!window.isClosing()) {
 			
-			renderer.clear();
+			sm.update();
 			
-//			renderer.drawTexture(texture, 20f, 20f, Color.RED);
-			renderer.drawText("Hello 3D World!", 0f, 0f);
+			sm.render();
 			
 			window.update();
 			
 		}
 		
 		texture.delete();
-		renderer.dispose();
 		window.destroy();
 		glfwTerminate();
 		

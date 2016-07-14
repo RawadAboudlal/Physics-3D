@@ -117,10 +117,17 @@ public class Font {
 			
 			Glyph glyph = new Glyph(charWidth, charHeight, offset, image.getHeight() - charHeight);
 			g.drawImage(charImage, offset, 0, null);
-			offset += glyph.width;
+			offset += glyph.getWidth();
 			
 			glyphs.put(c, glyph);
 			
+		}
+		
+		for(Glyph glyph: glyphs.values()) {
+			glyph.setU(glyph.getX() / (float) imageWidth);
+			glyph.setV(glyph.getY() / (float) imageHeight);
+			glyph.setU2((glyph.getX() + glyph.getWidth()) / (float) imageWidth);
+			glyph.setV2((glyph.getY() + glyph.getHeight()) / (float) imageHeight);
 		}
 		
 		AffineTransform transform = AffineTransform.getScaleInstance(1f, -1f);// Flips horizontally to get origin to
@@ -206,7 +213,7 @@ public class Font {
 			if(c == CARRIAGE_RETURN) continue;
 			
 			Glyph glyph = glyphs.get(c);
-			lineWidth += glyph.width;
+			lineWidth += glyph.getWidth();
 			
 		}
 		
@@ -234,7 +241,7 @@ public class Font {
 			if(c == CARRIAGE_RETURN) continue;
 			
 			Glyph glyph = glyphs.get(c);
-			lineHeight = Math.max(lineHeight, glyph.height);
+			lineHeight = Math.max(lineHeight, glyph.getHeight());
 			
 		}
 		
@@ -251,9 +258,6 @@ public class Font {
 		float drawY = y;
 		
 		if(textHeight > fontHeight) drawY += textHeight - fontHeight;
-		
-		texture.bind();
-		renderer.begin();
 		
 		for(int i = 0; i < text.length(); i++) {
 			
@@ -272,13 +276,12 @@ public class Font {
 			
 			Glyph glyph = glyphs.get(ch);
 			
-			renderer.drawTextureRegion(texture, drawX, drawY, glyph.x, glyph.y, glyph.width, glyph.height, c);
+			renderer.drawTextureRegion(texture, drawX, drawY, drawX + glyph.getWidth(), drawY + glyph.getHeight(), 
+					glyph.getU(), glyph.getV(), glyph.getU2(), glyph.getV2(), c);
 			
-			drawX += glyph.width;
+			drawX += glyph.getWidth();
 			
 		}
-		
-		renderer.end();
 		
 	}
 	

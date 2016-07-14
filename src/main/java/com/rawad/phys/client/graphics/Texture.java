@@ -2,18 +2,14 @@ package com.rawad.phys.client.graphics;
 
 import static org.lwjgl.opengl.GL11.GL_NEAREST;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
-import static org.lwjgl.opengl.GL11.GL_TRUE;
 import static org.lwjgl.opengl.GL11.glBindTexture;
 import static org.lwjgl.opengl.GL11.glDeleteTextures;
 import static org.lwjgl.opengl.GL11.glTexParameteri;
 import static org.lwjgl.opengl.GL13.GL_CLAMP_TO_BORDER;
 
 import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.stb.STBImage;
 
 public class Texture {
 	
@@ -55,21 +51,5 @@ public class Texture {
 		return height;
 	}
 	
-	public static Texture loadTexture(String path) {
-		
-		IntBuffer w = BufferUtils.createIntBuffer(1);
-		IntBuffer h = BufferUtils.createIntBuffer(1);
-		IntBuffer comp = BufferUtils.createIntBuffer(1);
-		
-		STBImage.stbi_set_flip_vertically_on_load(GL_TRUE);
-		
-		ByteBuffer image = STBImage.stbi_load(path, w, h, comp, STBImage.STBI_rgb_alpha);
-		
-		if(image == null) throw new RuntimeException("Failed to load texture file." + System.lineSeparator()
-				+ STBImage.stbi_failure_reason());
-		
-		return new Texture(w.get(), h.get(), image);
-		
-	}
 	
 }
