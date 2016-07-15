@@ -7,7 +7,10 @@ public class VertexArrayObject {
 	private final int id;
 	
 	public VertexArrayObject() {
+		super();
+		
 		id = GL30.glGenVertexArrays();
+		
 	}
 	
 	public void bind() {

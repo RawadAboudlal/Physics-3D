@@ -7,39 +7,35 @@ import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 import static org.lwjgl.opengl.GL11.glBlendFunc;
 import static org.lwjgl.opengl.GL11.glClear;
-import static org.lwjgl.opengl.GL11.glDrawArrays;
 import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL15.GL_ARRAY_BUFFER;
 
-import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL20;
 
 import com.rawad.phys.math.Matrix4f;
 
 public abstract class Renderer {
 	
 	protected VertexArrayObject vao;
-	protected VertexBufferObject vbo;
 	
-	protected ShaderProgram shaderProgram;
+	protected ShaderProgram program;
 	
-	/**
-	 * For testing.
-	 */
-	private FloatBuffer vertices;
-	private int vertexCount;
-	private boolean drawing;
+	protected Shader vert;
+	protected Shader frag;
 	
-	public void init() {
+	public Renderer() {
+		super();
 		
 		vao = new VertexArrayObject();
 		vao.bind();
 		
+		vert = Shader.loadShader(GL20.GL_VERTEX_SHADER, getClass(), getShaderName());
+		frag = Shader.loadShader(GL20.GL_FRAGMENT_SHADER, getClass(), getShaderName());
+		
+		/*/
 		vbo = new VertexBufferObject();
 		vbo.bind(GL_ARRAY_BUFFER);
 		
@@ -47,17 +43,15 @@ public abstract class Renderer {
 		
 		long size = vertices.capacity() * Float.BYTES;
 		vbo.uploadData(GL_ARRAY_BUFFER, size, GL15.GL_DYNAMIC_DRAW);
-		
-		vertexCount = 0;
-		drawing = false;
+		/**/
 		
 //		vertexShader = Shader.loadShader(GL_VERTEX_SHADER, getClass(), "shader.vert");
 //		fragmentShader = Shader.loadShader(GL_FRAGMENT_SHADER, getClass(), "shader.frag");
 		
-		shaderProgram = new ShaderProgram();
-		shaderProgram.bindFragmentDataLocation(0, "fragColor");
-		shaderProgram.link();
-		shaderProgram.use();// Should shaders be added before this?
+		program = new ShaderProgram();
+		program.bindFragmentDataLocation(0, "fragColor");
+//		program.link();
+//		program.use();// Should shaders be added before this?
 		
 		long window = GLFW.glfwGetCurrentContext();
 		IntBuffer widthBuff = BufferUtils.createIntBuffer(1);
@@ -67,23 +61,23 @@ public abstract class Renderer {
 		
 		specifyVertexAttributes();
 		
-		int textureUniform = shaderProgram.getUniformLocation("tex");
-		shaderProgram.setUniform(textureUniform, 0);
+		int textureUniform = program.getUniformLocation("tex");
+		program.setUniform(textureUniform, 0);
 		
 		Matrix4f model = new Matrix4f();
-		int modelUniform = shaderProgram.getUniformLocation("model");
-		shaderProgram.setUniform(modelUniform, model);
+		int modelUniform = program.getUniformLocation("model");
+		program.setUniform(modelUniform, model);
 		
 		Matrix4f view = new Matrix4f();
-		int viewUniform = shaderProgram.getUniformLocation("view");
-		shaderProgram.setUniform(viewUniform, view);
+		int viewUniform = program.getUniformLocation("view");
+		program.setUniform(viewUniform, view);
 		
 		int width = widthBuff.get();
 		int height = heightBuff.get();
 		
 		Matrix4f projection = Matrix4f.orthographic(0, width, 0, height, 0f, 1f);
-		int projectionUniform = shaderProgram.getUniformLocation("projection");
-		shaderProgram.setUniform(projectionUniform, projection);
+		int projectionUniform = program.getUniformLocation("projection");
+		program.setUniform(projectionUniform, projection);
 		
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -95,7 +89,7 @@ public abstract class Renderer {
 	public void clear() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
-	
+	/*/
 	public void begin() {
 		if(drawing) throw new IllegalStateException("Renderer already drawing.");
 		
@@ -114,7 +108,7 @@ public abstract class Renderer {
 	
 	/**
 	 * Flushes data to GPU for rendering.
-	 */
+	 /
 	public void flush() {
 		
 		if(vertexCount <= 0) return;
@@ -122,7 +116,7 @@ public abstract class Renderer {
 		vertices.flip();
 		
 		vao.bind();
-		shaderProgram.use();
+		program.use();
 		
 		vbo.bind(GL_ARRAY_BUFFER);
 		vbo.uploadSubData(GL_ARRAY_BUFFER, 0, vertices);
@@ -132,24 +126,28 @@ public abstract class Renderer {
 		vertices.clear();
 		vertexCount = 0;
 		
-	}
+	}/**/
 	
 	private void specifyVertexAttributes() {
 		
-		int posAttrib = shaderProgram.getAttributeLocation("position");
-		shaderProgram.enableVertexAttribute(posAttrib);
-		shaderProgram.pointVertexAttribute(posAttrib, 2, 7 * Float.BYTES, 0);
+		int posAttrib = program.getAttributeLocation("position");
+		program.enableVertexAttribute(posAttrib);
+		program.pointVertexAttribute(posAttrib, 2, 7 * Float.BYTES, 0);
 		
-		int colAttrib = shaderProgram.getAttributeLocation("color");
-		shaderProgram.enableVertexAttribute(colAttrib);
-		shaderProgram.pointVertexAttribute(colAttrib, 3, 7 * Float.BYTES, 2 * Float.BYTES);
+		int colAttrib = program.getAttributeLocation("color");
+		program.enableVertexAttribute(colAttrib);
+		program.pointVertexAttribute(colAttrib, 3, 7 * Float.BYTES, 2 * Float.BYTES);
 		
-		int texAttrib = shaderProgram.getAttributeLocation("texCoord");
-		shaderProgram.enableVertexAttribute(texAttrib);
-		shaderProgram.pointVertexAttribute(texAttrib, 2, 7 * Float.BYTES, 5 * Float.BYTES);
+		int texAttrib = program.getAttributeLocation("texCoord");
+		program.enableVertexAttribute(texAttrib);
+		program.pointVertexAttribute(texAttrib, 2, 7 * Float.BYTES, 5 * Float.BYTES);
 		
 	}
 	
+	public void begin() {}
+	public void end() {}
+	
+	/*/
 	public void drawTexture(Texture texture, float x, float y, Color c) {
 		drawTextureRegion(texture, x, y, 0, 0, texture.getWidth(), texture.getHeight(), c);
 	}
@@ -199,13 +197,23 @@ public abstract class Renderer {
 		end();
 		
 	}
-	
+	/**/
 	public void dispose() {
-		vao.delete();
-		vbo.delete();
 		
-		shaderProgram.delete();
+		vao.delete();
+		
+		frag.delete();
+		vert.delete();
+		
+		program.delete();
 		
 	}
+	
+	/**
+	 * 
+	 * @return Name of the shader file (part before extension). Should be named the same (with the extension being the
+	 * only difference).
+	 */
+	protected abstract String getShaderName();
 	
 }

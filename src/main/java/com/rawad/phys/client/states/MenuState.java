@@ -1,6 +1,8 @@
 package com.rawad.phys.client.states;
 
-import com.rawad.phys.client.renderengine.GuiRenderer;
+import com.rawad.phys.client.fileparser.ObjFileParser;
+import com.rawad.phys.client.renderengine.TexturedModelRenderer;
+import com.rawad.phys.loader.Loader;
 
 public class MenuState extends State {
 	
@@ -9,7 +11,7 @@ public class MenuState extends State {
 	public MenuState() {
 		super();
 		
-		masterRenderer.getRenderers().put(new GuiRenderer());
+		masterRenderer.getRenderers().put(new TexturedModelRenderer());
 		
 	}
 	
@@ -20,10 +22,11 @@ public class MenuState extends State {
 	
 	@Override
 	public void onActive() {
-	}
-	
-	@Override
-	public void onDeactive() {
+		
+		ObjFileParser objFileParser = new ObjFileParser();
+		
+		masterRenderer.getRenderers().get(TexturedModelRenderer.class).setModel(Loader.loadModel(objFileParser, "cube"));
+		
 	}
 	
 }

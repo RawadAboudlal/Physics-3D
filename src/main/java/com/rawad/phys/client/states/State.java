@@ -23,7 +23,9 @@ public abstract class State {
 	
 	public abstract void onActive();
 	
-	public abstract void onDeactive();
+	public void onDeactive() {
+		masterRenderer.dispose();
+	}
 	
 	protected void setStateManager(StateManager sm) {
 		this.sm = sm;

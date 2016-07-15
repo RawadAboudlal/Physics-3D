@@ -1,6 +1,6 @@
 package com.rawad.phys.client.fileparser;
 
-import java.nio.DoubleBuffer;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
 import com.rawad.phys.client.model.Model;
@@ -14,8 +14,9 @@ public class ObjFileParser extends FileParser {
 	
 	private static final String REGEX = " ";
 	
-	private static final String REGEX_VERTEX_DATA = "/";
+	private static final String REGEX_FACE_DATA = "/";
 	
+	private static final String ID_COMMENT = "#";
 	private static final String ID_VERTEX = "v";	
 	private static final String ID_TEXTURE = "vt";
 	private static final String ID_NORMAL = "vn";
@@ -26,7 +27,7 @@ public class ObjFileParser extends FileParser {
 	private static final int INDEX_Z = 2;
 	
 	private static final int INDEX_VERTEX = 0;
-	private static final int INDEX_TEXTURE = 1;
+	private static final int INDEX_TEXTURE_COORDS = 1;
 	private static final int INDEX_NORMAL = 2;
 	
 	private Model model;
@@ -35,7 +36,16 @@ public class ObjFileParser extends FileParser {
 	private ArrayList<Vector3f> normals;
 	private ArrayList<Vector2f> textureCoords;
 	
-	private ArrayList<Vector3f[]> faces;
+	private ArrayList<Integer> vertexIndices;
+	private ArrayList<Integer> normalIndices;
+	private ArrayList<Integer> textureCoordIndices;
+	
+	public ObjFileParser() {
+		super();
+		
+		model = new Model(FloatBuffer.allocate(1));
+		
+	}
 	
 	@Override
 	protected void start() {
@@ -45,20 +55,25 @@ public class ObjFileParser extends FileParser {
 		normals = new ArrayList<Vector3f>();
 		textureCoords = new ArrayList<Vector2f>();
 		
-		faces = new ArrayList<Vector3f[]>();
+		vertexIndices = new ArrayList<Integer>();
+		normalIndices = new ArrayList<Integer>();
+		textureCoordIndices = new ArrayList<Integer>();
 		
 	}
 	
 	@Override
 	protected void parseLine(String line) {
 		
-		int firstRegexIndex = line.indexOf(REGEX) + REGEX.length();
+		int firstRegexIndex = line.indexOf(REGEX);
 		
 		String id = line.substring(0, firstRegexIndex);
 		
-		String lineData = line.substring(firstRegexIndex).trim();
+		String lineData = line.substring(firstRegexIndex + REGEX.length());
 		
 		switch(id) {
+		
+		case ID_COMMENT:
+			break;
 		
 		case ID_VERTEX:
 			vertices.add(parseVector3f(lineData));
@@ -73,7 +88,7 @@ public class ObjFileParser extends FileParser {
 			break;
 			
 		case ID_FACE:
-			faces.add(parseVertexIndices(lineData));
+			parseVertexIndices(lineData);
 			break;
 		
 		default:
@@ -118,29 +133,29 @@ public class ObjFileParser extends FileParser {
 		
 	}
 	
-	private Vector3f[] parseVertexIndices(String lineData) {
+	private void parseVertexIndices(String lineData) {
 		
-		String[] faceString = lineData.split(REGEX);
+		String[] faces = lineData.split(REGEX);
 		
-		Vector3f[] face = new Vector3f[faceString.length];
-		
-		ArrayList<Integer> verticesIndices = new ArrayList<Integer>();
-		ArrayList<Integer> textureCoordsIndices = new ArrayList<Integer>();
-		ArrayList<Integer> normalsIndices = new ArrayList<Integer>();
-		// Look at tutorial 9 for indexing to be able to do this properly.
-		for(int i = 0; i < faceString.length; i++) {
+		for(int i = 0; i < faces.length; i++) {
 			
+			String[] indices = faces[i].split(REGEX_FACE_DATA);
 			
+			vertexIndices.add(Util.parseInt(indices[INDEX_VERTEX]));
+			normalIndices.add(Util.parseInt(indices[INDEX_NORMAL]));
+			textureCoordIndices.add(Util.parseInt(indices[INDEX_TEXTURE_COORDS]));
 			
 		}
-		
-		return face;
 		
 	}
 	
 	@Override
 	protected void stop() {
 		super.stop();
+		
+		FloatBuffer vertexBuffer = FloatBuffer.allocate(vertices.size());
+		
+		model = new Model(vertexBuffer);
 		
 	}
 	

@@ -4,9 +4,20 @@ import java.nio.FloatBuffer;
 
 public class Model {
 	
-	private FloatBuffer vertices;
+	private final FloatBuffer vertices;
 	private FloatBuffer textureCoords;
 	
 	private int vertexCount;
+	
+	public Model(FloatBuffer vertices) {
+		super();
+		
+		this.vertices = vertices;
+		
+	}
+	
+	public FloatBuffer getVertices() {
+		return vertices;
+	}
 	
 }

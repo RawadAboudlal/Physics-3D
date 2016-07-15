@@ -18,5 +18,11 @@ public class GuiRenderer extends Renderer {
 	public void render() {
 		font.drawText(this, "Test 123", 10, 10);
 	}
+
+	@Override
+	protected String getShaderName() {
+		return null;
+		
+	}
 	
 }

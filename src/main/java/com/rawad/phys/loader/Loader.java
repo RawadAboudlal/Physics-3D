@@ -4,8 +4,11 @@ import static org.lwjgl.opengl.GL11.GL_TRUE;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.InputStreamReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -13,8 +16,9 @@ import java.util.concurrent.Executors;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 
-import com.rawad.phys.client.graphics.Shader;
+import com.rawad.phys.client.fileparser.ObjFileParser;
 import com.rawad.phys.client.graphics.Texture;
+import com.rawad.phys.client.model.Model;
 import com.rawad.phys.util.Util;
 
 public class Loader {
@@ -26,8 +30,10 @@ public class Loader {
 	});
 	
 	private static final String FOLDER_RES = "res";
+	private static final String FOLDER_MODELS = "models";
 	private static final String FOLDER_TEXTURES = "textures";
 	
+	private static final String EXTENSION_MODEL = ".obj";
 	private static final String EXTENSION_TEXTURE = ".png";
 	
 	public static Texture loadTexture(String name) {
@@ -49,25 +55,21 @@ public class Loader {
 		
 	}
 	
-	public static Shader loadShader(int type, Class<? extends Object> resLoader, String name) {
+	public static Model loadModel(ObjFileParser parser, String name) {
 		
-		StringBuilder builder = new StringBuilder();
+		String path = Loader.getFullPath(FOLDER_RES, FOLDER_MODELS, name) + EXTENSION_MODEL;
 		
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(resLoader.getResourceAsStream(name)))) {
+		try {
 			
-			String line = null;
+			BufferedReader reader = new BufferedReader(new FileReader(new File(path)));
 			
-			while((line = reader.readLine()) != null) {
-				builder.append(line).append(Util.NL);
-			}
+			parser.parseFile(reader);
 			
-		} catch(Exception ex) {
-			throw new RuntimeException("Failed to load shader file." + System.lineSeparator() + ex.getMessage());
+		} catch (IOException ex) {
+			ex.printStackTrace();
 		}
 		
-		CharSequence source = builder.toString();
-		
-		return new Shader(type, source);
+		return parser.getModel();
 		
 	}
 	

@@ -10,7 +10,10 @@ public class VertexBufferObject {
 	private final int id;
 	
 	public VertexBufferObject() {
+		super();
+		
 		id = GL15.glGenBuffers();
+		
 	}
 	
 	/**
@@ -58,9 +61,8 @@ public class VertexBufferObject {
 		GL15.glBufferData(target, data, usage);
 	}
 	
-	
 	public void delete() {
-		
+		GL15.glDeleteBuffers(id);
 	}
 	
 	public int getId() {

@@ -18,6 +18,7 @@ public class Physics3DStart {
 	// http://www.opengl-tutorial.org
 	// Matrices: http://www.matrix44.net/cms/notes/opengl-3d-graphics/basic-3d-math-matrices
 	// Visualizing Matrices: http://www.matrix44.net/cms/notes/opengl-3d-graphics/coordinate-systems-in-opengl
+	// Detailed explanation of rendering vertices in OpenGL: https://www.opengl.org/wiki/Vertex_Specification
 	
 	private static final String TITLE = "Physics 3D";
 	
