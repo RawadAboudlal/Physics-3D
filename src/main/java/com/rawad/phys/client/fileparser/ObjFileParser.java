@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import com.rawad.phys.client.model.Model;
 import com.rawad.phys.fileparser.FileParser;
 import com.rawad.phys.logging.Logger;
-import com.rawad.phys.math.Vector2f;
-import com.rawad.phys.math.Vector3f;
 import com.rawad.phys.util.Util;
 
 public class ObjFileParser extends FileParser {
@@ -32,9 +30,9 @@ public class ObjFileParser extends FileParser {
 	
 	private Model model;
 	
-	private ArrayList<Vector3f> vertices;
-	private ArrayList<Vector3f> normals;
-	private ArrayList<Vector2f> textureCoords;
+	private ArrayList<Float> vertices;
+	private ArrayList<Float> normals;
+	private ArrayList<Float> textureCoords;
 	
 	private ArrayList<Integer> vertexIndices;
 	private ArrayList<Integer> normalIndices;
@@ -51,9 +49,9 @@ public class ObjFileParser extends FileParser {
 	protected void start() {
 		super.start();
 		
-		vertices = new ArrayList<Vector3f>();
-		normals = new ArrayList<Vector3f>();
-		textureCoords = new ArrayList<Vector2f>();
+		vertices = new ArrayList<Float>();
+		normals = new ArrayList<Float>();
+		textureCoords = new ArrayList<Float>();
 		
 		vertexIndices = new ArrayList<Integer>();
 		normalIndices = new ArrayList<Integer>();
@@ -76,15 +74,15 @@ public class ObjFileParser extends FileParser {
 			break;
 		
 		case ID_VERTEX:
-			vertices.add(parseVector3f(lineData));
+			parseVector3f(vertices, lineData);
 			break;
 			
 		case ID_TEXTURE:
-			textureCoords.add(parseVector2f(lineData));
+			parseVector2f(textureCoords, lineData);
 			break;
 			
 		case ID_NORMAL:
-			normals.add(parseVector3f(lineData));
+			parseVector3f(normals, lineData);
 			break;
 			
 		case ID_FACE:
@@ -99,7 +97,7 @@ public class ObjFileParser extends FileParser {
 		
 	}
 	
-	private Vector3f parseVector3f(String lineData) {
+	private void parseVector3f(ArrayList<Float> array, String lineData) {
 		
 		String[] vertexCoords = lineData.split(REGEX);
 		
@@ -113,11 +111,13 @@ public class ObjFileParser extends FileParser {
 			z = Util.parseFloat(vertexCoords[INDEX_Z]);
 		}
 		
-		return new Vector3f(x, y, z);
+		array.add(x);
+		array.add(y);
+		array.add(z);
 		
 	}
 	
-	private Vector2f parseVector2f(String lineData) {
+	private void parseVector2f(ArrayList<Float> array, String lineData) {
 		
 		String[] textureCoords = lineData.split(REGEX);
 		
@@ -129,7 +129,8 @@ public class ObjFileParser extends FileParser {
 			y = Util.parseFloat(textureCoords[INDEX_Y]);
 		}
 		
-		return new Vector2f(x, y);
+		array.add(x);
+		array.add(y);
 		
 	}
 	
@@ -154,6 +155,12 @@ public class ObjFileParser extends FileParser {
 		super.stop();
 		
 		FloatBuffer vertexBuffer = FloatBuffer.allocate(vertices.size());
+		
+		for(Float v: vertices) {
+			vertexBuffer.put(v);
+		}
+		
+		vertexBuffer.flip();
 		
 		model = new Model(vertexBuffer);
 		

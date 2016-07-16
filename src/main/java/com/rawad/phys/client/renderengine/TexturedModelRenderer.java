@@ -2,16 +2,13 @@ package com.rawad.phys.client.renderengine;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
-import java.util.HashMap;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL20;
 
 import com.rawad.phys.client.graphics.Renderer;
-import com.rawad.phys.client.graphics.Shader;
 import com.rawad.phys.client.graphics.Texture;
 import com.rawad.phys.client.graphics.VertexBufferObject;
 import com.rawad.phys.client.model.Model;
@@ -24,7 +21,12 @@ public class TexturedModelRenderer extends Renderer {
 	
 	private VertexBufferObject vertices;
 	
-	private FloatBuffer vertexBuffer;
+	private float[] data = {
+			-1.0f, -1.0f, 0.0f,
+			1.0f, -1.0f, 0.0f,
+			0.0f,  1.0f, 0.0f,
+	};
+	private FloatBuffer dataBuffer;
 	
 	public TexturedModelRenderer() {
 		super();
@@ -32,14 +34,9 @@ public class TexturedModelRenderer extends Renderer {
 		program.attachShader(vert);
 		program.attachShader(frag);
 		
-		vertices = new VertexBufferObject();
-		vao.bind();
-		
 		program.bindFragmentDataLocation(0, "fragColor");
-		
-		int posAttrib = program.getAttributeLocation("position");// Vertex attributes.
-		program.enableVertexAttribute(posAttrib);
-		program.pointVertexAttribute(posAttrib, 3, 7 * Float.BYTES, 0);
+		program.link();
+		program.use();
 		
 //		int texAttrib = program.getAttributeLocation("texCoord");
 //		program.enableVertexAttribute(texAttrib);
@@ -54,7 +51,8 @@ public class TexturedModelRenderer extends Renderer {
 		int textureUniform = program.getUniformLocation("tex");// Uniform variables.
 		program.setUniform(textureUniform, 0);
 		
-		Matrix4f model = new Matrix4f();
+		Matrix4f model = new Matrix4f().multiply(Matrix4f.scale(0.5f, 0.5f, 0.5f)).multiply(Matrix4f.rotate(10, 0, 0, 1))
+				.multiply(Matrix4f.translate(0, 0, -2.5f));
 		int modelUniform = program.getUniformLocation("model");
 		program.setUniform(modelUniform, model);
 		
@@ -65,14 +63,18 @@ public class TexturedModelRenderer extends Renderer {
 		int width = widthBuff.get();
 		int height = heightBuff.get();
 		
-		Matrix4f projection = Matrix4f.perspective(90, width / height, 0.1f, 100.0f);
+//		Matrix4f projection = Matrix4f.orthographic(-width / height, width / height, -1f, 1f, -1f, 1f);
+		Matrix4f projection = Matrix4f.perspective(90, width / height, 0.1f, 100f);
 		int projectionUniform = program.getUniformLocation("projection");
 		program.setUniform(projectionUniform, projection);
 		
-		vertexBuffer = FloatBuffer.allocate(3 * 3);
-		vertexBuffer.put(0.0f).put(0.0f).put(0);
-		vertexBuffer.put(1.0f).put(1.0f).put(0);
-		vertexBuffer.put(-1.0f).put(0.0f).put(0);
+		vao.bind();
+		
+		vertices = new VertexBufferObject();
+		
+		dataBuffer = BufferUtils.createFloatBuffer(data.length);
+		dataBuffer.put(data);
+		dataBuffer.flip();
 		
 	}
 	
@@ -83,22 +85,26 @@ public class TexturedModelRenderer extends Renderer {
 		
 		if(model != null) {
 			
-			program.link();
+			vao.bind();
 			program.use();
 			
-			vao.bind();
+			int posAttrib = program.getAttributeLocation("position");// Vertex attributes.
+			program.enableVertexAttribute(posAttrib);
+			program.pointVertexAttribute(posAttrib, 3, 3 * Float.BYTES, 0);
+			
 			vertices.bind(GL15.GL_ARRAY_BUFFER);
+			vertices.uploadData(GL15.GL_ARRAY_BUFFER, dataBuffer, GL15.GL_STATIC_DRAW);
 			
-			vertices.uploadSubData(GL15.GL_ARRAY_BUFFER, 0, vertexBuffer);
-			
-			GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, vertexBuffer.capacity());
+			// Cube might not be showing up because -z is forward (into screen)?
+			GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, dataBuffer.capacity());
 			
 		}
 		
 	}
 	
+	/** Should prepare shaders and upload data. */
 	private void prepareModel(Model model) {
-		// Should prepare shaders and upload data.
+		
 	}
 	
 	public void setModel(Model model) {

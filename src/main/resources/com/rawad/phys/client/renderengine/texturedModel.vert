@@ -1,4 +1,4 @@
-#version 150 core
+#version 330 core
 
 in vec3 position;
 //in vec2 texCoord;
@@ -11,11 +11,11 @@ uniform mat4 view;
 uniform mat4 projection;
 
 void main() {
-	//textureCoord = texCoord;
-
-	vertexColor = vec3(1.0, 1.0, 1.0);
-
+//	textureCoord = texCoord;
+	
+	vertexColor = vec3(1.0, 1.0, 1.0) * position;
+	
 	mat4 mvp = projection * view * model;
 	gl_Position = mvp * vec4(position, 1.0);
-
+	
 }

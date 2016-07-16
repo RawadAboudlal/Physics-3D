@@ -57,6 +57,29 @@ public class Physics3DStart {
 		
 	}
 	
+	// Minimum required for rendering a trianlge on screen.
+	/*/
+	float[] vertices = {
+			-1.0f, -1.0f, 0.0f,
+			1.0f, -1.0f, 0.0f,
+			0.0f,  1.0f, 0.0f,
+	};
+	int vao = GL30.glGenVertexArrays();
+	GL30.glBindVertexArray(vao);
+	
+	int vbo = GL15.glGenBuffers();
+	GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
+	GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertices, GL15.GL_STATIC_DRAW);
+	
+	// v Put in loop, called every rendering cycle.
+	GL20.glEnableVertexAttribArray(vao);
+	GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
+	GL20.glVertexAttribPointer(0, 3, GL11.GL_FLOAT, false, 0, 0);
+	
+	GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, vertices.length);
+	
+	GL20.glDisableVertexAttribArray(vao);/**/
+	
 	/*/
 	public static void main(String[] args)  throws URISyntaxException {
 		GLFWErrorCallback errorCallback = GLFWErrorCallback.createPrint(System.err);
