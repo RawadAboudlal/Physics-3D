@@ -23,35 +23,11 @@ public abstract class Renderer {
 	
 	protected ShaderProgram program;
 	
-	protected Shader vert;
-	protected Shader frag;
-	
 	public Renderer() {
 		super();
 		
 		vao = new VertexArrayObject();
 		vao.bind();
-		
-		vert = Shader.loadShader(GL20.GL_VERTEX_SHADER, getClass(), getShaderName());
-		frag = Shader.loadShader(GL20.GL_FRAGMENT_SHADER, getClass(), getShaderName());
-		
-		/*/
-		vbo = new VertexBufferObject();
-		vbo.bind(GL_ARRAY_BUFFER);
-		
-		vertices = BufferUtils.createFloatBuffer((int) Math.pow(2, 12));
-		
-		long size = vertices.capacity() * Float.BYTES;
-		vbo.uploadData(GL_ARRAY_BUFFER, size, GL15.GL_DYNAMIC_DRAW);
-		/**/
-		
-//		vertexShader = Shader.loadShader(GL_VERTEX_SHADER, getClass(), "shader.vert");
-//		fragmentShader = Shader.loadShader(GL_FRAGMENT_SHADER, getClass(), "shader.frag");
-		
-		program = new ShaderProgram();
-		program.bindFragmentDataLocation(0, "fragColor");
-//		program.link();
-//		program.use();// Should shaders be added before this?
 		
 		long window = GLFW.glfwGetCurrentContext();
 		IntBuffer widthBuff = BufferUtils.createIntBuffer(1);

@@ -1,12 +1,28 @@
 package com.rawad.phys.client.renderengine.shaders;
 
-import com.rawad.phys.client.graphics.Shader;
+import org.lwjgl.opengl.GL20;
 
-public class TexturedModelShader extends Shader {
+import com.rawad.phys.client.graphics.ShaderProgram;
 
-	public TexturedModelShader(int type, CharSequence source) {
-		super(type, source);
-			
+public class TexturedModelShader extends ShaderProgram {
+	
+	private final int vertexShader;
+	private final int fragmentShader;
+	
+	public TexturedModelShader() {
+		super();
+		
+		vertexShader = loadShader(GL20.GL_VERTEX_SHADER);
+		fragmentShader = loadShader(GL20.GL_FRAGMENT_SHADER);
+		
+		attachShader(vertexShader);
+		attachShader(fragmentShader);
+		
+	}
+	
+	@Override
+	protected String getShaderName() {
+		return "texturedModel";
 	}
 	
 }

@@ -3,6 +3,8 @@ package com.rawad.phys.client.fileparser;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 
+import org.lwjgl.BufferUtils;
+
 import com.rawad.phys.client.model.Model;
 import com.rawad.phys.fileparser.FileParser;
 import com.rawad.phys.logging.Logger;
@@ -41,7 +43,7 @@ public class ObjFileParser extends FileParser {
 	public ObjFileParser() {
 		super();
 		
-		model = new Model(FloatBuffer.allocate(1));
+		model = new Model(BufferUtils.createFloatBuffer(1));
 		
 	}
 	
@@ -154,10 +156,10 @@ public class ObjFileParser extends FileParser {
 	protected void stop() {
 		super.stop();
 		
-		FloatBuffer vertexBuffer = FloatBuffer.allocate(vertices.size());
+		FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(vertices.size());
 		
-		for(Float v: vertices) {
-			vertexBuffer.put(v);
+		for(Float f: vertices) {
+			vertexBuffer.put(f);
 		}
 		
 		vertexBuffer.flip();

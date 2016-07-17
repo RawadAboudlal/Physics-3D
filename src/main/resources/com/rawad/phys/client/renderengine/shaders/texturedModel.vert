@@ -1,9 +1,7 @@
 #version 330 core
 
-in vec3 position;
-//in vec2 texCoord;
+layout (location = 0) in vec3 position;// Matches glEnableVertexAttribArray(0).
 
-//out vec2 textureCoord;
 out vec3 vertexColor;
 
 uniform mat4 model;
@@ -11,7 +9,6 @@ uniform mat4 view;
 uniform mat4 projection;
 
 void main() {
-//	textureCoord = texCoord;
 	
 	vertexColor = vec3(1.0, 1.0, 1.0) * position;
 	

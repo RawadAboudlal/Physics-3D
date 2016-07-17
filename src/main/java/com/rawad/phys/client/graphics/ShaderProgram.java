@@ -1,7 +1,11 @@
 package com.rawad.phys.client.graphics;
 
-import static org.lwjgl.opengl.GL20.glAttachShader;
-import static org.lwjgl.opengl.GL20.glCreateProgram;
+import static org.lwjgl.opengl.GL20.glCompileShader;
+import static org.lwjgl.opengl.GL20.glCreateShader;
+import static org.lwjgl.opengl.GL20.glShaderSource;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
@@ -12,26 +16,27 @@ import com.rawad.phys.math.Matrix4f;
 import com.rawad.phys.math.Vector2f;
 import com.rawad.phys.math.Vector3f;
 import com.rawad.phys.math.Vector4f;
+import com.rawad.phys.util.Util;
 
-public class ShaderProgram {
+public abstract class ShaderProgram {
+	
+	private static final String EXTENSION_VERTEX_SHADER = ".vert";
+	private static final String EXTENSION_FRAGMENT_SHADER = ".frag";
 	
 	private final int id;
 	
 	public ShaderProgram() {
-		id = glCreateProgram();
+		super();
+		
+		id = GL20.glCreateProgram();
+		
 	}
 	
-	public void attachShader(Shader shader) {
-		glAttachShader(id, shader.getId());
+	public void attachShader(int shader) {
+		GL20.glAttachShader(id, shader);
 	}
 	
-	/**
-	 * Binds fragment shader's output color location.
-	 * 
-	 * @param number Color number to be bound.
-	 * @param name Name of variable to bind {@code number} to.
-	 */
-	public void bindFragmentDataLocation(int number, CharSequence name) {
+	public void bindAttribLocation(int number, CharSequence name) {
 		GL20.glBindAttribLocation(id, number, name);
 	}
 	
@@ -54,7 +59,7 @@ public class ShaderProgram {
 		GL20.glEnableVertexAttribArray(location);
 	}
 	
-	public void disableVertexAttrivute(int location) {
+	public void disableVertexAttribute(int location) {
 		GL20.glDisableVertexAttribArray(location);
 	}
 	
@@ -107,8 +112,59 @@ public class ShaderProgram {
 		if(status != GL11.GL_TRUE) throw new RuntimeException(GL20.glGetProgramInfoLog(id));
 	}
 	
-	public int getId() {
+	public final int getId() {
 		return id;
 	}
+	
+	protected final int loadShader(int type) {
+		
+		StringBuilder builder = new StringBuilder();
+		
+		String name = getShaderName() + getExtensionFromType(type);
+		
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(name)))) {
+			
+			String line = null;
+			
+			while((line = reader.readLine()) != null) {
+				builder.append(line).append(Util.NL);
+			}
+			
+		} catch(Exception ex) {
+			throw new RuntimeException("Failed to load shader file." + System.lineSeparator() + ex.getMessage());
+		}
+		
+		CharSequence source = builder.toString();
+		
+		int id = glCreateShader(type);
+		glShaderSource(id, source);
+		glCompileShader(id);
+		
+		return id;
+		
+	}
+	
+	private static final String getExtensionFromType(int type) {
+		
+		switch(type) {
+		
+		case GL20.GL_VERTEX_SHADER:
+			return EXTENSION_VERTEX_SHADER;
+		
+		case GL20.GL_FRAGMENT_SHADER:
+			return EXTENSION_FRAGMENT_SHADER;
+		
+		default:
+			return EXTENSION_VERTEX_SHADER;
+			
+		}
+		
+	}
+	
+	/**
+	 * Base name of this {@code ShaderProgram}.
+	 * @return
+	 */
+	protected abstract String getShaderName();
 	
 }
