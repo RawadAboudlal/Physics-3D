@@ -1,6 +1,7 @@
 package com.rawad.phys.client.fileparser;
 
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 
 import org.lwjgl.BufferUtils;
@@ -8,6 +9,7 @@ import org.lwjgl.BufferUtils;
 import com.rawad.phys.client.model.Model;
 import com.rawad.phys.fileparser.FileParser;
 import com.rawad.phys.logging.Logger;
+import com.rawad.phys.math.Vector3f;
 import com.rawad.phys.util.Util;
 
 public class ObjFileParser extends FileParser {
@@ -26,24 +28,24 @@ public class ObjFileParser extends FileParser {
 	private static final int INDEX_Y = 1;
 	private static final int INDEX_Z = 2;
 	
-	private static final int INDEX_VERTEX = 0;
+	private static final int INDEX_POSITION = 0;
 	private static final int INDEX_TEXTURE_COORDS = 1;
 	private static final int INDEX_NORMAL = 2;
 	
 	private Model model;
 	
-	private ArrayList<Float> vertices;
-	private ArrayList<Float> normals;
+	private ArrayList<Vector3f> vertices;
+	private ArrayList<Vector3f> normals;
 	private ArrayList<Float> textureCoords;
 	
-	private ArrayList<Integer> vertexIndices;
+	private ArrayList<Integer> positionIndices;
 	private ArrayList<Integer> normalIndices;
 	private ArrayList<Integer> textureCoordIndices;
 	
 	public ObjFileParser() {
 		super();
 		
-		model = new Model(BufferUtils.createFloatBuffer(1));
+		model = new Model(BufferUtils.createFloatBuffer(1), BufferUtils.createIntBuffer(1));
 		
 	}
 	
@@ -51,11 +53,11 @@ public class ObjFileParser extends FileParser {
 	protected void start() {
 		super.start();
 		
-		vertices = new ArrayList<Float>();
-		normals = new ArrayList<Float>();
+		vertices = new ArrayList<Vector3f>();
+		normals = new ArrayList<Vector3f>();
 		textureCoords = new ArrayList<Float>();
 		
-		vertexIndices = new ArrayList<Integer>();
+		positionIndices = new ArrayList<Integer>();
 		normalIndices = new ArrayList<Integer>();
 		textureCoordIndices = new ArrayList<Integer>();
 		
@@ -76,7 +78,7 @@ public class ObjFileParser extends FileParser {
 			break;
 		
 		case ID_VERTEX:
-			parseVector3f(vertices, lineData);
+			vertices.add(parseVector3f(lineData));
 			break;
 			
 		case ID_TEXTURE:
@@ -84,7 +86,7 @@ public class ObjFileParser extends FileParser {
 			break;
 			
 		case ID_NORMAL:
-			parseVector3f(normals, lineData);
+			normals.add(parseVector3f(lineData));
 			break;
 			
 		case ID_FACE:
@@ -99,7 +101,7 @@ public class ObjFileParser extends FileParser {
 		
 	}
 	
-	private void parseVector3f(ArrayList<Float> array, String lineData) {
+	private Vector3f parseVector3f(String lineData) {
 		
 		String[] vertexCoords = lineData.split(REGEX);
 		
@@ -113,9 +115,7 @@ public class ObjFileParser extends FileParser {
 			z = Util.parseFloat(vertexCoords[INDEX_Z]);
 		}
 		
-		array.add(x);
-		array.add(y);
-		array.add(z);
+		return new Vector3f(x, y, z);
 		
 	}
 	
@@ -144,7 +144,7 @@ public class ObjFileParser extends FileParser {
 			
 			String[] indices = faces[i].split(REGEX_FACE_DATA);
 			
-			vertexIndices.add(Util.parseInt(indices[INDEX_VERTEX]));
+			positionIndices.add(Util.parseInt(indices[INDEX_POSITION]));
 			normalIndices.add(Util.parseInt(indices[INDEX_NORMAL]));
 			textureCoordIndices.add(Util.parseInt(indices[INDEX_TEXTURE_COORDS]));
 			
@@ -156,15 +156,24 @@ public class ObjFileParser extends FileParser {
 	protected void stop() {
 		super.stop();
 		
-		FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(vertices.size());
+		FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(positionIndices.size() * Vector3f.SIZE);
 		
-		for(Float f: vertices) {
-			vertexBuffer.put(f);
+		IntBuffer indexBuffer = BufferUtils.createIntBuffer(positionIndices.size());
+		
+		for(int i: positionIndices) {
+			
+			Vector3f vertex = vertices.get(i - 1);// OBJ uses 1 index system (Java uses 0 index system).
+			
+			vertexBuffer.put(vertex.x).put(vertex.y).put(vertex.z);
+			
+			indexBuffer.put(i);
+			
 		}
 		
 		vertexBuffer.flip();
+		indexBuffer.flip();
 		
-		model = new Model(vertexBuffer);
+		model = new Model(vertexBuffer, indexBuffer);
 		
 	}
 	

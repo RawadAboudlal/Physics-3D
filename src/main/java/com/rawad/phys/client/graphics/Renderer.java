@@ -9,51 +9,14 @@ import static org.lwjgl.opengl.GL11.glBlendFunc;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glEnable;
 
-import java.nio.IntBuffer;
-
-import org.lwjgl.BufferUtils;
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL20;
-
-import com.rawad.phys.math.Matrix4f;
-
 public abstract class Renderer {
 	
 	protected VertexArrayObject vao;
-	
-	protected ShaderProgram program;
 	
 	public Renderer() {
 		super();
 		
 		vao = new VertexArrayObject();
-		vao.bind();
-		
-		long window = GLFW.glfwGetCurrentContext();
-		IntBuffer widthBuff = BufferUtils.createIntBuffer(1);
-		IntBuffer heightBuff = BufferUtils.createIntBuffer(1);
-		
-		GLFW.glfwGetWindowSize(window, widthBuff, heightBuff);
-		
-		specifyVertexAttributes();
-		
-		int textureUniform = program.getUniformLocation("tex");
-		program.setUniform(textureUniform, 0);
-		
-		Matrix4f model = new Matrix4f();
-		int modelUniform = program.getUniformLocation("model");
-		program.setUniform(modelUniform, model);
-		
-		Matrix4f view = new Matrix4f();
-		int viewUniform = program.getUniformLocation("view");
-		program.setUniform(viewUniform, view);
-		
-		int width = widthBuff.get();
-		int height = heightBuff.get();
-		
-		Matrix4f projection = Matrix4f.orthographic(0, width, 0, height, 0f, 1f);
-		int projectionUniform = program.getUniformLocation("projection");
-		program.setUniform(projectionUniform, projection);
 		
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -64,60 +27,6 @@ public abstract class Renderer {
 	
 	public void clear() {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	}
-	/*/
-	public void begin() {
-		if(drawing) throw new IllegalStateException("Renderer already drawing.");
-		
-		drawing = true;
-		vertexCount = 0;
-		
-	}
-	
-	public void end() {
-		if(!drawing) throw new IllegalStateException("Renderer not drawing.");
-		
-		drawing = false;
-		flush();
-		
-	}
-	
-	/**
-	 * Flushes data to GPU for rendering.
-	 /
-	public void flush() {
-		
-		if(vertexCount <= 0) return;
-		
-		vertices.flip();
-		
-		vao.bind();
-		program.use();
-		
-		vbo.bind(GL_ARRAY_BUFFER);
-		vbo.uploadSubData(GL_ARRAY_BUFFER, 0, vertices);
-		
-		glDrawArrays(GL11.GL_TRIANGLES, 0, vertexCount);
-		
-		vertices.clear();
-		vertexCount = 0;
-		
-	}/**/
-	
-	private void specifyVertexAttributes() {
-		
-		int posAttrib = program.getAttributeLocation("position");
-		program.enableVertexAttribute(posAttrib);
-		program.pointVertexAttribute(posAttrib, 2, 7 * Float.BYTES, 0);
-		
-		int colAttrib = program.getAttributeLocation("color");
-		program.enableVertexAttribute(colAttrib);
-		program.pointVertexAttribute(colAttrib, 3, 7 * Float.BYTES, 2 * Float.BYTES);
-		
-		int texAttrib = program.getAttributeLocation("texCoord");
-		program.enableVertexAttribute(texAttrib);
-		program.pointVertexAttribute(texAttrib, 2, 7 * Float.BYTES, 5 * Float.BYTES);
-		
 	}
 	
 	public void begin() {}
@@ -178,18 +87,6 @@ public abstract class Renderer {
 		
 		vao.delete();
 		
-		frag.delete();
-		vert.delete();
-		
-		program.delete();
-		
 	}
-	
-	/**
-	 * 
-	 * @return Name of the shader file (part before extension). Should be named the same (with the extension being the
-	 * only difference).
-	 */
-	protected abstract String getShaderName();
 	
 }

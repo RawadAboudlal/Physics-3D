@@ -23,12 +23,23 @@ public abstract class ShaderProgram {
 	private static final String EXTENSION_VERTEX_SHADER = ".vert";
 	private static final String EXTENSION_FRAGMENT_SHADER = ".frag";
 	
-	private final int id;
+	protected final int id;
+	
+	protected final int vertexShader;
+	protected final int fragmentShader;
 	
 	public ShaderProgram() {
 		super();
 		
 		id = GL20.glCreateProgram();
+		
+		vertexShader = this.loadShader(GL20.GL_VERTEX_SHADER);
+		fragmentShader = this.loadShader(GL20.GL_FRAGMENT_SHADER);
+		
+		attachShader(vertexShader);
+		attachShader(fragmentShader);
+		
+		link();
 		
 	}
 	
