@@ -9,6 +9,7 @@ import org.lwjgl.BufferUtils;
 import com.rawad.phys.client.model.Model;
 import com.rawad.phys.fileparser.FileParser;
 import com.rawad.phys.logging.Logger;
+import com.rawad.phys.math.Vector2f;
 import com.rawad.phys.math.Vector3f;
 import com.rawad.phys.util.Util;
 
@@ -36,7 +37,7 @@ public class ObjFileParser extends FileParser {
 	
 	private ArrayList<Vector3f> vertices;
 	private ArrayList<Vector3f> normals;
-	private ArrayList<Float> textureCoords;
+	private ArrayList<Vector2f> textureCoords;
 	
 	private ArrayList<Integer> positionIndices;
 	private ArrayList<Integer> normalIndices;
@@ -55,7 +56,7 @@ public class ObjFileParser extends FileParser {
 		
 		vertices = new ArrayList<Vector3f>();
 		normals = new ArrayList<Vector3f>();
-		textureCoords = new ArrayList<Float>();
+		textureCoords = new ArrayList<Vector2f>();
 		
 		positionIndices = new ArrayList<Integer>();
 		normalIndices = new ArrayList<Integer>();
@@ -82,7 +83,7 @@ public class ObjFileParser extends FileParser {
 			break;
 			
 		case ID_TEXTURE:
-			parseVector2f(textureCoords, lineData);
+			textureCoords.add(parseVector2f(lineData));
 			break;
 			
 		case ID_NORMAL:
@@ -119,7 +120,7 @@ public class ObjFileParser extends FileParser {
 		
 	}
 	
-	private void parseVector2f(ArrayList<Float> array, String lineData) {
+	private Vector2f parseVector2f(String lineData) {
 		
 		String[] textureCoords = lineData.split(REGEX);
 		
@@ -131,8 +132,7 @@ public class ObjFileParser extends FileParser {
 			y = Util.parseFloat(textureCoords[INDEX_Y]);
 		}
 		
-		array.add(x);
-		array.add(y);
+		return new Vector2f(x, y);
 		
 	}
 	
@@ -157,16 +157,29 @@ public class ObjFileParser extends FileParser {
 		super.stop();
 		
 		FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(positionIndices.size() * Vector3f.SIZE);
+		FloatBuffer textureCoordBuffer = BufferUtils.createFloatBuffer(textureCoordIndices.size() * Vector2f.SIZE);
 		
 		IntBuffer indexBuffer = BufferUtils.createIntBuffer(positionIndices.size());
 		
 		for(int i: positionIndices) {
 			
-			Vector3f vertex = vertices.get(i - 1);// OBJ uses 1 index system (Java uses 0 index system).
+			i -= 1;// OBJ uses 1 index system (Java uses 0 index system).
+			
+			Vector3f vertex = vertices.get(i);
 			
 			vertexBuffer.put(vertex.x).put(vertex.y).put(vertex.z);
 			
 			indexBuffer.put(i);
+			
+		}
+		
+		for(int i: textureCoordIndices) {
+			
+			i -= 1;
+			
+			Vector2f textureCoord = textureCoords.get(i);
+			
+			textureCoordBuffer.put(textureCoord.x).put(textureCoord.y);
 			
 		}
 		

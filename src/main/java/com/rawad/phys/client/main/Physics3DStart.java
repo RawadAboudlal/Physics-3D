@@ -4,12 +4,19 @@ import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL20;
 
+import com.rawad.phys.client.fileparser.ObjFileParser;
 import com.rawad.phys.client.graphics.Texture;
+import com.rawad.phys.client.graphics.VertexArrayObject;
 import com.rawad.phys.client.graphics.Window;
+import com.rawad.phys.client.model.Model;
+import com.rawad.phys.client.renderengine.shaders.TexturedModelShader;
 import com.rawad.phys.client.states.MenuState;
 import com.rawad.phys.client.states.StateManager;
 import com.rawad.phys.loader.Loader;
+import com.rawad.phys.math.Vector3f;
 
 public class Physics3DStart {
 	
@@ -58,19 +65,77 @@ public class Physics3DStart {
 		
 		GL11.glClearColor(0.5f, 0.5f, 1f, 1f);
 		
+		init();
+		
 		while(!window.isClosing()) {
 			
 			sm.update();
 			
 			sm.render();
 			
+			render();
+			
 			window.update();
 			
 		}
 		
+		dispose();
+		
 		texture.delete();
 		window.destroy();
 		glfwTerminate();
+		
+	}
+	
+	private static TexturedModelShader program;
+	private static VertexArrayObject vao;
+	
+	private static Model cube;
+	
+	private static int vbo;
+	private static int ibo;
+	
+	private static final void init() {
+		
+		program = new TexturedModelShader();
+		
+		vao = new VertexArrayObject();
+		
+		vbo = GL15.glGenBuffers();
+		ibo = GL15.glGenBuffers();
+		
+		vao.bind();
+		
+		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
+		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, ibo);
+		
+		int location_position = program.getAttributeLocation("position");
+		GL20.glEnableVertexAttribArray(location_position);
+		GL20.glVertexAttribPointer(location_position, GL11.GL_FLOAT, Vector3f.SIZE, false, 0, 0);
+		
+		cube = Loader.loadModel(new ObjFileParser(), "cube");
+		GL15.glBufferData(vbo, cube.getVertices(), GL15.GL_STATIC_DRAW);
+		
+		GL15.glBufferData(ibo, cube.getIndices(), GL15.GL_STATIC_DRAW);
+		
+	}
+	
+	private static final void render() {
+		
+		program.use();
+		vao.bind();
+		
+		GL11.glDrawElements(GL11.GL_TRIANGLES, cube.getVertices().capacity(), GL11.GL_UNSIGNED_SHORT, 0);
+		
+	}
+	
+	private static final void dispose() {
+		
+		GL15.glDeleteBuffers(vbo);
+		GL15.glDeleteBuffers(ibo);
+		
+		vao.delete();
+		program.delete();
 		
 	}
 	

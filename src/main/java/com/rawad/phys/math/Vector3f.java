@@ -35,9 +35,7 @@ public class Vector3f {
 	public static final int SIZE = 3;
 	
 	public float x;
-	
 	public float y;
-	
 	public float z;
 	
 	/**
