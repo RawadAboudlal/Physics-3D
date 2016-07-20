@@ -4,19 +4,12 @@ import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL15;
-import org.lwjgl.opengl.GL20;
 
-import com.rawad.phys.client.fileparser.ObjFileParser;
 import com.rawad.phys.client.graphics.Texture;
-import com.rawad.phys.client.graphics.VertexArrayObject;
 import com.rawad.phys.client.graphics.Window;
-import com.rawad.phys.client.model.Model;
-import com.rawad.phys.client.renderengine.shaders.TexturedModelShader;
 import com.rawad.phys.client.states.MenuState;
 import com.rawad.phys.client.states.StateManager;
 import com.rawad.phys.loader.Loader;
-import com.rawad.phys.math.Vector3f;
 
 public class Physics3DStart {
 	
@@ -65,7 +58,7 @@ public class Physics3DStart {
 		
 		GL11.glClearColor(0.5f, 0.5f, 1f, 1f);
 		
-		init();
+//		init();
 		
 		while(!window.isClosing()) {
 			
@@ -73,13 +66,13 @@ public class Physics3DStart {
 			
 			sm.render();
 			
-			render();
+//			render();
 			
 			window.update();
 			
 		}
 		
-		dispose();
+//		dispose();
 		
 		texture.delete();
 		window.destroy();
@@ -87,13 +80,23 @@ public class Physics3DStart {
 		
 	}
 	
+	/*/
 	private static TexturedModelShader program;
 	private static VertexArrayObject vao;
 	
+	private static IntBuffer indicesBuffer;
+	private static FloatBuffer verticesBuffer;
+	
 	private static Model cube;
+	
+	private static Matrix4f model;
+	private static Matrix4f view;
+	private static Matrix4f projection;
 	
 	private static int vbo;
 	private static int ibo;
+	
+	private static int locationu_model;
 	
 	private static final void init() {
 		
@@ -104,19 +107,79 @@ public class Physics3DStart {
 		vbo = GL15.glGenBuffers();
 		ibo = GL15.glGenBuffers();
 		
+		program.use();
 		vao.bind();
 		
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
 		GL15.glBindBuffer(GL15.GL_ELEMENT_ARRAY_BUFFER, ibo);
 		
-		int location_position = program.getAttributeLocation("position");
-		GL20.glEnableVertexAttribArray(location_position);
-		GL20.glVertexAttribPointer(location_position, GL11.GL_FLOAT, Vector3f.SIZE, false, 0, 0);
+		final int[] indices = {
+				0, 1, 2,
+				2, 3, 0,
+				1, 5, 6,
+				6, 2, 1,
+				3, 2, 6,
+				6, 7, 3,
+				5, 4, 7,
+				7, 6, 5,
+				0, 4, 7,
+				7, 3, 0,
+				0, 4, 5,
+				5, 1, 0,
+		};
+		
+		final float[] vertices = {
+				-1, -1, 1,
+				1, -1, 1,
+				1, 1, 1,
+				-1, 1, 1,
+				-1, -1, -1,
+				1, -1, -1,
+				1, 1, -1,
+				-1, 1, -1,
+		};
+		
+		indicesBuffer = BufferUtils.createIntBuffer(indices.length);
+		verticesBuffer = BufferUtils.createFloatBuffer(vertices.length);
+		
+		indicesBuffer.put(indices);
+		verticesBuffer.put(vertices);
+		
+		indicesBuffer.flip();
+		verticesBuffer.flip();
 		
 		cube = Loader.loadModel(new ObjFileParser(), "cube");
-		GL15.glBufferData(vbo, cube.getVertices(), GL15.GL_STATIC_DRAW);
+		indicesBuffer = cube.getIndices();
+		verticesBuffer = cube.getVertices();
 		
-		GL15.glBufferData(ibo, cube.getIndices(), GL15.GL_STATIC_DRAW);
+		GL15.glBufferData(GL15.GL_ARRAY_BUFFER, verticesBuffer, GL15.GL_STATIC_DRAW);
+		
+		int location_position = program.getAttributeLocation("position");
+		GL20.glEnableVertexAttribArray(location_position);
+		GL20.glVertexAttribPointer(location_position, Vector3f.SIZE, GL11.GL_FLOAT, false, 0, 0);
+		
+		GL15.glBufferData(GL15.GL_ELEMENT_ARRAY_BUFFER, indicesBuffer, GL15.GL_STATIC_DRAW);
+		
+		IntBuffer widthBuffer = BufferUtils.createIntBuffer(1);
+		IntBuffer heightBuffer = BufferUtils.createIntBuffer(1);
+		
+		GLFW.glfwGetWindowSize(GLFW.glfwGetCurrentContext(), widthBuffer, heightBuffer);
+		
+		int width = widthBuffer.get();
+		int height = heightBuffer.get();
+		
+		model = new Matrix4f().multiply(Matrix4f.translate(0f, 0f, -3.5f));
+		view = new Matrix4f();
+		projection = Matrix4f.perspective(90f, (float) width / (float) height, 0.1f, 100f);
+		
+		locationu_model = program.getUniformLocation("model");
+		program.setUniform(locationu_model, model);
+		
+		int locationu_view = program.getUniformLocation("view");
+		program.setUniform(locationu_view, view);
+		
+		int locationu_projection = program.getUniformLocation("projection");
+		program.setUniform(locationu_projection, projection);
 		
 	}
 	
@@ -125,7 +188,10 @@ public class Physics3DStart {
 		program.use();
 		vao.bind();
 		
-		GL11.glDrawElements(GL11.GL_TRIANGLES, cube.getVertices().capacity(), GL11.GL_UNSIGNED_SHORT, 0);
+		model.multiply(Matrix4f.rotate(1f / 5f, 0f, 1f, 0f));
+		program.setUniform(locationu_model, model);
+		
+		GL11.glDrawElements(GL11.GL_TRIANGLES, indicesBuffer.capacity(), GL11.GL_UNSIGNED_INT, 0);
 		
 	}
 	
@@ -137,7 +203,50 @@ public class Physics3DStart {
 		vao.delete();
 		program.delete();
 		
-	}
+	}/**/
+
+	/*/
+	// Indexed Quad
+	final int[] indices = {
+			2, 1, 0,
+			2, 3, 0,
+	};
+	
+	final float[] vertices = {
+			-0.5f, -0.5f, 0,
+			0.5f, -0.5f, 0,
+			0.5f, 0.5f, 0,
+			-0.5f, 0.5f, 0,
+	};
+	/**/
+	
+	/*/
+	// Indexed Cube
+	final int[] indices = {
+			0, 1, 2,
+			2, 3, 0,
+			1, 5, 6,
+			6, 2, 5,
+			3, 2, 6,
+			6, 7, 3,
+			5, 4, 7,
+			7, 6, 5,
+			0, 4, 7,
+			7, 3, 0,
+			0, 4, 5,
+			5, 1, 0
+	};
+	
+	final float[] vertices = {
+			-1, -1, 1,
+			1, -1, 1,
+			1, 1, 1,
+			-1, 1, 1,
+			-1, -1, -1,
+			1, -1, -1,
+			1, 1, -1,
+			-1, 1, -1
+	};/**/
 	
 	/*/
 	private float[] vertex = {

@@ -35,7 +35,7 @@ public class ObjFileParser extends FileParser {
 	
 	private Model model;
 	
-	private ArrayList<Vector3f> vertices;
+	private ArrayList<Vector3f> positions;
 	private ArrayList<Vector3f> normals;
 	private ArrayList<Vector2f> textureCoords;
 	
@@ -54,7 +54,7 @@ public class ObjFileParser extends FileParser {
 	protected void start() {
 		super.start();
 		
-		vertices = new ArrayList<Vector3f>();
+		positions = new ArrayList<Vector3f>();
 		normals = new ArrayList<Vector3f>();
 		textureCoords = new ArrayList<Vector2f>();
 		
@@ -79,7 +79,7 @@ public class ObjFileParser extends FileParser {
 			break;
 		
 		case ID_VERTEX:
-			vertices.add(parseVector3f(lineData));
+			positions.add(parseVector3f(lineData));
 			break;
 			
 		case ID_TEXTURE:
@@ -156,20 +156,20 @@ public class ObjFileParser extends FileParser {
 	protected void stop() {
 		super.stop();
 		
-		FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(positionIndices.size() * Vector3f.SIZE);
+		FloatBuffer positionBuffer = BufferUtils.createFloatBuffer(positions.size() * Vector3f.SIZE);
 		FloatBuffer textureCoordBuffer = BufferUtils.createFloatBuffer(textureCoordIndices.size() * Vector2f.SIZE);
 		
 		IntBuffer indexBuffer = BufferUtils.createIntBuffer(positionIndices.size());
 		
 		for(int i: positionIndices) {
 			
-			i -= 1;// OBJ uses 1 index system (Java uses 0 index system).
+			indexBuffer.put(i - 1);
 			
-			Vector3f vertex = vertices.get(i);
+		}
+		
+		for(Vector3f position: positions) {
 			
-			vertexBuffer.put(vertex.x).put(vertex.y).put(vertex.z);
-			
-			indexBuffer.put(i);
+			positionBuffer.put(position.x).put(position.y).put(position.z);
 			
 		}
 		
@@ -183,10 +183,11 @@ public class ObjFileParser extends FileParser {
 			
 		}
 		
-		vertexBuffer.flip();
+		positionBuffer.flip();
+		textureCoordBuffer.flip();
 		indexBuffer.flip();
 		
-		model = new Model(vertexBuffer, indexBuffer);
+		model = new Model(positionBuffer, indexBuffer);
 		
 	}
 	
