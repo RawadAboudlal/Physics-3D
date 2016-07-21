@@ -187,5 +187,20 @@ public class Vector4f {
         buffer.flip();
         return buffer;
     }
-
+	
+	@Override
+	public boolean equals(Object obj) {
+		
+		if(obj instanceof Vector4f) {
+			
+			Vector4f vec4 = (Vector4f) obj;
+			
+			return this.x == vec4.x && this.y == vec4.y && this.z == vec4.z && this.w == vec4.w;
+			
+		}
+		
+		return false;
+		
+	}
+    
 }

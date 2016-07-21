@@ -184,4 +184,19 @@ public class Vector2f {
 		return buffer;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		
+		if(obj instanceof Vector2f) {
+			
+			Vector2f vec2 = (Vector2f) obj;
+			
+			return this.x == vec2.x && this.y == vec2.y;
+			
+		}
+		
+		return false;
+		
+	}
+	
 }

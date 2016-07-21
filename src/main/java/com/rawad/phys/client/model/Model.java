@@ -5,26 +5,42 @@ import java.nio.IntBuffer;
 
 public class Model {
 	
-	private final FloatBuffer vertices;
 	private final IntBuffer indices;
-	private FloatBuffer textureCoords;
 	
-	private int vertexCount;
+	private final FloatBuffer data;
 	
-	public Model(FloatBuffer vertices, IntBuffer indices) {
+	private final int vertexCount;
+	
+	public Model(IntBuffer indices, FloatBuffer data, int vertexCount) {
 		super();
 		
-		this.vertices = vertices;
 		this.indices = indices;
+		
+		this.data = data;
+		
+		this.vertexCount = vertexCount;
 		
 	}
 	
-	public FloatBuffer getVertices() {
-		return vertices;
-	}
-	
+	/**
+	 * @return the indices
+	 */
 	public IntBuffer getIndices() {
 		return indices;
+	}
+	
+	/**
+	 * @return the data
+	 */
+	public FloatBuffer getData() {
+		return data;
+	}
+	
+	/**
+	 * @return the vertexCount
+	 */
+	public int getVertexCount() {
+		return vertexCount;
 	}
 	
 }

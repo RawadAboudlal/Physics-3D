@@ -209,4 +209,19 @@ public class Vector3f {
 		return buffer;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		
+		if(obj instanceof Vector3f) {
+			
+			Vector3f vec3 = (Vector3f) obj;
+			
+			return this.x == vec3.x && this.y == vec3.y && this.z == vec3.z;
+			
+		}
+		
+		return false;
+		
+	}
+	
 }

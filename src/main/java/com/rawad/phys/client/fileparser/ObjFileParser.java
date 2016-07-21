@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.lwjgl.BufferUtils;
 
 import com.rawad.phys.client.model.Model;
+import com.rawad.phys.client.model.Vertex;
 import com.rawad.phys.fileparser.FileParser;
 import com.rawad.phys.logging.Logger;
 import com.rawad.phys.math.Vector2f;
@@ -43,10 +44,12 @@ public class ObjFileParser extends FileParser {
 	private ArrayList<Integer> normalIndices;
 	private ArrayList<Integer> textureCoordIndices;
 	
+	private int vertexCount;
+	
 	public ObjFileParser() {
 		super();
 		
-		model = new Model(BufferUtils.createFloatBuffer(1), BufferUtils.createIntBuffer(1));
+		model = new Model(BufferUtils.createIntBuffer(1), BufferUtils.createFloatBuffer(1), 0);
 		
 	}
 	
@@ -61,6 +64,8 @@ public class ObjFileParser extends FileParser {
 		positionIndices = new ArrayList<Integer>();
 		normalIndices = new ArrayList<Integer>();
 		textureCoordIndices = new ArrayList<Integer>();
+		
+		vertexCount = 0;
 		
 	}
 	
@@ -148,6 +153,8 @@ public class ObjFileParser extends FileParser {
 			normalIndices.add(Util.parseInt(indices[INDEX_NORMAL]));
 			textureCoordIndices.add(Util.parseInt(indices[INDEX_TEXTURE_COORDS]));
 			
+			vertexCount++;
+			
 		}
 		
 	}
@@ -156,38 +163,29 @@ public class ObjFileParser extends FileParser {
 	protected void stop() {
 		super.stop();
 		
-		FloatBuffer positionBuffer = BufferUtils.createFloatBuffer(positions.size() * Vector3f.SIZE);
-		FloatBuffer textureCoordBuffer = BufferUtils.createFloatBuffer(textureCoordIndices.size() * Vector2f.SIZE);
+		ArrayList<Vertex> vertices = new ArrayList<Vertex>(vertexCount);
+		ArrayList<Integer> indices = new ArrayList<Integer>();// Final indices for IBO.
 		
-		IntBuffer indexBuffer = BufferUtils.createIntBuffer(positionIndices.size());
-		
-		for(int i: positionIndices) {
+		for(int i = 0; i < vertexCount; i++) {
 			
-			indexBuffer.put(i - 1);
+			int positionIndex = positionIndices.get(i);
+			int normalIndex = normalIndices.get(i);
+			int textureCoordIndex = textureCoordIndices.get(i);
+			
+			Vertex vertex = new Vertex(positionIndex, normalIndex, textureCoordIndex);
+			
+			if(!vertices.contains(vertex)) vertices.set(i, vertex);
+			
+			indices.add(vertices.indexOf(vertex));
 			
 		}
 		
-		for(Vector3f position: positions) {
-			
-			positionBuffer.put(position.x).put(position.y).put(position.z);
-			
-		}
+		IntBuffer indexBuffer = BufferUtils.createIntBuffer(vertexCount);
 		
-		for(int i: textureCoordIndices) {
-			
-			i -= 1;
-			
-			Vector2f textureCoord = textureCoords.get(i);
-			
-			textureCoordBuffer.put(textureCoord.x).put(textureCoord.y);
-			
-		}
+		FloatBuffer data = BufferUtils.createFloatBuffer(vertexCount);
+		// TODO: Multiply by data count in Vertex and make Vertex construct each data set.
 		
-		positionBuffer.flip();
-		textureCoordBuffer.flip();
-		indexBuffer.flip();
-		
-		model = new Model(positionBuffer, indexBuffer);
+		model = new Model(indexBuffer, null, vertexCount);
 		
 	}
 	
