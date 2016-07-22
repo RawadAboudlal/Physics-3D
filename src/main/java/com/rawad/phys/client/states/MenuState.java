@@ -1,12 +1,15 @@
 package com.rawad.phys.client.states;
 
 import com.rawad.phys.client.fileparser.ObjFileParser;
+import com.rawad.phys.client.graphics.Texture;
 import com.rawad.phys.client.renderengine.TexturedModelRenderer;
 import com.rawad.phys.loader.Loader;
 
 public class MenuState extends State {
 	
 	// Define renderers up here, initialize and add them in constructor.
+	
+	private Texture texture;
 	
 	public MenuState() {
 		super();
@@ -25,7 +28,18 @@ public class MenuState extends State {
 		
 		ObjFileParser objFileParser = new ObjFileParser();
 		
-		masterRenderer.getRenderers().get(TexturedModelRenderer.class).setModel(Loader.loadModel(objFileParser, "cube"));
+		texture = Loader.loadTexture("unknown");
+		
+		masterRenderer.getRenderers().get(TexturedModelRenderer.class).setModel(Loader.loadModel(objFileParser, "quad"), 
+				texture);
+		
+	}
+	
+	@Override
+	public void onDeactive() {
+		super.onDeactive();
+		
+		texture.delete();
 		
 	}
 	

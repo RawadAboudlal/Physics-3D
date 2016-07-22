@@ -6,11 +6,14 @@ import java.nio.IntBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 
 import com.rawad.phys.client.graphics.Renderer;
+import com.rawad.phys.client.graphics.Texture;
 import com.rawad.phys.client.graphics.VertexBufferObject;
 import com.rawad.phys.client.model.Model;
+import com.rawad.phys.client.model.Vertex;
 import com.rawad.phys.client.renderengine.shaders.TexturedModelShader;
 import com.rawad.phys.math.Matrix4f;
 import com.rawad.phys.math.Vector2f;
@@ -20,12 +23,13 @@ public class TexturedModelRenderer extends Renderer {
 	
 	private TexturedModelShader program;
 	
-	private VertexBufferObject positions;
-	private VertexBufferObject textureCoords;
-	private VertexBufferObject indices;
+	private VertexBufferObject ibo;
+	private VertexBufferObject vbo;
 	
 	private IntBuffer indexBuffer;
-	private FloatBuffer positionBuffer;
+	private FloatBuffer dataBuffer;
+	
+	private Texture texture;
 	
 	private Matrix4f modelMatrix;
 	
@@ -34,30 +38,30 @@ public class TexturedModelRenderer extends Renderer {
 		
 		program = new TexturedModelShader();
 		
-//		int texAttrib = program.getAttributeLocation("texCoord");
-//		program.enableVertexAttribute(texAttrib);
-//		program.pointVertexAttribute(texAttrib, 2, 7 * Float.BYTES, 2 * Float.BYTES);
-		
-		indices = new VertexBufferObject();
-		positions = new VertexBufferObject();
-		textureCoords = new VertexBufferObject();
+		ibo = new VertexBufferObject();
+		vbo = new VertexBufferObject();
 		
 		program.use();
 		
 		vao.bind();
 		
-		indices.bind(GL15.GL_ELEMENT_ARRAY_BUFFER);
-		positions.bind(GL15.GL_ARRAY_BUFFER);
+		ibo.bind(GL15.GL_ELEMENT_ARRAY_BUFFER);
+		vbo.bind(GL15.GL_ARRAY_BUFFER);
+		
+		int stride = Vertex.SIZE * Float.BYTES;
 		
 		int location_position = program.getAttributeLocation("position");
 		program.enableVertexAttribute(location_position);
-		program.pointVertexAttribute(location_position, Vector3f.SIZE, 0, 0);
+		program.pointVertexAttribute(location_position, Vector3f.SIZE, stride, 0);
 		
-		textureCoords.bind(GL15.GL_ARRAY_BUFFER);
+		int location_normal = program.getAttributeLocation("normal");
+		program.enableVertexAttribute(location_normal);
+		program.pointVertexAttribute(location_normal, Vector3f.SIZE, stride, Vector3f.SIZE * Float.BYTES);
 		
-		int location_textureCoords = program.getAttributeLocation("textureCoords");
+		int location_textureCoords = program.getAttributeLocation("vertexTextureCoords");
 		program.enableVertexAttribute(location_textureCoords);
-		program.pointVertexAttribute(location_textureCoords, Vector2f.SIZE, 0, 0);
+		program.pointVertexAttribute(location_textureCoords, Vector2f.SIZE, stride, (Vector3f.SIZE + Vector3f.SIZE) * 
+				Float.BYTES);
 		
 		long window = GLFW.glfwGetCurrentContext();
 		IntBuffer widthBuff = BufferUtils.createIntBuffer(1);
@@ -65,10 +69,7 @@ public class TexturedModelRenderer extends Renderer {
 		
 		GLFW.glfwGetWindowSize(window, widthBuff, heightBuff);
 		
-		int textureUniform = program.getUniformLocation("tex");// Uniform variables.
-		program.setUniform(textureUniform, 0);
-		
-		modelMatrix = new Matrix4f().multiply(Matrix4f.translate(0, 0, -3.5f));
+		modelMatrix = new Matrix4f().multiply(Matrix4f.translate(0, 0, -3.5f));//.multiply(Matrix4f.rotate(0, 0, 1f, 0));
 		int modelUniform = program.getUniformLocation("model");
 		program.setUniform(modelUniform, modelMatrix);
 		
@@ -84,11 +85,15 @@ public class TexturedModelRenderer extends Renderer {
 		int projectionUniform = program.getUniformLocation("projection");
 		program.setUniform(projectionUniform, projection);
 		
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);
+		int texture = program.getUniformLocation("modelTexture");
+		program.setUniform(texture, 0);
+		
 		indexBuffer = BufferUtils.createIntBuffer(1);
-		positionBuffer = BufferUtils.createFloatBuffer(1);
+		dataBuffer = BufferUtils.createFloatBuffer(1);
 		
 		indexBuffer.flip();
-		positionBuffer.flip();
+		dataBuffer.flip();
 		
 	}
 	
@@ -99,19 +104,22 @@ public class TexturedModelRenderer extends Renderer {
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		
 		vao.bind();
-		positions.bind(GL15.GL_ARRAY_BUFFER);
-		indices.bind(GL15.GL_ELEMENT_ARRAY_BUFFER);
+		vbo.bind(GL15.GL_ARRAY_BUFFER);
+		ibo.bind(GL15.GL_ELEMENT_ARRAY_BUFFER);
+		
 		program.use();
 		
-		modelMatrix.multiply(Matrix4f.rotate(1f/5f, 1f, 1f, 0f));
+		GL13.glActiveTexture(texture.getId());
+		texture.bind();
 		
-		int modelUniform = program.getUniformLocation("model");
-		program.setUniform(modelUniform, modelMatrix);
+//		modelMatrix.multiply(Matrix4f.rotate(1f/5f, 0f, 1f, 0f));
 		
-		indices.uploadData(GL15.GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL15.GL_STATIC_DRAW);
+//		int modelUniform = program.getUniformLocation("model");
+//		program.setUniform(modelUniform, modelMatrix);
 		
-		positions.uploadData(GL15.GL_ARRAY_BUFFER, positionBuffer, GL15.GL_STATIC_DRAW);
-		textureCoords.uploadData(GL15.GL_ARRAY_BUFFER, model, usage);
+		ibo.uploadData(GL15.GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL15.GL_STATIC_DRAW);
+		
+		vbo.uploadData(GL15.GL_ARRAY_BUFFER, dataBuffer, GL15.GL_STATIC_DRAW);
 		
 		GL11.glDrawElements(GL11.GL_TRIANGLES, indexBuffer.capacity(), GL11.GL_UNSIGNED_INT, 0);
 		
@@ -119,14 +127,14 @@ public class TexturedModelRenderer extends Renderer {
 		
 	}
 	
-	public void setModel(Model model) {
+	public void setModel(Model model, Texture texture) {
 		
 		if(model != null) {
 			indexBuffer = model.getIndices();
-			
-			positionBuffer = model.getVertices();
-			
+			dataBuffer = model.getData();
 		}
+		
+		this.texture = texture;
 		
 	}
 	
@@ -135,8 +143,9 @@ public class TexturedModelRenderer extends Renderer {
 		super.dispose();
 		
 		program.delete();
-		positions.delete();
-		indices.delete();
+		
+		vbo.delete();
+		ibo.delete();
 		
 	}
 	

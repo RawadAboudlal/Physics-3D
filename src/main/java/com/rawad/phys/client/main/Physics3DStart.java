@@ -5,11 +5,9 @@ import static org.lwjgl.glfw.GLFW.glfwTerminate;
 
 import org.lwjgl.opengl.GL11;
 
-import com.rawad.phys.client.graphics.Texture;
 import com.rawad.phys.client.graphics.Window;
 import com.rawad.phys.client.states.MenuState;
 import com.rawad.phys.client.states.StateManager;
-import com.rawad.phys.loader.Loader;
 
 public class Physics3DStart {
 	
@@ -20,6 +18,7 @@ public class Physics3DStart {
 	// Visualizing Matrices: http://www.matrix44.net/cms/notes/opengl-3d-graphics/coordinate-systems-in-opengl
 	// Detailed explanation of rendering vertices in OpenGL: https://www.opengl.org/wiki/Vertex_Specification
 	// OpenGL, the ultimate guide: https://www.opengl.org/registry/doc/glspec45.core.withchanges.pdf
+	// OpenGL, semi(?)-ultimate guide: https://open.gl
 	
 	/*/ Rendering best practice:
 	
@@ -54,8 +53,6 @@ public class Physics3DStart {
 		
 		sm.setState(MenuState.class);
 		
-		Texture texture = Loader.loadTexture("image");
-		
 		GL11.glClearColor(0.5f, 0.5f, 1f, 1f);
 		
 //		init();
@@ -74,7 +71,6 @@ public class Physics3DStart {
 		
 //		dispose();
 		
-		texture.delete();
 		window.destroy();
 		glfwTerminate();
 		
@@ -204,7 +200,7 @@ public class Physics3DStart {
 		program.delete();
 		
 	}/**/
-
+	
 	/*/
 	// Indexed Quad
 	final int[] indices = {
@@ -213,10 +209,10 @@ public class Physics3DStart {
 	};
 	
 	final float[] vertices = {
-			-0.5f, -0.5f, 0,
-			0.5f, -0.5f, 0,
-			0.5f, 0.5f, 0,
-			-0.5f, 0.5f, 0,
+			-1f, -1f, 0,
+			1f, -1f, 0,
+			1f, 1f, 0,
+			-1f, 1f, 0,
 	};
 	/**/
 	

@@ -115,7 +115,7 @@ public class ObjFileParser extends FileParser {
 		float y = 0f;
 		float z = 0f;
 		
-		if(vertexCoords.length >= 3) {// TODO: Replace with a global "dimension" variable? Or maybe "dimension_three"?
+		if(vertexCoords.length >= Vector3f.SIZE) {
 			x = Util.parseFloat(vertexCoords[INDEX_X]);
 			y = Util.parseFloat(vertexCoords[INDEX_Y]);
 			z = Util.parseFloat(vertexCoords[INDEX_Z]);
@@ -132,7 +132,7 @@ public class ObjFileParser extends FileParser {
 		float x = 0;
 		float y = 0;
 		
-		if(textureCoords.length >= 2) {
+		if(textureCoords.length >= Vector2f.SIZE) {
 			x = Util.parseFloat(textureCoords[INDEX_X]);
 			y = Util.parseFloat(textureCoords[INDEX_Y]);
 		}
@@ -149,9 +149,9 @@ public class ObjFileParser extends FileParser {
 			
 			String[] indices = faces[i].split(REGEX_FACE_DATA);
 			
-			positionIndices.add(Util.parseInt(indices[INDEX_POSITION]));
-			normalIndices.add(Util.parseInt(indices[INDEX_NORMAL]));
-			textureCoordIndices.add(Util.parseInt(indices[INDEX_TEXTURE_COORDS]));
+			positionIndices.add(Util.parseInt(indices[INDEX_POSITION]) - 1);
+			normalIndices.add(Util.parseInt(indices[INDEX_NORMAL]) - 1);
+			textureCoordIndices.add(Util.parseInt(indices[INDEX_TEXTURE_COORDS]) - 1);
 			
 			vertexCount++;
 			
@@ -166,6 +166,8 @@ public class ObjFileParser extends FileParser {
 		ArrayList<Vertex> vertices = new ArrayList<Vertex>(vertexCount);
 		ArrayList<Integer> indices = new ArrayList<Integer>();// Final indices for IBO.
 		
+		int uniqueVertexCount = 0;
+		
 		for(int i = 0; i < vertexCount; i++) {
 			
 			int positionIndex = positionIndices.get(i);
@@ -174,7 +176,10 @@ public class ObjFileParser extends FileParser {
 			
 			Vertex vertex = new Vertex(positionIndex, normalIndex, textureCoordIndex);
 			
-			if(!vertices.contains(vertex)) vertices.set(i, vertex);
+			if(!vertices.contains(vertex)) {
+				vertices.add(vertex);
+				uniqueVertexCount++;
+			}
 			
 			indices.add(vertices.indexOf(vertex));
 			
@@ -182,10 +187,28 @@ public class ObjFileParser extends FileParser {
 		
 		IntBuffer indexBuffer = BufferUtils.createIntBuffer(vertexCount);
 		
-		FloatBuffer data = BufferUtils.createFloatBuffer(vertexCount);
-		// TODO: Multiply by data count in Vertex and make Vertex construct each data set.
+		for(int i: indices) {
+			indexBuffer.put(i);
+		}
 		
-		model = new Model(indexBuffer, null, vertexCount);
+		indexBuffer.flip();
+		
+		FloatBuffer data = BufferUtils.createFloatBuffer(uniqueVertexCount * Vertex.SIZE);
+		
+		for(Vertex vertex: vertices) {
+			
+			int positionIndex = vertex.getPosition();
+			int normalIndex = vertex.getNormal();
+			int textureCoordIndex = vertex.getTextureCoord();
+			
+			data.put(positions.get(positionIndex).getBuffer()).put(normals.get(normalIndex).getBuffer())
+					.put(textureCoords.get(textureCoordIndex).getBuffer());
+			
+		}
+		
+		data.flip();
+		
+		model = new Model(indexBuffer, data, vertexCount);
 		
 	}
 	

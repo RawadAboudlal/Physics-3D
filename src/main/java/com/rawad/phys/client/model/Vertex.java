@@ -1,5 +1,8 @@
 package com.rawad.phys.client.model;
 
+import com.rawad.phys.math.Vector2f;
+import com.rawad.phys.math.Vector3f;
+
 /**
  * Holds indices for each set of data.
  * 
@@ -7,6 +10,8 @@ package com.rawad.phys.client.model;
  *
  */
 public class Vertex {
+	
+	public static final int SIZE = Vector3f.SIZE + Vector3f.SIZE + Vector2f.SIZE;
 	
 	private final int position;
 	private final int normal;
