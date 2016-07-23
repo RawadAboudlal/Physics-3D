@@ -150,8 +150,8 @@ public class ObjFileParser extends FileParser {
 			String[] indices = faces[i].split(REGEX_FACE_DATA);
 			
 			positionIndices.add(Util.parseInt(indices[INDEX_POSITION]) - 1);
-			normalIndices.add(Util.parseInt(indices[INDEX_NORMAL]) - 1);
 			textureCoordIndices.add(Util.parseInt(indices[INDEX_TEXTURE_COORDS]) - 1);
+			normalIndices.add(Util.parseInt(indices[INDEX_NORMAL]) - 1);
 			
 			vertexCount++;
 			
@@ -179,9 +179,16 @@ public class ObjFileParser extends FileParser {
 			if(!vertices.contains(vertex)) {
 				vertices.add(vertex);
 				uniqueVertexCount++;
+			} else {
+//				System.out.println("Vertex referencing: " + (positionIndex + 1) + ", " + (textureCoordIndex + 1) + ", "
+//						+ (normalIndex + 1) + " indices was already present at " + vertices.indexOf(vertex));
 			}
 			
-			indices.add(vertices.indexOf(vertex));
+			int vertexIndex = vertices.indexOf(vertex);
+			
+			System.out.println("Added vertex index: " + vertexIndex + ", unique vertex count: " + uniqueVertexCount);
+			
+			indices.add(vertexIndex);
 			
 		}
 		
@@ -201,8 +208,15 @@ public class ObjFileParser extends FileParser {
 			int normalIndex = vertex.getNormal();
 			int textureCoordIndex = vertex.getTextureCoord();
 			
-			data.put(positions.get(positionIndex).getBuffer()).put(normals.get(normalIndex).getBuffer())
-					.put(textureCoords.get(textureCoordIndex).getBuffer());
+			Vector3f position = positions.get(positionIndex);
+			Vector3f normal = normals.get(normalIndex);
+			Vector2f textureCoord = textureCoords.get(textureCoordIndex);
+			
+			System.out.println("Put: position (" + position.x + ", " + position.y + ", " + position.z + "), normal: ("
+					+ normal.x + ", " + normal.y + ", " + normal.z + "), textureCoord (" + textureCoord.x + ", "
+							+ textureCoord.y + ").");
+			
+			data.put(position.getBuffer()).put(normal.getBuffer()).put(textureCoord.getBuffer());
 			
 		}
 		

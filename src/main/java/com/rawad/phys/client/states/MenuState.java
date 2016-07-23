@@ -23,6 +23,9 @@ public class MenuState extends State {
 		
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.rawad.phys.client.states.State#onActive()
+	 */
 	@Override
 	public void onActive() {
 		
@@ -30,7 +33,7 @@ public class MenuState extends State {
 		
 		texture = Loader.loadTexture("unknown");
 		
-		masterRenderer.getRenderers().get(TexturedModelRenderer.class).setModel(Loader.loadModel(objFileParser, "quad"), 
+		masterRenderer.getRenderers().get(TexturedModelRenderer.class).setModel(Loader.loadModel(objFileParser, "cube"), 
 				texture);
 		
 	}

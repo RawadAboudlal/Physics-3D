@@ -8,6 +8,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
+import org.lwjgl.opengl.GL20;
 
 import com.rawad.phys.client.graphics.Renderer;
 import com.rawad.phys.client.graphics.Texture;
@@ -33,6 +34,8 @@ public class TexturedModelRenderer extends Renderer {
 	
 	private Matrix4f modelMatrix;
 	
+	private int vertexCount;
+	
 	public TexturedModelRenderer() {
 		super();
 		
@@ -52,7 +55,7 @@ public class TexturedModelRenderer extends Renderer {
 		
 		int location_position = program.getAttributeLocation("position");
 		program.enableVertexAttribute(location_position);
-		program.pointVertexAttribute(location_position, Vector3f.SIZE, stride, 0);
+		GL20.glVertexAttribPointer(location_position, Vector3f.SIZE, GL11.GL_FLOAT, false, stride, 0);
 		
 		int location_normal = program.getAttributeLocation("normal");
 		program.enableVertexAttribute(location_normal);
@@ -95,6 +98,8 @@ public class TexturedModelRenderer extends Renderer {
 		indexBuffer.flip();
 		dataBuffer.flip();
 		
+		vertexCount = 0;
+		
 	}
 	
 	@Override
@@ -104,24 +109,21 @@ public class TexturedModelRenderer extends Renderer {
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		
 		vao.bind();
-		vbo.bind(GL15.GL_ARRAY_BUFFER);
 		ibo.bind(GL15.GL_ELEMENT_ARRAY_BUFFER);
+		vbo.bind(GL15.GL_ARRAY_BUFFER);
 		
 		program.use();
 		
-		GL13.glActiveTexture(texture.getId());
 		texture.bind();
 		
-//		modelMatrix.multiply(Matrix4f.rotate(1f/5f, 0f, 1f, 0f));
-		
-//		int modelUniform = program.getUniformLocation("model");
-//		program.setUniform(modelUniform, modelMatrix);
+		program.setUniform(program.getUniformLocation("model"), modelMatrix.multiply(Matrix4f.rotate(1f/5f, 1f, 0f, 0f)));
 		
 		ibo.uploadData(GL15.GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL15.GL_STATIC_DRAW);
-		
 		vbo.uploadData(GL15.GL_ARRAY_BUFFER, dataBuffer, GL15.GL_STATIC_DRAW);
 		
-		GL11.glDrawElements(GL11.GL_TRIANGLES, indexBuffer.capacity(), GL11.GL_UNSIGNED_INT, 0);
+//		GL11.glDrawElements(GL11.GL_TRIANGLES, vertexCount, GL11.GL_UNSIGNED_INT, 0);
+		GL11.glDrawElements(GL11.GL_LINE_STRIP, vertexCount, GL11.GL_UNSIGNED_INT, 0);
+//		GL11.glDrawElements(GL11.GL_LINES, vertexCount, GL11.GL_UNSIGNED_INT, 0);
 		
 		GL11.glDisable(GL11.GL_CULL_FACE);
 		
@@ -132,6 +134,7 @@ public class TexturedModelRenderer extends Renderer {
 		if(model != null) {
 			indexBuffer = model.getIndices();
 			dataBuffer = model.getData();
+			vertexCount = model.getVertexCount();
 		}
 		
 		this.texture = texture;
