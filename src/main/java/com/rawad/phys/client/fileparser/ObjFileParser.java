@@ -179,14 +179,9 @@ public class ObjFileParser extends FileParser {
 			if(!vertices.contains(vertex)) {
 				vertices.add(vertex);
 				uniqueVertexCount++;
-			} else {
-//				System.out.println("Vertex referencing: " + (positionIndex + 1) + ", " + (textureCoordIndex + 1) + ", "
-//						+ (normalIndex + 1) + " indices was already present at " + vertices.indexOf(vertex));
 			}
 			
 			int vertexIndex = vertices.indexOf(vertex);
-			
-			System.out.println("Added vertex index: " + vertexIndex + ", unique vertex count: " + uniqueVertexCount);
 			
 			indices.add(vertexIndex);
 			
@@ -211,10 +206,6 @@ public class ObjFileParser extends FileParser {
 			Vector3f position = positions.get(positionIndex);
 			Vector3f normal = normals.get(normalIndex);
 			Vector2f textureCoord = textureCoords.get(textureCoordIndex);
-			
-			System.out.println("Put: position (" + position.x + ", " + position.y + ", " + position.z + "), normal: ("
-					+ normal.x + ", " + normal.y + ", " + normal.z + "), textureCoord (" + textureCoord.x + ", "
-							+ textureCoord.y + ").");
 			
 			data.put(position.getBuffer()).put(normal.getBuffer()).put(textureCoord.getBuffer());
 			

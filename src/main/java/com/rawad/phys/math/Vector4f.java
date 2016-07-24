@@ -39,16 +39,6 @@ public class Vector4f {
     public float w;
 
     /**
-     * Creates a default 4-tuple vector with all values set to 0.
-     */
-    public Vector4f() {
-        this.x = 0f;
-        this.y = 0f;
-        this.z = 0f;
-        this.w = 0f;
-    }
-
-    /**
      * Creates a 4-tuple vector with specified values.
      *
      * @param x x value
@@ -62,7 +52,14 @@ public class Vector4f {
         this.z = z;
         this.w = w;
     }
-
+    
+    /**
+     * Creates a default 4-tuple vector with all values set to 0.
+     */
+    public Vector4f() {
+    	this(0f, 0f, 0f, 0f);
+    }
+    
     /**
      * Calculates the squared length of the vector.
      *

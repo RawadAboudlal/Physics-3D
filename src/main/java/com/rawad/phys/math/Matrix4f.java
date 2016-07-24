@@ -24,11 +24,12 @@
 package com.rawad.phys.math;
 
 import java.nio.FloatBuffer;
-
 import org.lwjgl.BufferUtils;
 
 /**
  * This class represents a 4x4-Matrix. GLSL equivalent to mat4.
+ * 
+ * Note how creating a new object each time keeps this as the original, avoiding any rounding problems.
  *
  * @author Heiko Brumme
  */
@@ -80,32 +81,7 @@ public class Matrix4f {
         m23 = col4.z;
         m33 = col4.w;
     }
-    
-    public Matrix4f(Matrix4f other) {
-    	super();
-    	
-        other.m00 = this.m00;
-        other.m10 = this.m10;
-        other.m20 = this.m20;
-        other.m30 = this.m30;
-        
-        other.m01 = this.m01;
-        other.m11 = this.m11;
-        other.m21 = this.m21;
-        other.m31 = this.m31;
-        
-        other.m02 = this.m02;
-        other.m12 = this.m12;
-        other.m22 = this.m22;
-        other.m32 = this.m32;
-        
-        other.m03 = this.m03;
-        other.m13 = this.m13;
-        other.m23 = this.m23;
-        other.m33 = this.m33;
-        
-    }
-    
+
     /**
      * Sets this matrix to the identity matrix.
      */
@@ -137,28 +113,29 @@ public class Matrix4f {
      * @return Sum of this + other
      */
     public Matrix4f add(Matrix4f other) {
-        
-        this.m00 = this.m00 + other.m00;
-        this.m10 = this.m10 + other.m10;
-        this.m20 = this.m20 + other.m20;
-        this.m30 = this.m30 + other.m30;
-        
-        this.m01 = this.m01 + other.m01;
-        this.m11 = this.m11 + other.m11;
-        this.m21 = this.m21 + other.m21;
-        this.m31 = this.m31 + other.m31;
-        
-        this.m02 = this.m02 + other.m02;
-        this.m12 = this.m12 + other.m12;
-        this.m22 = this.m22 + other.m22;
-        this.m32 = this.m32 + other.m32;
+        Matrix4f result = new Matrix4f();
 
-        this.m03 = this.m03 + other.m03;
-        this.m13 = this.m13 + other.m13;
-        this.m23 = this.m23 + other.m23;
-        this.m33 = this.m33 + other.m33;
-        
-        return this;
+        result.m00 = this.m00 + other.m00;
+        result.m10 = this.m10 + other.m10;
+        result.m20 = this.m20 + other.m20;
+        result.m30 = this.m30 + other.m30;
+
+        result.m01 = this.m01 + other.m01;
+        result.m11 = this.m11 + other.m11;
+        result.m21 = this.m21 + other.m21;
+        result.m31 = this.m31 + other.m31;
+
+        result.m02 = this.m02 + other.m02;
+        result.m12 = this.m12 + other.m12;
+        result.m22 = this.m22 + other.m22;
+        result.m32 = this.m32 + other.m32;
+
+        result.m03 = this.m03 + other.m03;
+        result.m13 = this.m13 + other.m13;
+        result.m23 = this.m23 + other.m23;
+        result.m33 = this.m33 + other.m33;
+
+        return result;
     }
 
     /**
@@ -189,28 +166,29 @@ public class Matrix4f {
      * @return Scalar product of this * scalar
      */
     public Matrix4f multiply(float scalar) {
-        
-        this.m00 = this.m00 * scalar;
-        this.m10 = this.m10 * scalar;
-        this.m20 = this.m20 * scalar;
-        this.m30 = this.m30 * scalar;
-        
-        this.m01 = this.m01 * scalar;
-        this.m11 = this.m11 * scalar;
-        this.m21 = this.m21 * scalar;
-        this.m31 = this.m31 * scalar;
-        
-        this.m02 = this.m02 * scalar;
-        this.m12 = this.m12 * scalar;
-        this.m22 = this.m22 * scalar;
-        this.m32 = this.m32 * scalar;
-        
-        this.m03 = this.m03 * scalar;
-        this.m13 = this.m13 * scalar;
-        this.m23 = this.m23 * scalar;
-        this.m33 = this.m33 * scalar;
-        
-        return this;
+        Matrix4f result = new Matrix4f();
+
+        result.m00 = this.m00 * scalar;
+        result.m10 = this.m10 * scalar;
+        result.m20 = this.m20 * scalar;
+        result.m30 = this.m30 * scalar;
+
+        result.m01 = this.m01 * scalar;
+        result.m11 = this.m11 * scalar;
+        result.m21 = this.m21 * scalar;
+        result.m31 = this.m31 * scalar;
+
+        result.m02 = this.m02 * scalar;
+        result.m12 = this.m12 * scalar;
+        result.m22 = this.m22 * scalar;
+        result.m32 = this.m32 * scalar;
+
+        result.m03 = this.m03 * scalar;
+        result.m13 = this.m13 * scalar;
+        result.m23 = this.m23 * scalar;
+        result.m33 = this.m33 * scalar;
+
+        return result;
     }
 
     /**
@@ -237,28 +215,29 @@ public class Matrix4f {
      * @return Matrix product of this * other
      */
     public Matrix4f multiply(Matrix4f other) {
+        Matrix4f result = new Matrix4f();
         
-        this.m00 = this.m00 * other.m00 + this.m01 * other.m10 + this.m02 * other.m20 + this.m03 * other.m30;
-        this.m10 = this.m10 * other.m00 + this.m11 * other.m10 + this.m12 * other.m20 + this.m13 * other.m30;
-        this.m20 = this.m20 * other.m00 + this.m21 * other.m10 + this.m22 * other.m20 + this.m23 * other.m30;
-        this.m30 = this.m30 * other.m00 + this.m31 * other.m10 + this.m32 * other.m20 + this.m33 * other.m30;
+        result.m00 = this.m00 * other.m00 + this.m01 * other.m10 + this.m02 * other.m20 + this.m03 * other.m30;
+        result.m10 = this.m10 * other.m00 + this.m11 * other.m10 + this.m12 * other.m20 + this.m13 * other.m30;
+        result.m20 = this.m20 * other.m00 + this.m21 * other.m10 + this.m22 * other.m20 + this.m23 * other.m30;
+        result.m30 = this.m30 * other.m00 + this.m31 * other.m10 + this.m32 * other.m20 + this.m33 * other.m30;
         
-        this.m01 = this.m00 * other.m01 + this.m01 * other.m11 + this.m02 * other.m21 + this.m03 * other.m31;
-        this.m11 = this.m10 * other.m01 + this.m11 * other.m11 + this.m12 * other.m21 + this.m13 * other.m31;
-        this.m21 = this.m20 * other.m01 + this.m21 * other.m11 + this.m22 * other.m21 + this.m23 * other.m31;
-        this.m31 = this.m30 * other.m01 + this.m31 * other.m11 + this.m32 * other.m21 + this.m33 * other.m31;
+        result.m01 = this.m00 * other.m01 + this.m01 * other.m11 + this.m02 * other.m21 + this.m03 * other.m31;
+        result.m11 = this.m10 * other.m01 + this.m11 * other.m11 + this.m12 * other.m21 + this.m13 * other.m31;
+        result.m21 = this.m20 * other.m01 + this.m21 * other.m11 + this.m22 * other.m21 + this.m23 * other.m31;
+        result.m31 = this.m30 * other.m01 + this.m31 * other.m11 + this.m32 * other.m21 + this.m33 * other.m31;
         
-        this.m02 = this.m00 * other.m02 + this.m01 * other.m12 + this.m02 * other.m22 + this.m03 * other.m32;
-        this.m12 = this.m10 * other.m02 + this.m11 * other.m12 + this.m12 * other.m22 + this.m13 * other.m32;
-        this.m22 = this.m20 * other.m02 + this.m21 * other.m12 + this.m22 * other.m22 + this.m23 * other.m32;
-        this.m32 = this.m30 * other.m02 + this.m31 * other.m12 + this.m32 * other.m22 + this.m33 * other.m32;
+        result.m02 = this.m00 * other.m02 + this.m01 * other.m12 + this.m02 * other.m22 + this.m03 * other.m32;
+        result.m12 = this.m10 * other.m02 + this.m11 * other.m12 + this.m12 * other.m22 + this.m13 * other.m32;
+        result.m22 = this.m20 * other.m02 + this.m21 * other.m12 + this.m22 * other.m22 + this.m23 * other.m32;
+        result.m32 = this.m30 * other.m02 + this.m31 * other.m12 + this.m32 * other.m22 + this.m33 * other.m32;
         
-        this.m03 = this.m00 * other.m03 + this.m01 * other.m13 + this.m02 * other.m23 + this.m03 * other.m33;
-        this.m13 = this.m10 * other.m03 + this.m11 * other.m13 + this.m12 * other.m23 + this.m13 * other.m33;
-        this.m23 = this.m20 * other.m03 + this.m21 * other.m13 + this.m22 * other.m23 + this.m23 * other.m33;
-        this.m33 = this.m30 * other.m03 + this.m31 * other.m13 + this.m32 * other.m23 + this.m33 * other.m33;
+        result.m03 = this.m00 * other.m03 + this.m01 * other.m13 + this.m02 * other.m23 + this.m03 * other.m33;
+        result.m13 = this.m10 * other.m03 + this.m11 * other.m13 + this.m12 * other.m23 + this.m13 * other.m33;
+        result.m23 = this.m20 * other.m03 + this.m21 * other.m13 + this.m22 * other.m23 + this.m23 * other.m33;
+        result.m33 = this.m30 * other.m03 + this.m31 * other.m13 + this.m32 * other.m23 + this.m33 * other.m33;
         
-        return this;
+        return result;
     }
     
     /**
@@ -267,29 +246,29 @@ public class Matrix4f {
      * @return Transposed matrix
      */
     public Matrix4f transpose() {
-        Matrix4f holder = new Matrix4f(this);
+        Matrix4f result = new Matrix4f();
         
-        this.m00 = holder.m00;
-        this.m10 = holder.m01;
-        this.m20 = holder.m02;
-        this.m30 = holder.m03;
+        result.m00 = this.m00;
+        result.m10 = this.m01;
+        result.m20 = this.m02;
+        result.m30 = this.m03;
         
-        this.m01 = holder.m10;
-        this.m11 = holder.m11;
-        this.m21 = holder.m12;
-        this.m31 = holder.m13;
+        result.m01 = this.m10;
+        result.m11 = this.m11;
+        result.m21 = this.m12;
+        result.m31 = this.m13;
         
-        this.m02 = holder.m20;
-        this.m12 = holder.m21;
-        this.m22 = holder.m22;
-        this.m32 = holder.m23;
+        result.m02 = this.m20;
+        result.m12 = this.m21;
+        result.m22 = this.m22;
+        result.m32 = this.m23;
         
-        this.m03 = holder.m30;
-        this.m13 = holder.m31;
-        this.m23 = holder.m32;
-        this.m33 = holder.m33;
+        result.m03 = this.m30;
+        result.m13 = this.m31;
+        result.m23 = this.m32;
+        result.m33 = this.m33;
         
-        return this;
+        return result;
     }
     
     /**

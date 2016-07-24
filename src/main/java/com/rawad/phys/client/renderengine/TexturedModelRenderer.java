@@ -36,6 +36,8 @@ public class TexturedModelRenderer extends Renderer {
 	
 	private int vertexCount;
 	
+	private float angle;
+	
 	public TexturedModelRenderer() {
 		super();
 		
@@ -116,14 +118,14 @@ public class TexturedModelRenderer extends Renderer {
 		
 		texture.bind();
 		
-		program.setUniform(program.getUniformLocation("model"), modelMatrix.multiply(Matrix4f.rotate(1f/5f, 1f, 0f, 0f)));
+		angle += 1f/5f % 360;
+		
+		program.setUniform(program.getUniformLocation("model"), modelMatrix.multiply(Matrix4f.rotate(angle, 0f, 1f, 1f)));
 		
 		ibo.uploadData(GL15.GL_ELEMENT_ARRAY_BUFFER, indexBuffer, GL15.GL_STATIC_DRAW);
 		vbo.uploadData(GL15.GL_ARRAY_BUFFER, dataBuffer, GL15.GL_STATIC_DRAW);
 		
-//		GL11.glDrawElements(GL11.GL_TRIANGLES, vertexCount, GL11.GL_UNSIGNED_INT, 0);
-		GL11.glDrawElements(GL11.GL_LINE_STRIP, vertexCount, GL11.GL_UNSIGNED_INT, 0);
-//		GL11.glDrawElements(GL11.GL_LINES, vertexCount, GL11.GL_UNSIGNED_INT, 0);
+		GL11.glDrawElements(GL11.GL_TRIANGLES, vertexCount, GL11.GL_UNSIGNED_INT, 0);
 		
 		GL11.glDisable(GL11.GL_CULL_FACE);
 		

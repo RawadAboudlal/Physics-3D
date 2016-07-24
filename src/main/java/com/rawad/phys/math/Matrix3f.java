@@ -52,6 +52,8 @@ public class Matrix3f {
      * @param col3 Vector with values of the third column
      */
     public Matrix3f(Vector3f col1, Vector3f col2, Vector3f col3) {
+    	super();
+    	
         m00 = col1.x;
         m10 = col1.y;
         m20 = col1.z;
