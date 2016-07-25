@@ -3,6 +3,7 @@ package com.rawad.phys.client.main;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 
+import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 
 import com.rawad.phys.client.graphics.Window;
@@ -47,7 +48,7 @@ public class Physics3DStart {
 		
 		Window window = new Window(WIDTH, HEIGHT, TITLE, false);
 		
-		StateManager sm = new StateManager();
+		StateManager sm = new StateManager(window);
 		
 		sm.addState(new MenuState());
 		

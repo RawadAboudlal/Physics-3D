@@ -94,4 +94,8 @@ public class Window {
 		return vsync;
 	}
 	
+	public long getId() {
+		return id;
+	}
+	
 }

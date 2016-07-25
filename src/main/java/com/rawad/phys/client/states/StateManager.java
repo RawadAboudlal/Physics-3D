@@ -1,5 +1,6 @@
 package com.rawad.phys.client.states;
 
+import com.rawad.phys.client.graphics.Window;
 import com.rawad.phys.util.ClassMap;
 
 public class StateManager extends State {
@@ -8,8 +9,15 @@ public class StateManager extends State {
 	
 	private State currentState;
 	
-	public StateManager() {
+	private Window window;
+	
+	public StateManager(Window window) {
+		super();
+		
 		states = new ClassMap<State>();
+		
+		this.window = window;
+		
 	}
 	
 	public void setState(Class<? extends State> newStateId) {
@@ -42,5 +50,9 @@ public class StateManager extends State {
 	
 	@Override
 	public void onDeactive() {}
+	
+	public Window getWindow() {
+		return window;
+	}
 	
 }

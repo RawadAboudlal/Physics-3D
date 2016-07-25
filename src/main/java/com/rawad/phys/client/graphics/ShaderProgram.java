@@ -43,6 +43,11 @@ public abstract class ShaderProgram {
 		
 	}
 	
+	/**
+	 * {@code VertexArrayObject} and any other {@code Buffer} objects should be bound before calling this.
+	 */
+	public abstract void initVertexAttributes();
+	
 	public void attachShader(int shader) {
 		GL20.glAttachShader(id, shader);
 	}
@@ -78,35 +83,42 @@ public abstract class ShaderProgram {
 		GL20.glVertexAttribPointer(location, size, GL11.GL_FLOAT, false, stride, offset);
 	}
 	
-	public int getUniformLocation(CharSequence name) {
+	protected int getUniformLocation(CharSequence name) {
 		return GL20.glGetUniformLocation(id, name);
 	}
 	
-	public void setUniform(int location, int value) {
-		GL20.glUniform1i(id, value);
+	public void setUniform(CharSequence name, int value) {
+		int location = getUniformLocation(name);
+		GL20.glUniform1i(location, value);
 	}
 	
-	public void setUniform(int location, Vector2f value) {
+	public void setUniform(CharSequence name, Vector2f value) {
+		int location = getUniformLocation(name);
 		GL20.glUniform2fv(location, value.getBuffer());
 	}
 	
-	public void setUniform(int location, Vector3f value) {
+	public void setUniform(CharSequence name, Vector3f value) {
+		int location = getUniformLocation(name);
 		GL20.glUniform3fv(location, value.getBuffer());
 	}
 	
-	public void setUniform(int location, Vector4f value) {
+	public void setUniform(CharSequence name, Vector4f value) {
+		int location = getUniformLocation(name);
 		GL20.glUniform4fv(location, value.getBuffer());
 	}
 	
-	public void setUniform(int location, Matrix2f value) {
+	public void setUniform(CharSequence name, Matrix2f value) {
+		int location = getUniformLocation(name);
 		GL20.glUniformMatrix2fv(location, false, value.getBuffer());
 	}
 	
-	public void setUniform(int location, Matrix3f value) {
+	public void setUniform(CharSequence name, Matrix3f value) {
+		int location = getUniformLocation(name);
 		GL20.glUniformMatrix3fv(location, false, value.getBuffer());
 	}
 	
-	public void setUniform(int location, Matrix4f value) {
+	public void setUniform(CharSequence name, Matrix4f value) {
+		int location = getUniformLocation(name);
 		GL20.glUniformMatrix4fv(location, false, value.getBuffer());
 	}
 	
