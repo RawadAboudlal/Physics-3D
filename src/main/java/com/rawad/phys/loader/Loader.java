@@ -4,11 +4,9 @@ import static org.lwjgl.opengl.GL11.GL_TRUE;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -74,7 +72,7 @@ public class Loader {
 	}
 	
 	public static String getFullPath(String... pathParts) {
-		return Util.getStringFromLines(pathParts, File.separator, false);
+		return Util.getStringFromLines(File.separator, false, pathParts);
 	}
 	
 	public static void addTask(Runnable runnableToLoad) {

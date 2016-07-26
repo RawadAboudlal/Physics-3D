@@ -24,7 +24,7 @@ public final class Util {
 		
 	}
 	
-	public static String getStringFromLines(String[] lines, String regex, boolean addRegexToEnd) {
+	public static String getStringFromLines(String regex, boolean addRegexToEnd, String... lines) {
 		
 		String re = "";
 		

@@ -132,7 +132,9 @@ public abstract class ShaderProgram {
 	
 	private void checkStatus() {
 		int status = GL20.glGetProgrami(id, GL20.GL_LINK_STATUS);
-		if(status != GL11.GL_TRUE) throw new RuntimeException(GL20.glGetProgramInfoLog(id));
+		if(status != GL11.GL_TRUE)
+			throw new RuntimeException(Util.getStringFromLines(Util.NL, false, GL20.glGetShaderInfoLog(vertexShader), 
+					GL20.glGetShaderInfoLog(fragmentShader)));
 	}
 	
 	public final int getId() {

@@ -12,12 +12,18 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLCapabilities;
 
 public class Window {
 	
 	private final long id;
+	
+	private GLFWWindowSizeCallback sizeCallback;
+	
+	private int width;
+	private int height;
 	
 	private boolean vsync;
 	
@@ -52,10 +58,19 @@ public class Window {
 			throw new RuntimeException("Failed to create GLFW window.");
 		}
 		
+		sizeCallback = new GLFWWindowSizeCallback() {
+			@Override
+			public void invoke(long window, int width, int height) {
+				Window.this.width = width;
+				Window.this.height = height;
+			}
+		};
+		GLFW.glfwSetWindowSizeCallback(id, sizeCallback);
+		
 		GLFWVidMode vidMode = GLFW.glfwGetVideoMode(GLFW.glfwGetPrimaryMonitor());
 		GLFW.glfwSetWindowPos(id, (vidMode.width() - width) / 2, (vidMode.height() - height) / 2);
 		
-		glfwMakeContextCurrent(id);;
+		glfwMakeContextCurrent(id);
 		GL.createCapabilities();
 		
 		setVSync(vsync);
@@ -92,6 +107,14 @@ public class Window {
 	
 	public boolean isVSyncEnabled() {
 		return vsync;
+	}
+	
+	public int getWidth() {
+		return width;
+	}
+	
+	public int getHeight() {
+		return height;
 	}
 	
 	public long getId() {
