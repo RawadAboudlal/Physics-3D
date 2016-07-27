@@ -55,21 +55,15 @@ public class Physics3DStart {
 		
 		GL11.glClearColor(0.5f, 0.5f, 1f, 1f);
 		
-//		init();
-		
 		while(!window.isClosing()) {
 			
 			sm.update();
 			
 			sm.render();
 			
-//			render();
-			
 			window.update();
 			
 		}
-		
-//		dispose();
 		
 		window.destroy();
 		glfwTerminate();

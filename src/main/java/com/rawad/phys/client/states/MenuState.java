@@ -8,8 +8,9 @@ import com.rawad.phys.client.fileparser.ObjFileParser;
 import com.rawad.phys.client.graphics.Texture;
 import com.rawad.phys.client.renderengine.TexturedModelRenderer;
 import com.rawad.phys.loader.Loader;
+import com.rawad.phys.math.Matrix4f;
 import com.rawad.phys.math.Vector2f;
-import com.rawad.phys.math.Vector3f;
+import com.rawad.phys.math.Vector4f;
 
 public class MenuState extends State {
 	
@@ -50,8 +51,8 @@ public class MenuState extends State {
 			public void invoke(long window, double posX, double posY) {
 				
 				if(startedDragging) {
-					startX = posX;
-					startY = posY;
+					startX = posX + 1;
+					startY = posY + 1;
 					
 					prevX = posX;
 					prevY = posY;
@@ -72,10 +73,10 @@ public class MenuState extends State {
 					
 					Vector2f rotateDirection = new Vector2f(distanceX, distanceY);
 					
-					Vector3f rotationAxis = new Vector3f(-dy, dx, 0f);// or (dy, -dx). Perpendicular to rotateDirection.
+					Vector4f rotationAxis = new Vector4f(-dy, dx, 0f, 0f);// Perpendicular to rotateDirection.
 					
-					tmRenderer.setRotationAxis(rotationAxis);
-					tmRenderer.setAngle(rotateDirection.length() + tmRenderer.getAngle());
+					tmRenderer.setModelMatrix(tmRenderer.getModelMatrix().multiply(Matrix4f.rotate(rotateDirection
+							.length() / 10f, rotationAxis.x, rotationAxis.y, rotationAxis.z)));
 					
 				}
 				

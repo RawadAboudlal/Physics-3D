@@ -14,7 +14,6 @@ import com.rawad.phys.client.graphics.VertexBufferObject;
 import com.rawad.phys.client.model.Model;
 import com.rawad.phys.client.renderengine.shaders.TexturedModelShader;
 import com.rawad.phys.math.Matrix4f;
-import com.rawad.phys.math.Vector3f;
 
 public class TexturedModelRenderer extends Renderer {
 	
@@ -27,9 +26,6 @@ public class TexturedModelRenderer extends Renderer {
 	private Texture texture;
 	
 	private Matrix4f modelMatrix;
-	
-	private Vector3f rotationAxis;
-	private float angle;
 	
 	public TexturedModelRenderer() {
 		super();
@@ -67,11 +63,8 @@ public class TexturedModelRenderer extends Renderer {
 		Matrix4f projection = Matrix4f.perspective(90, width / height, 0.1f, 100f);
 		program.setUniform("projection", projection);
 		
-		GL13.glActiveTexture(GL13.GL_TEXTURE0);// Note: GL_TEXTURE# -> # has to equalvalue given to setUniform
+		GL13.glActiveTexture(GL13.GL_TEXTURE0);// Note: GL_TEXTURE# -> # has to equal value given to setUniform
 		program.setUniform("modelTexture", 0);
-		
-		rotationAxis = new Vector3f(0f, 0f, 0f);
-		angle = 0f;
 		
 	}
 	
@@ -89,11 +82,7 @@ public class TexturedModelRenderer extends Renderer {
 		
 		texture.bind();
 		
-//		angle += 1f/5f % 360;
-		
-		if(angle != 0)
-		program.setUniform("model", modelMatrix.multiply(Matrix4f.rotate(angle, rotationAxis.x, rotationAxis.y, 
-				rotationAxis.z)));
+		program.setUniform("model", modelMatrix);
 		
 		if(model != null) {
 			ibo.uploadData(GL15.GL_ELEMENT_ARRAY_BUFFER, model.getIndices(), GL15.GL_STATIC_DRAW);
@@ -113,16 +102,12 @@ public class TexturedModelRenderer extends Renderer {
 		
 	}
 	
-	public void setRotationAxis(Vector3f rotationAxis) {
-		this.rotationAxis = rotationAxis;
+	public void setModelMatrix(Matrix4f modelMatrix) {
+		this.modelMatrix = modelMatrix;
 	}
 	
-	public void setAngle(float angle) {
-		this.angle = angle;
-	}
-	
-	public float getAngle() {
-		return angle;
+	public Matrix4f getModelMatrix() {
+		return modelMatrix;
 	}
 	
 	@Override
