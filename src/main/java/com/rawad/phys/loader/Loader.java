@@ -17,6 +17,8 @@ import org.lwjgl.stb.STBImage;
 import com.rawad.phys.client.fileparser.ObjFileParser;
 import com.rawad.phys.client.graphics.Texture;
 import com.rawad.phys.client.model.Model;
+import com.rawad.phys.entity.Blueprint;
+import com.rawad.phys.fileparser.xml.EntityFileParser;
 import com.rawad.phys.util.Util;
 
 public class Loader {
@@ -28,9 +30,11 @@ public class Loader {
 	});
 	
 	private static final String FOLDER_RES = "res";
+	private static final String FOLDER_ENTITY_BLUEPRINTS = "entity";
 	private static final String FOLDER_MODELS = "models";
 	private static final String FOLDER_TEXTURES = "textures";
 	
+	private static final String EXTENSION_ENTITY = ".xml";
 	private static final String EXTENSION_MODEL = ".obj";
 	private static final String EXTENSION_TEXTURE = ".png";
 	
@@ -46,7 +50,7 @@ public class Loader {
 		
 		ByteBuffer image = STBImage.stbi_load(path, w, h, comp, STBImage.STBI_rgb_alpha);
 		
-		if(image == null) throw new RuntimeException("Failed to load texture file ("+ path +")." + System.lineSeparator()
+		if(image == null) throw new RuntimeException("Failed to load texture file ("+ path +")." + Util.NL
 				+ STBImage.stbi_failure_reason());
 		
 		return new Texture(w.get(), h.get(), image);
@@ -68,6 +72,28 @@ public class Loader {
 		}
 		
 		return parser.getModel();
+		
+	}
+	
+	public static Blueprint loadEntityBlueprint(EntityFileParser parser, String name, String... contextPaths) {
+		
+		String path = Loader.getFullPath(FOLDER_RES, FOLDER_ENTITY_BLUEPRINTS, name) + EXTENSION_ENTITY;
+		
+		parser.setContextPaths(contextPaths);
+		
+		try {
+			
+			BufferedReader reader = new BufferedReader(new FileReader(path));
+			
+			parser.parseFile(reader);
+			
+		} catch(IOException ex) {
+			ex.printStackTrace();
+		}
+		
+		Blueprint blueprint = new Blueprint(parser.getEntity());
+		
+		return blueprint;
 		
 	}
 	

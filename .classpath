@@ -9,5 +9,6 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Physics-3D/lib/lwjgl/native"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry combineaccessrules="false" kind="src" path="/Game Helpers"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
