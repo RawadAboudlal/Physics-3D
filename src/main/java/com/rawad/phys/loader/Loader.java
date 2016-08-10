@@ -8,26 +8,19 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.stb.STBImage;
 
-import com.rawad.phys.client.fileparser.ObjFileParser;
+import com.rawad.gamehelpers.fileparser.xml.EntityFileParser;
+import com.rawad.gamehelpers.game.entity.Blueprint;
+import com.rawad.gamehelpers.resources.ALoader;
+import com.rawad.gamehelpers.utils.Util;
 import com.rawad.phys.client.graphics.Texture;
 import com.rawad.phys.client.model.Model;
-import com.rawad.phys.entity.Blueprint;
-import com.rawad.phys.fileparser.xml.EntityFileParser;
-import com.rawad.phys.util.Util;
+import com.rawad.phys.fileparser.ObjFileParser;
 
-public class Loader {
-	
-	private static final Executor loadingExecutor = Executors.newSingleThreadExecutor((Runnable r) -> {
-		Thread t = new Thread(r, "Loading Thread");
-		t.setDaemon(true);
-		return t;
-	});
+public class Loader extends ALoader {
 	
 	private static final String FOLDER_RES = "res";
 	private static final String FOLDER_ENTITY_BLUEPRINTS = "entity";
@@ -38,7 +31,11 @@ public class Loader {
 	private static final String EXTENSION_MODEL = ".obj";
 	private static final String EXTENSION_TEXTURE = ".png";
 	
-	public static Texture loadTexture(String name) {
+	public Loader() {
+		super(FOLDER_RES);
+	}
+	
+	public Texture loadTexture(String name) {
 		
 		IntBuffer w = BufferUtils.createIntBuffer(1);
 		IntBuffer h = BufferUtils.createIntBuffer(1);
@@ -46,7 +43,7 @@ public class Loader {
 		
 		STBImage.stbi_set_flip_vertically_on_load(GL_TRUE);
 		
-		String path = Loader.getFullPath(FOLDER_RES, FOLDER_TEXTURES, name) + EXTENSION_TEXTURE;
+		String path = getFilePathFromParts(EXTENSION_TEXTURE, FOLDER_TEXTURES, name);
 		
 		ByteBuffer image = STBImage.stbi_load(path, w, h, comp, STBImage.STBI_rgb_alpha);
 		
@@ -57,9 +54,9 @@ public class Loader {
 		
 	}
 	
-	public static Model loadModel(ObjFileParser parser, String name) {
+	public Model loadModel(ObjFileParser parser, String name) {
 		
-		String path = Loader.getFullPath(FOLDER_RES, FOLDER_MODELS, name) + EXTENSION_MODEL;
+		String path = getFilePathFromParts(EXTENSION_MODEL, FOLDER_MODELS, name);
 		
 		try {
 			
@@ -75,9 +72,13 @@ public class Loader {
 		
 	}
 	
-	public static Blueprint loadEntityBlueprint(EntityFileParser parser, String name, String... contextPaths) {
+	public Blueprint loadEntityBlueprint(EntityFileParser parser, String name) {
 		
-		String path = Loader.getFullPath(FOLDER_RES, FOLDER_ENTITY_BLUEPRINTS, name) + EXTENSION_ENTITY;
+		String path = getFilePathFromParts(EXTENSION_ENTITY, FOLDER_ENTITY_BLUEPRINTS, name);
+		
+		final String[] contextPaths = {
+				
+		};
 		
 		parser.setContextPaths(contextPaths);
 		
@@ -95,14 +96,6 @@ public class Loader {
 		
 		return blueprint;
 		
-	}
-	
-	public static String getFullPath(String... pathParts) {
-		return Util.getStringFromLines(File.separator, false, pathParts);
-	}
-	
-	public static void addTask(Runnable runnableToLoad) {
-		loadingExecutor.execute(runnableToLoad);
 	}
 	
 }

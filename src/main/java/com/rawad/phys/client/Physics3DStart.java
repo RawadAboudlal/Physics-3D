@@ -1,13 +1,15 @@
-package com.rawad.phys.client.main;
+package com.rawad.phys.client;
 
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 
 import org.lwjgl.opengl.GL11;
 
+import com.rawad.gamehelpers.client.gamestates.StateManager;
+import com.rawad.gamehelpers.game.GameManager;
 import com.rawad.phys.client.graphics.Window;
 import com.rawad.phys.client.states.MenuState;
-import com.rawad.phys.client.states.StateManager;
+import com.rawad.phys.game.Physics3D;
 
 public class Physics3DStart {
 	
@@ -36,37 +38,17 @@ public class Physics3DStart {
 	
 	/**/
 	
-	private static final String TITLE = "Physics 3D";
+	private static final Physics3D game = new Physics3D();
 	
-	private static final int WIDTH = 640;
-	private static final int HEIGHT = 480;
+	private static final Client client = new Client();
 	
 	public static void main(String... args) {
 		
-		if(!glfwInit()) throw new IllegalStateException("Unable to initialize GLFW.");
+		game.getProxies().put(client);
 		
-		Window window = new Window(WIDTH, HEIGHT, TITLE, false);
-		
-		StateManager sm = new StateManager(window);
-		
-		sm.addState(new MenuState());
-		
-		sm.setState(MenuState.class);
+		GameManager.launchGame(game);
 		
 		GL11.glClearColor(0.5f, 0.5f, 1f, 1f);
-		
-		while(!window.isClosing()) {
-			
-			sm.update();
-			
-			sm.render();
-			
-			window.update();
-			
-		}
-		
-		window.destroy();
-		glfwTerminate();
 		
 	}
 	

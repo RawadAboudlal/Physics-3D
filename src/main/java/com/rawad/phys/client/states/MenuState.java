@@ -4,9 +4,10 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 
-import com.rawad.phys.client.fileparser.ObjFileParser;
+import com.rawad.gamehelpers.client.gamestates.State;
 import com.rawad.phys.client.graphics.Texture;
-import com.rawad.phys.client.renderengine.TexturedModelRenderer;
+import com.rawad.phys.client.renderengine.TexturedModelRender;
+import com.rawad.phys.fileparser.ObjFileParser;
 import com.rawad.phys.loader.Loader;
 import com.rawad.phys.math.Matrix4f;
 import com.rawad.phys.math.Vector2f;
@@ -27,8 +28,8 @@ public class MenuState extends State {
 	public MenuState() {
 		super();
 		
-		TexturedModelRenderer tmRenderer = new TexturedModelRenderer();
-		masterRenderer.getRenderers().put(tmRenderer);
+		TexturedModelRender tmRenderer = new TexturedModelRender();
+		masterRender.getRenders().put(tmRenderer);
 		
 		mouseButtonCallback = new GLFWMouseButtonCallback() {
 			@Override
@@ -107,7 +108,7 @@ public class MenuState extends State {
 		
 		texture = Loader.loadTexture("unknown");
 		
-		masterRenderer.getRenderers().get(TexturedModelRenderer.class).setModel(Loader.loadModel(objFileParser, "cube"), 
+		masterRenderer.getRenderers().get(TexturedModelRender.class).setModel(Loader.loadModel(objFileParser, "cube"), 
 				texture);
 		
 	}

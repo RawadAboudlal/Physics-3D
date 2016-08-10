@@ -8,14 +8,14 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 
-import com.rawad.phys.client.graphics.Renderer;
+import com.rawad.gamehelpers.client.renderengine.LayerRender;
 import com.rawad.phys.client.graphics.Texture;
 import com.rawad.phys.client.graphics.VertexBufferObject;
 import com.rawad.phys.client.model.Model;
 import com.rawad.phys.client.renderengine.shaders.TexturedModelShader;
 import com.rawad.phys.math.Matrix4f;
 
-public class TexturedModelRenderer extends Renderer {
+public class TexturedModelRender extends LayerRender {
 	
 	private TexturedModelShader program;
 	
@@ -27,7 +27,7 @@ public class TexturedModelRenderer extends Renderer {
 	
 	private Matrix4f modelMatrix;
 	
-	public TexturedModelRenderer() {
+	public TexturedModelRender() {
 		super();
 		
 		program = new TexturedModelShader();

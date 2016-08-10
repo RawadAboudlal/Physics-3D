@@ -1,4 +1,4 @@
-package com.rawad.phys.client.fileparser;
+package com.rawad.phys.fileparser;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -6,13 +6,13 @@ import java.util.ArrayList;
 
 import org.lwjgl.BufferUtils;
 
+import com.rawad.gamehelpers.fileparser.FileParser;
+import com.rawad.gamehelpers.log.Logger;
+import com.rawad.gamehelpers.utils.Util;
 import com.rawad.phys.client.model.Model;
 import com.rawad.phys.client.model.Vertex;
-import com.rawad.phys.fileparser.FileParser;
-import com.rawad.phys.logging.Logger;
 import com.rawad.phys.math.Vector2f;
 import com.rawad.phys.math.Vector3f;
-import com.rawad.phys.util.Util;
 
 public class ObjFileParser extends FileParser {
 	

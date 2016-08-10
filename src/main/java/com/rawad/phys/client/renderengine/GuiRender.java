@@ -1,13 +1,13 @@
 package com.rawad.phys.client.renderengine;
 
-import com.rawad.phys.client.graphics.Renderer;
+import com.rawad.gamehelpers.client.renderengine.LayerRender;
 import com.rawad.phys.client.text.Font;
 
-public class GuiRenderer extends Renderer {
+public class GuiRender extends LayerRender {
 	
 	private Font font;
 	
-	public GuiRenderer() {
+	public GuiRender() {
 		super();
 		
 		font = new Font();
