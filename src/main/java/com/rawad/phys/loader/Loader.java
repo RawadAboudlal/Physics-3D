@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 
@@ -16,8 +17,8 @@ import com.rawad.gamehelpers.fileparser.xml.EntityFileParser;
 import com.rawad.gamehelpers.game.entity.Blueprint;
 import com.rawad.gamehelpers.resources.ALoader;
 import com.rawad.gamehelpers.utils.Util;
-import com.rawad.phys.client.graphics.Texture;
 import com.rawad.phys.client.model.Model;
+import com.rawad.phys.client.renderengine.Texture;
 import com.rawad.phys.fileparser.ObjFileParser;
 
 public class Loader extends ALoader {
@@ -95,6 +96,28 @@ public class Loader extends ALoader {
 		Blueprint blueprint = new Blueprint(parser.getEntity());
 		
 		return blueprint;
+		
+	}
+	
+	public static String loadShaderSource(Class<? extends Object> clazz, String shaderName, int type) {
+		
+		StringBuilder builder = new StringBuilder();
+		
+		String name = shaderName + REGEX_EXTENSION + ShaderType.getByInt(type).getExtensionName();
+		
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(clazz.getResourceAsStream(name)))) {
+			
+			String line = null;
+			
+			while((line = reader.readLine()) != null) {
+				builder.append(line).append(Util.NL);
+			}
+			
+		} catch(Exception ex) {
+			throw new RuntimeException("Failed to load shader file." + System.lineSeparator() + ex.getMessage());
+		}
+		
+		return builder.toString();
 		
 	}
 	

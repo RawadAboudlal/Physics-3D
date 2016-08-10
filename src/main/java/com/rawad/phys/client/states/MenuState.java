@@ -5,7 +5,10 @@ import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 
 import com.rawad.gamehelpers.client.gamestates.State;
-import com.rawad.phys.client.graphics.Texture;
+import com.rawad.gamehelpers.client.gamestates.StateManager;
+import com.rawad.gamehelpers.game.Game;
+import com.rawad.phys.client.Client;
+import com.rawad.phys.client.renderengine.Texture;
 import com.rawad.phys.client.renderengine.TexturedModelRender;
 import com.rawad.phys.fileparser.ObjFileParser;
 import com.rawad.phys.loader.Loader;
@@ -25,8 +28,9 @@ public class MenuState extends State {
 	private boolean dragging = false;
 	private boolean startedDragging = false;
 	
-	public MenuState() {
-		super();
+	@Override
+	public void init(StateManager sm, Game game) {
+		super.init(sm, game);
 		
 		TexturedModelRender tmRenderer = new TexturedModelRender();
 		masterRender.getRenders().put(tmRenderer);
@@ -91,31 +95,32 @@ public class MenuState extends State {
 	}
 	
 	@Override
-	public void update() {
+	public void initGui() {
 		
 	}
 	
-	/**
-	 * @see com.rawad.phys.client.states.State#onActive()
-	 */
 	@Override
-	public void onActive() {
+	public void onActivate() {
+		super.onActivate();
 		
-		GLFW.glfwSetMouseButtonCallback(sm.getWindow().getId(), mouseButtonCallback);
-		GLFW.glfwSetCursorPosCallback(sm.getWindow().getId(), cursorPosCallback);
+		Client client = game.getProxies().get(Client.class);
+		Loader loader = client.getLoaders().get(Loader.class);
 		
-		ObjFileParser objFileParser = new ObjFileParser();
+		GLFW.glfwSetMouseButtonCallback(client.getWindow().getId(), mouseButtonCallback);
+		GLFW.glfwSetCursorPosCallback(client.getWindow().getId(), cursorPosCallback);
 		
-		texture = Loader.loadTexture("unknown");
+		ObjFileParser objFileParser = client.getFileParsers().get(ObjFileParser.class);
 		
-		masterRenderer.getRenderers().get(TexturedModelRender.class).setModel(Loader.loadModel(objFileParser, "cube"), 
+		texture = loader.loadTexture("unknown");
+		
+		masterRender.getRenders().get(TexturedModelRender.class).setModel(loader.loadModel(objFileParser, "cube"), 
 				texture);
 		
 	}
 	
 	@Override
-	public void onDeactive() {
-		super.onDeactive();
+	public void onDeactivate() {
+		super.onDeactivate();
 		
 		texture.delete();
 		

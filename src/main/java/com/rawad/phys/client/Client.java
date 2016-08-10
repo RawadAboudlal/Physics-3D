@@ -1,6 +1,11 @@
 package com.rawad.phys.client;
 
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.opengl.GL11;
 
 import com.rawad.gamehelpers.client.gamestates.IStateChangeListener;
 import com.rawad.gamehelpers.client.gamestates.State;
@@ -8,7 +13,6 @@ import com.rawad.gamehelpers.client.gamestates.StateManager;
 import com.rawad.gamehelpers.client.renderengine.IRenderable;
 import com.rawad.gamehelpers.game.Game;
 import com.rawad.gamehelpers.game.Proxy;
-import com.rawad.phys.client.graphics.Window;
 
 public class Client extends Proxy implements IRenderable, IStateChangeListener {
 	
@@ -34,6 +38,9 @@ public class Client extends Proxy implements IRenderable, IStateChangeListener {
 		
 		window = new Window(WIDTH, HEIGHT, game.getName(), false);
 		
+		GL11.glEnable(GL_BLEND);
+		GL11.glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		
 	}
 	
 	@Override
@@ -43,6 +50,8 @@ public class Client extends Proxy implements IRenderable, IStateChangeListener {
 	
 	@Override
 	public void render() {
+		
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 		
 		sm.render();
 		
@@ -61,6 +70,10 @@ public class Client extends Proxy implements IRenderable, IStateChangeListener {
 		window.destroy();
 		GLFW.glfwTerminate();
 		
+	}
+	
+	public Window getWindow() {
+		return window;
 	}
 	
 }

@@ -1,27 +1,18 @@
-package com.rawad.phys.client.graphics;
-
-import static org.lwjgl.opengl.GL20.glCompileShader;
-import static org.lwjgl.opengl.GL20.glCreateShader;
-import static org.lwjgl.opengl.GL20.glShaderSource;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+package com.rawad.phys.client.renderengine;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
+import com.rawad.gamehelpers.utils.Util;
+import com.rawad.phys.loader.Loader;
 import com.rawad.phys.math.Matrix2f;
 import com.rawad.phys.math.Matrix3f;
 import com.rawad.phys.math.Matrix4f;
 import com.rawad.phys.math.Vector2f;
 import com.rawad.phys.math.Vector3f;
 import com.rawad.phys.math.Vector4f;
-import com.rawad.phys.util.Util;
 
 public abstract class ShaderProgram {
-	
-	private static final String EXTENSION_VERTEX_SHADER = ".vert";
-	private static final String EXTENSION_FRAGMENT_SHADER = ".frag";
 	
 	protected final int id;
 	
@@ -36,10 +27,10 @@ public abstract class ShaderProgram {
 		vertexShader = this.loadShader(GL20.GL_VERTEX_SHADER);
 		fragmentShader = this.loadShader(GL20.GL_FRAGMENT_SHADER);
 		
-		attachShader(vertexShader);
-		attachShader(fragmentShader);
+		this.attachShader(vertexShader);
+		this.attachShader(fragmentShader);
 		
-		link();
+		this.link();
 		
 	}
 	
@@ -143,46 +134,13 @@ public abstract class ShaderProgram {
 	
 	protected final int loadShader(int type) {
 		
-		StringBuilder builder = new StringBuilder();
+		CharSequence source = Loader.loadShaderSource(getClass(), this.getShaderName(), type);
 		
-		String name = getShaderName() + getExtensionFromType(type);
-		
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(getClass().getResourceAsStream(name)))) {
-			
-			String line = null;
-			
-			while((line = reader.readLine()) != null) {
-				builder.append(line).append(Util.NL);
-			}
-			
-		} catch(Exception ex) {
-			throw new RuntimeException("Failed to load shader file." + System.lineSeparator() + ex.getMessage());
-		}
-		
-		CharSequence source = builder.toString();
-		
-		int id = glCreateShader(type);
-		glShaderSource(id, source);
-		glCompileShader(id);
+		int id = GL20.glCreateShader(type);
+		GL20.glShaderSource(id, source);
+		GL20.glCompileShader(id);
 		
 		return id;
-		
-	}
-	
-	private static final String getExtensionFromType(int type) {
-		
-		switch(type) {
-		
-		case GL20.GL_VERTEX_SHADER:
-			return EXTENSION_VERTEX_SHADER;
-		
-		case GL20.GL_FRAGMENT_SHADER:
-			return EXTENSION_FRAGMENT_SHADER;
-		
-		default:
-			return EXTENSION_VERTEX_SHADER;
-			
-		}
 		
 	}
 	

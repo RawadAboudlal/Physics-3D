@@ -1,4 +1,4 @@
-package com.rawad.phys.client.graphics;
+package com.rawad.phys.client;
 
 import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
 import static org.lwjgl.glfw.GLFW.GLFW_TRUE;

@@ -9,8 +9,6 @@ import org.lwjgl.opengl.GL13;
 import org.lwjgl.opengl.GL15;
 
 import com.rawad.gamehelpers.client.renderengine.LayerRender;
-import com.rawad.phys.client.graphics.Texture;
-import com.rawad.phys.client.graphics.VertexBufferObject;
 import com.rawad.phys.client.model.Model;
 import com.rawad.phys.client.renderengine.shaders.TexturedModelShader;
 import com.rawad.phys.math.Matrix4f;
@@ -18,6 +16,8 @@ import com.rawad.phys.math.Matrix4f;
 public class TexturedModelRender extends LayerRender {
 	
 	private TexturedModelShader program;
+	
+	private VertexArrayObject vao;
 	
 	private VertexBufferObject ibo;
 	private VertexBufferObject vbo;
@@ -31,6 +31,8 @@ public class TexturedModelRender extends LayerRender {
 		super();
 		
 		program = new TexturedModelShader();
+		
+		vao = new VertexArrayObject();
 		
 		ibo = new VertexBufferObject();
 		vbo = new VertexBufferObject();
@@ -71,10 +73,11 @@ public class TexturedModelRender extends LayerRender {
 	@Override
 	public void render() {
 		
-		clear();
+		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		
 		vao.bind();
+		
 		ibo.bind(GL15.GL_ELEMENT_ARRAY_BUFFER);
 		vbo.bind(GL15.GL_ARRAY_BUFFER);
 		
@@ -110,9 +113,7 @@ public class TexturedModelRender extends LayerRender {
 		return modelMatrix;
 	}
 	
-	@Override
-	public void dispose() {
-		super.dispose();
+	public void dispose() {// TODO: Add this somewhere.
 		
 		program.delete();
 		

@@ -20,9 +20,9 @@ import java.util.logging.Level;
 
 import org.lwjgl.BufferUtils;
 
-import com.rawad.phys.client.graphics.Color;
 import com.rawad.phys.client.graphics.Renderer;
-import com.rawad.phys.client.graphics.Texture;
+import com.rawad.phys.client.renderengine.Color;
+import com.rawad.phys.client.renderengine.Texture;
 import com.sun.istack.internal.logging.Logger;
 
 public class Font {

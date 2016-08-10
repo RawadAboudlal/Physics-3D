@@ -1,14 +1,8 @@
 package com.rawad.phys.client;
 
-import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwTerminate;
-
 import org.lwjgl.opengl.GL11;
 
-import com.rawad.gamehelpers.client.gamestates.StateManager;
 import com.rawad.gamehelpers.game.GameManager;
-import com.rawad.phys.client.graphics.Window;
-import com.rawad.phys.client.states.MenuState;
 import com.rawad.phys.game.Physics3D;
 
 public class Physics3DStart {
