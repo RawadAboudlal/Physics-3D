@@ -28,9 +28,9 @@ public class Loader extends ALoader {
 	private static final String FOLDER_MODELS = "models";
 	private static final String FOLDER_TEXTURES = "textures";
 	
-	private static final String EXTENSION_ENTITY = ".xml";
-	private static final String EXTENSION_MODEL = ".obj";
-	private static final String EXTENSION_TEXTURE = ".png";
+	private static final String EXTENSION_ENTITY = "xml";
+	private static final String EXTENSION_MODEL = "obj";
+	private static final String EXTENSION_TEXTURE = "png";
 	
 	public Loader() {
 		super(FOLDER_RES);

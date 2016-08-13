@@ -1,7 +1,5 @@
 package com.rawad.phys.client;
 
-import org.lwjgl.opengl.GL11;
-
 import com.rawad.gamehelpers.game.GameManager;
 import com.rawad.phys.game.Physics3D;
 
@@ -42,7 +40,19 @@ public class Physics3DStart {
 		
 		GameManager.launchGame(game);
 		
-		GL11.glClearColor(0.5f, 0.5f, 1f, 1f);
+		while(true) {
+			
+			try {
+				
+				Runnable e = MainThreadQueue.pollRunnable();
+				
+				e.run();
+				
+			} catch(InterruptedException ex) {
+				ex.printStackTrace();
+			}
+			
+		}
 		
 	}
 	

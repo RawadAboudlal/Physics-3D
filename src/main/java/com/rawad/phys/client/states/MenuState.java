@@ -5,8 +5,6 @@ import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 
 import com.rawad.gamehelpers.client.gamestates.State;
-import com.rawad.gamehelpers.client.gamestates.StateManager;
-import com.rawad.gamehelpers.game.Game;
 import com.rawad.phys.client.Client;
 import com.rawad.phys.client.renderengine.Texture;
 import com.rawad.phys.client.renderengine.TexturedModelRender;
@@ -29,8 +27,7 @@ public class MenuState extends State {
 	private boolean startedDragging = false;
 	
 	@Override
-	public void init(StateManager sm, Game game) {
-		super.init(sm, game);
+	public void init() {
 		
 		TexturedModelRender tmRenderer = new TexturedModelRender();
 		masterRender.getRenders().put(tmRenderer);
@@ -95,13 +92,12 @@ public class MenuState extends State {
 	}
 	
 	@Override
-	public void initGui() {
-		
+	public void terminate() {
+		texture.delete();
 	}
 	
 	@Override
 	public void onActivate() {
-		super.onActivate();
 		
 		Client client = game.getProxies().get(Client.class);
 		Loader loader = client.getLoaders().get(Loader.class);
@@ -120,9 +116,6 @@ public class MenuState extends State {
 	
 	@Override
 	public void onDeactivate() {
-		super.onDeactivate();
-		
-		texture.delete();
 		
 	}
 	
