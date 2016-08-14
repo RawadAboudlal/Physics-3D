@@ -6,6 +6,7 @@ import org.lwjgl.glfw.GLFWMouseButtonCallback;
 
 import com.rawad.gamehelpers.client.gamestates.State;
 import com.rawad.phys.client.Client;
+import com.rawad.phys.client.renderengine.DebugRender;
 import com.rawad.phys.client.renderengine.Texture;
 import com.rawad.phys.client.renderengine.TexturedModelRender;
 import com.rawad.phys.fileparser.ObjFileParser;
@@ -27,7 +28,9 @@ public class MenuState extends State {
 	public void init() {
 		
 		TexturedModelRender tmRender = new TexturedModelRender();
+		
 		masterRender.getRenders().put(tmRender);
+		masterRender.getRenders().put(new DebugRender());
 		
 		mouseButtonCallback = new GLFWMouseButtonCallback() {
 			@Override
