@@ -5,6 +5,12 @@ import com.rawad.phys.game.Physics3D;
 
 public class Physics3DStart {
 	
+	// Game Development (Multi-threading): 2nd answer
+	// http://gamedev.stackexchange.com/questions/2116/multi-threaded-game-engine-design-resources
+	// In depth explanation of multi-threading models:
+	// http://www.gamasutra.com/view/feature/130247/multithreaded_game_engine_.php?print=1
+	// Use Compute Shaders to keep particles on GPU.
+	
 	// OpenGL Resources: https://www.opengl.org/documentation/books/ and http://openglbook.com/the-book.html
 	// http://gamedev.stackexchange.com/questions/32876/good-resources-for-learning-modern-opengl-3-0-or-later
 	// http://www.opengl-tutorial.org
@@ -39,20 +45,6 @@ public class Physics3DStart {
 		game.getProxies().put(client);
 		
 		GameManager.launchGame(game);
-		
-		while(true) {
-			
-			try {
-				
-				Runnable e = MainThreadQueue.pollRunnable();
-				
-				e.run();
-				
-			} catch(InterruptedException ex) {
-				ex.printStackTrace();
-			}
-			
-		}
 		
 	}
 	

@@ -12,6 +12,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.glfw.GLFWWindowCloseCallbackI;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GLCapabilities;
@@ -77,8 +78,8 @@ public class Window {
 		
 	}
 	
-	public boolean isClosing() {
-		return GLFW.glfwWindowShouldClose(id);
+	public GLFWWindowCloseCallbackI setCloseCallback(GLFWWindowCloseCallbackI callback) {
+		return GLFW.glfwSetWindowCloseCallback(id, callback);
 	}
 	
 	public void setTitle(CharSequence title) {

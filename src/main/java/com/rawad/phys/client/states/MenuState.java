@@ -11,8 +11,6 @@ import com.rawad.phys.client.renderengine.TexturedModelRender;
 import com.rawad.phys.fileparser.ObjFileParser;
 import com.rawad.phys.loader.Loader;
 import com.rawad.phys.math.Matrix4f;
-import com.rawad.phys.math.Vector2f;
-import com.rawad.phys.math.Vector4f;
 
 public class MenuState extends State {
 	
@@ -23,14 +21,13 @@ public class MenuState extends State {
 	private GLFWMouseButtonCallback mouseButtonCallback;
 	private GLFWCursorPosCallback cursorPosCallback;
 	
-	private boolean dragging = false;
-	private boolean startedDragging = false;
+	private boolean dragging;
 	
 	@Override
 	public void init() {
 		
-		TexturedModelRender tmRenderer = new TexturedModelRender();
-		masterRender.getRenders().put(tmRenderer);
+		TexturedModelRender tmRender = new TexturedModelRender();
+		masterRender.getRenders().put(tmRender);
 		
 		mouseButtonCallback = new GLFWMouseButtonCallback() {
 			@Override
@@ -41,44 +38,24 @@ public class MenuState extends State {
 			}
 		};
 		
+		dragging = false;
+		
 		cursorPosCallback = new GLFWCursorPosCallback() {
 			
 			private double prevX = 0;
 			private double prevY = 0;
 			
-			private double startX = 0;
-			private double startY = 0;
-			
 			@Override
 			public void invoke(long window, double posX, double posY) {
 				
-				if(startedDragging) {
-					startX = posX + 1;
-					startY = posY + 1;
-					
-					prevX = posX;
-					prevY = posY;
-					
-					startedDragging = false;
-					
-				}
-				
 				if(dragging) {
-					
-					final float smooth = 10f;
 					
 					float dx = (float) (posX - prevX);
 					float dy = (float) - (posY - prevY);// - in front because OpenGL coordinate system.
 					
-					float distanceX = (float) (posX - startX) / smooth;
-					float distanceY = (float) - (posY - startY) / smooth;
-					
-					Vector2f rotateDirection = new Vector2f(distanceX, distanceY);
-					
-					Vector4f rotationAxis = new Vector4f(-dy, dx, 0f, 0f);// Perpendicular to rotateDirection.
-					
-					tmRenderer.setModelMatrix(tmRenderer.getModelMatrix().multiply(Matrix4f.rotate(rotateDirection
-							.length() / 10f, rotationAxis.x, rotationAxis.y, rotationAxis.z)));
+					tmRender.setModelMatrix(tmRender.getModelMatrix()
+							.multiply(Matrix4f.rotate(dx, 1, 0, 0)
+							.multiply(Matrix4f.rotate(dy, 0, 1, 0))));
 					
 				}
 				
