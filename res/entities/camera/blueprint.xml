@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE Entity>
+<Entity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<comp xsi:type="transformComponent">
+		<scale>
+			<x>1</x>
+			<y>1</y>
+			<z>1</z>
+		</scale>
+	</comp>
+	<comp xsi:type="userViewComp"></comp>
+</Entity>

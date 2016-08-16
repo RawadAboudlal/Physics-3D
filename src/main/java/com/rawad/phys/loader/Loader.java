@@ -19,12 +19,13 @@ import com.rawad.gamehelpers.resources.ALoader;
 import com.rawad.gamehelpers.utils.Util;
 import com.rawad.phys.client.model.Model;
 import com.rawad.phys.client.renderengine.Texture;
+import com.rawad.phys.entity.EEntity;
 import com.rawad.phys.fileparser.ObjFileParser;
 
 public class Loader extends ALoader {
 	
 	private static final String FOLDER_RES = "res";
-	private static final String FOLDER_ENTITY_BLUEPRINTS = "entity";
+	private static final String FOLDER_ENTITY_BLUEPRINTS = "entities";
 	private static final String FOLDER_MODELS = "models";
 	private static final String FOLDER_TEXTURES = "textures";
 	
@@ -78,7 +79,7 @@ public class Loader extends ALoader {
 		String path = getFilePathFromParts(EXTENSION_ENTITY, FOLDER_ENTITY_BLUEPRINTS, name);
 		
 		final String[] contextPaths = {
-				
+			EEntity.class.getPackage().getName(),	
 		};
 		
 		parser.setContextPaths(contextPaths);

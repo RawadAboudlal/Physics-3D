@@ -52,8 +52,6 @@ public class Client extends Proxy implements IRenderable, IStateChangeListener {
 		if(!GLFW.glfwInit()) throw new IllegalStateException("Unable to initialize GLFW.");
 		
 		window = new Window(WIDTH, HEIGHT, game.getName(), false);
-		// TODO: Add CloseCallback to window. Figure out thread layout and context; one context per thread.
-		
 		window.setCloseCallback(windowCloseCallback);
 		
 		GL11.glClearColor(0.5f, 0.5f, 1f, 1f);

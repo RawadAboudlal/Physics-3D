@@ -1,7 +1,6 @@
 package com.rawad.phys.client.renderengine.shaders;
 
 import com.rawad.phys.client.model.Vertex;
-import com.rawad.phys.client.renderengine.ShaderProgram;
 import com.rawad.phys.math.Vector2f;
 import com.rawad.phys.math.Vector3f;
 

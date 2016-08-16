@@ -1,4 +1,4 @@
-package com.rawad.phys.client.renderengine;
+package com.rawad.phys.client.renderengine.shaders;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;

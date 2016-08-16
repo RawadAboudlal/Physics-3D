@@ -1,4 +1,4 @@
-package com.rawad.phys.client.renderengine;
+package com.rawad.phys.client.renderengine.buffers;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;

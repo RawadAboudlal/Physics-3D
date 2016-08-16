@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL15;
 
 import com.rawad.gamehelpers.client.renderengine.LayerRender;
 import com.rawad.phys.client.model.Model;
+import com.rawad.phys.client.renderengine.buffers.VertexBufferObject;
 import com.rawad.phys.client.renderengine.shaders.TexturedModelShader;
 import com.rawad.phys.math.Matrix4f;
 
