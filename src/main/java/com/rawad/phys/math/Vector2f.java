@@ -25,7 +25,7 @@ import org.lwjgl.BufferUtils;
  *
  * @author Heiko Brumme
  */
-public class Vector2f {
+public class Vector2f implements Cloneable {
 	
 	
 	public static final int SIZE = 2;
@@ -178,10 +178,15 @@ public class Vector2f {
 	 * @return Vector as FloatBuffer
 	 */
 	public FloatBuffer getBuffer() {
-		FloatBuffer buffer = BufferUtils.createFloatBuffer(2);
+		FloatBuffer buffer = BufferUtils.createFloatBuffer(SIZE);
 		buffer.put(x).put(y);
 		buffer.flip();
 		return buffer;
+	}
+	
+	@Override
+	protected Vector2f clone() {
+		return new Vector2f(x, y);
 	}
 	
 	@Override

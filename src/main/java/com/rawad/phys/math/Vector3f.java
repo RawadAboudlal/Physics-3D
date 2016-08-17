@@ -25,12 +25,10 @@ import org.lwjgl.BufferUtils;
  *
  * @author Heiko Brumme
  */
-public class Vector3f {
-	
+public class Vector3f implements Cloneable {
 	
 	/**
-	 * Represents the number of components a {@code Vector3f} holds (a.k.a
-	 * number of tuples).
+	 * Represents the number of components a {@code Vector3f} holds (a.k.a number of tuples).
 	 */
 	public static final int SIZE = 3;
 	
@@ -207,6 +205,11 @@ public class Vector3f {
 		buffer.put(x).put(y).put(z);
 		buffer.flip();
 		return buffer;
+	}
+	
+	@Override
+	public Vector3f clone() {
+		return new Vector3f(x, y, z);
 	}
 	
 	@Override

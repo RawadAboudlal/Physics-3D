@@ -2,6 +2,7 @@ package com.rawad.phys.client.renderengine;
 
 import java.nio.ByteBuffer;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 public class Texture {
@@ -29,6 +30,10 @@ public class Texture {
 		GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, width, height, 0, GL11.GL_RGBA, 
 				GL11.GL_UNSIGNED_BYTE, data);
 		
+	}
+	
+	public Texture() {
+		this(0, 0, BufferUtils.createByteBuffer(0));
 	}
 	
 	public void bind() {

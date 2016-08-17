@@ -2,7 +2,8 @@ package com.rawad.phys.entity;
 
 public enum EEntity {
 	
-	CAMERA("camera");
+	CAMERA("camera"),
+	CRATE("crate");
 	
 	private final String name;
 	

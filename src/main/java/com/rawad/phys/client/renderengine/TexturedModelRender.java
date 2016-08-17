@@ -10,6 +10,7 @@ import org.lwjgl.opengl.GL15;
 
 import com.rawad.gamehelpers.client.renderengine.LayerRender;
 import com.rawad.phys.client.model.Model;
+import com.rawad.phys.client.renderengine.buffers.IndexBufferObject;
 import com.rawad.phys.client.renderengine.buffers.VertexBufferObject;
 import com.rawad.phys.client.renderengine.shaders.TexturedModelShader;
 import com.rawad.phys.math.Matrix4f;
@@ -20,7 +21,7 @@ public class TexturedModelRender extends LayerRender {
 	
 	private VertexArrayObject vao;
 	
-	private VertexBufferObject ibo;
+	private IndexBufferObject ibo;
 	private VertexBufferObject vbo;
 	
 	private Model model;
@@ -35,15 +36,15 @@ public class TexturedModelRender extends LayerRender {
 		
 		vao = new VertexArrayObject();
 		
-		ibo = new VertexBufferObject();
+		ibo = new IndexBufferObject();
 		vbo = new VertexBufferObject();
 		
 		program.use();
 		
 		vao.bind();
 		
-		ibo.bind(GL15.GL_ELEMENT_ARRAY_BUFFER);
-		vbo.bind(GL15.GL_ARRAY_BUFFER);
+		ibo.bind();
+		vbo.bind();
 		
 		program.initVertexAttributes();
 		
@@ -79,9 +80,6 @@ public class TexturedModelRender extends LayerRender {
 		
 		vao.bind();
 		
-		ibo.bind(GL15.GL_ELEMENT_ARRAY_BUFFER);
-		vbo.bind(GL15.GL_ARRAY_BUFFER);
-		
 		program.use();
 		
 		texture.bind();
@@ -89,8 +87,8 @@ public class TexturedModelRender extends LayerRender {
 		program.setUniform("model", modelMatrix);
 		
 		if(model != null) {
-			ibo.uploadData(GL15.GL_ELEMENT_ARRAY_BUFFER, model.getIndices(), GL15.GL_STATIC_DRAW);
-			vbo.uploadData(GL15.GL_ARRAY_BUFFER, model.getData(), GL15.GL_STATIC_DRAW);
+			ibo.uploadData(model.getIndices(), GL15.GL_STATIC_DRAW);
+			vbo.uploadData(model.getData(), GL15.GL_STATIC_DRAW);
 			
 			GL11.glDrawElements(GL11.GL_TRIANGLES, model.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 		}

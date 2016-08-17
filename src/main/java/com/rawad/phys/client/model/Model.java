@@ -3,6 +3,8 @@ package com.rawad.phys.client.model;
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 
+import org.lwjgl.BufferUtils;
+
 public class Model {
 	
 	private final IntBuffer indices;
@@ -20,6 +22,10 @@ public class Model {
 		
 		this.vertexCount = vertexCount;
 		
+	}
+	
+	public Model() {
+		this(BufferUtils.createIntBuffer(0), BufferUtils.createFloatBuffer(0), 0);
 	}
 	
 	/**

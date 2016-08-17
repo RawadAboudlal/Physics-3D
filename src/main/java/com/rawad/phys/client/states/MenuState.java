@@ -5,10 +5,12 @@ import org.lwjgl.glfw.GLFWCursorPosCallback;
 import org.lwjgl.glfw.GLFWMouseButtonCallback;
 
 import com.rawad.gamehelpers.client.gamestates.State;
+import com.rawad.gamehelpers.game.entity.Entity;
 import com.rawad.phys.client.Client;
 import com.rawad.phys.client.renderengine.DebugRender;
 import com.rawad.phys.client.renderengine.Texture;
 import com.rawad.phys.client.renderengine.TexturedModelRender;
+import com.rawad.phys.entity.EEntity;
 import com.rawad.phys.fileparser.ObjFileParser;
 import com.rawad.phys.loader.Loader;
 import com.rawad.phys.math.Matrix4f;
@@ -16,6 +18,10 @@ import com.rawad.phys.math.Matrix4f;
 public class MenuState extends State {
 	
 	// Define renderers up here, initialize and add them in constructor.
+	
+	private Entity camera;
+	
+	private Entity crate;
 	
 	private Texture texture;
 	
@@ -27,10 +33,16 @@ public class MenuState extends State {
 	@Override
 	public void init() {
 		
+		camera = Entity.createEntity(EEntity.CAMERA);
+		
+		crate = Entity.createEntity(EEntity.CRATE);
+		
 		TexturedModelRender tmRender = new TexturedModelRender();
 		
 		masterRender.getRenders().put(tmRender);
 		masterRender.getRenders().put(new DebugRender());
+		
+		dragging = false;
 		
 		mouseButtonCallback = new GLFWMouseButtonCallback() {
 			@Override
@@ -40,8 +52,6 @@ public class MenuState extends State {
 				
 			}
 		};
-		
-		dragging = false;
 		
 		cursorPosCallback = new GLFWCursorPosCallback() {
 			
@@ -54,11 +64,11 @@ public class MenuState extends State {
 				if(dragging) {
 					
 					float dx = (float) (posX - prevX);
-					float dy = (float) - (posY - prevY);// - in front because OpenGL coordinate system.
+					float dy = (float) (posY - prevY);
 					
 					tmRender.setModelMatrix(tmRender.getModelMatrix()
-							.multiply(Matrix4f.rotate(dx, 1, 0, 0)
-							.multiply(Matrix4f.rotate(dy, 0, 1, 0))));
+							.multiply(Matrix4f.rotate(dx, 0, 1, 0)
+							.multiply(Matrix4f.rotate(dy, 1, 0, 0))));
 					
 				}
 				
@@ -91,6 +101,9 @@ public class MenuState extends State {
 		
 		masterRender.getRenders().get(TexturedModelRender.class).setModel(loader.loadModel(objFileParser, "cube"), 
 				texture);
+		
+		world.addEntity(camera);
+		world.addEntity(crate);
 		
 	}
 	

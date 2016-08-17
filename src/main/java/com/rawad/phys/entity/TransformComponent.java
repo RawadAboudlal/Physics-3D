@@ -60,9 +60,11 @@ public class TransformComponent extends Component {
 			
 			TransformComponent transformComp = (TransformComponent) comp;
 			
-			transformComp.setPosition(getPosition());
-			transformComp.setScale(getScale());
-			transformComp.setRotation(getRotation());
+			transformComp.setPosition(getPosition().clone());
+			transformComp.setScale(getScale().clone());
+			transformComp.setRotation(getRotation().clone());
+			
+			return transformComp;
 			
 		}
 		

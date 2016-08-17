@@ -31,13 +31,15 @@ import org.lwjgl.BufferUtils;
  *
  * @author Heiko Brumme
  */
-public class Vector4f {
-
+public class Vector4f implements Cloneable {
+	
+	public static final int SIZE = 4;
+	
     public float x;
     public float y;
     public float z;
     public float w;
-
+    
     /**
      * Creates a 4-tuple vector with specified values.
      *
@@ -47,10 +49,13 @@ public class Vector4f {
      * @param w w value
      */
     public Vector4f(float x, float y, float z, float w) {
+    	super();
+    	
         this.x = x;
         this.y = y;
         this.z = z;
         this.w = w;
+        
     }
     
     /**
@@ -179,10 +184,15 @@ public class Vector4f {
      * @return Vector as FloatBuffer
      */
     public FloatBuffer getBuffer() {
-        FloatBuffer buffer = BufferUtils.createFloatBuffer(4);
+        FloatBuffer buffer = BufferUtils.createFloatBuffer(SIZE);
         buffer.put(x).put(y).put(z).put(w);
         buffer.flip();
         return buffer;
+    }
+    
+    @Override
+    protected Vector4f clone() {
+    	return new Vector4f(x, y, z, w);
     }
 	
 	@Override

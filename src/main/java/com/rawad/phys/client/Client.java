@@ -15,7 +15,15 @@ import com.rawad.gamehelpers.client.gamestates.StateManager;
 import com.rawad.gamehelpers.client.renderengine.IRenderable;
 import com.rawad.gamehelpers.game.Game;
 import com.rawad.gamehelpers.game.Proxy;
+import com.rawad.gamehelpers.game.entity.Blueprint;
+import com.rawad.gamehelpers.game.entity.BlueprintManager;
+import com.rawad.gamehelpers.game.entity.Entity;
 import com.rawad.phys.client.states.MenuState;
+import com.rawad.phys.entity.EEntity;
+import com.rawad.phys.entity.MovementComponent;
+import com.rawad.phys.entity.RenderingComponent;
+import com.rawad.phys.entity.TransformComponent;
+import com.rawad.phys.entity.UserViewComponent;
 import com.rawad.phys.fileparser.ObjFileParser;
 import com.rawad.phys.loader.Loader;
 
@@ -43,6 +51,15 @@ public class Client extends Proxy implements IRenderable, IStateChangeListener {
 		windowCloseCallback = (window) -> {
 			game.requestStop();
 		};
+		
+		Entity camera = Entity.createEntity();
+		camera.addComponent(new TransformComponent()).addComponent(new MovementComponent())
+				.addComponent(new UserViewComponent());
+		BlueprintManager.addBlueprint(EEntity.CAMERA, new Blueprint(camera));
+		
+		Entity crate = Entity.createEntity();
+		crate.addComponent(new TransformComponent()).addComponent(new RenderingComponent());
+		BlueprintManager.addBlueprint(EEntity.CRATE, new Blueprint(crate));
 		
 	}
 	
