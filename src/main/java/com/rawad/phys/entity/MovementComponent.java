@@ -5,7 +5,7 @@ import com.rawad.phys.math.Vector3f;
 
 public class MovementComponent extends Component {
 	
-	private Vector3f velocity;
+	private Vector3f velocity = new Vector3f();
 	
 	/**
 	 * @return the velocity

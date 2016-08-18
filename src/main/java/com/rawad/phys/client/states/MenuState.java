@@ -9,11 +9,14 @@ import com.rawad.gamehelpers.game.entity.Entity;
 import com.rawad.phys.client.Client;
 import com.rawad.phys.client.renderengine.DebugRender;
 import com.rawad.phys.client.renderengine.Texture;
-import com.rawad.phys.client.renderengine.TexturedModelRender;
+import com.rawad.phys.client.renderengine.WorldRender;
 import com.rawad.phys.entity.EEntity;
+import com.rawad.phys.entity.RenderingComponent;
+import com.rawad.phys.entity.TransformComponent;
 import com.rawad.phys.fileparser.ObjFileParser;
+import com.rawad.phys.game.RenderingSystem;
 import com.rawad.phys.loader.Loader;
-import com.rawad.phys.math.Matrix4f;
+import com.rawad.phys.math.Vector3f;
 
 public class MenuState extends State {
 	
@@ -37,10 +40,22 @@ public class MenuState extends State {
 		
 		crate = Entity.createEntity(EEntity.CRATE);
 		
-		TexturedModelRender tmRender = new TexturedModelRender();
+		Client client = game.getProxies().get(Client.class);
+		Loader loader = client.getLoaders().get(Loader.class);
 		
-		masterRender.getRenders().put(tmRender);
+		ObjFileParser objFileParser = client.getFileParsers().get(ObjFileParser.class);
+		
+		texture = loader.loadTexture("unknown");
+		
+		crate.getComponent(RenderingComponent.class).setTexture(texture);
+		crate.getComponent(RenderingComponent.class).setModel(loader.loadModel(objFileParser, "cube"));
+		
+		WorldRender worldRender = new WorldRender(camera);
+		
+		masterRender.getRenders().put(worldRender);
 		masterRender.getRenders().put(new DebugRender());
+		
+		gameSystems.put(new RenderingSystem(worldRender));
 		
 		dragging = false;
 		
@@ -66,9 +81,10 @@ public class MenuState extends State {
 					float dx = (float) (posX - prevX);
 					float dy = (float) (posY - prevY);
 					
-					tmRender.setModelMatrix(tmRender.getModelMatrix()
-							.multiply(Matrix4f.rotate(dx, 0, 1, 0)
-							.multiply(Matrix4f.rotate(dy, 1, 0, 0))));
+					crate.getComponent(TransformComponent.class).getRotation().add(new Vector3f(dy, dx, 0));
+//					worldRender.setModelMatrix(tmRender.getModelMatrix()
+//							.multiply(Matrix4f.rotate(dx, 0, 1, 0)
+//							.multiply(Matrix4f.rotate(dy, 1, 0, 0))));
 					
 				}
 				
@@ -90,17 +106,9 @@ public class MenuState extends State {
 	public void onActivate() {
 		
 		Client client = game.getProxies().get(Client.class);
-		Loader loader = client.getLoaders().get(Loader.class);
 		
 		GLFW.glfwSetMouseButtonCallback(client.getWindow().getId(), mouseButtonCallback);
 		GLFW.glfwSetCursorPosCallback(client.getWindow().getId(), cursorPosCallback);
-		
-		ObjFileParser objFileParser = client.getFileParsers().get(ObjFileParser.class);
-		
-		texture = loader.loadTexture("unknown");
-		
-		masterRender.getRenders().get(TexturedModelRender.class).setModel(loader.loadModel(objFileParser, "cube"), 
-				texture);
 		
 		world.addEntity(camera);
 		world.addEntity(crate);

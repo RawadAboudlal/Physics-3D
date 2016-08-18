@@ -9,7 +9,7 @@ public class RenderingComponent extends Component {
 	
 	private Model model = new Model();
 	
-	private Texture texture = new Texture();
+	private Texture texture = null;
 	
 	/**
 	 * @return the model

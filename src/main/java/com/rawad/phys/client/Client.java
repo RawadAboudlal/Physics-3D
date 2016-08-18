@@ -44,9 +44,13 @@ public class Client extends Proxy implements IRenderable, IStateChangeListener {
 		
 		sm = new StateManager(game, this);
 		
-		loaders.put(new Loader());
+		Loader loader = new Loader();
 		
-		fileParsers.put(new ObjFileParser());
+		ObjFileParser objFileParser = new ObjFileParser();
+		
+		loaders.put(loader);
+		
+		fileParsers.put(objFileParser);
 		
 		windowCloseCallback = (window) -> {
 			game.requestStop();

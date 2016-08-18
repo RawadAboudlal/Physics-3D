@@ -28,7 +28,7 @@ public class StaticEntityShader extends ShaderProgram {
 	
 	@Override
 	protected String getShaderName() {
-		return "static";
+		return "staticEntity";
 	}
 	
 }
