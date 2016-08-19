@@ -1,9 +1,5 @@
 package com.rawad.phys.client.states;
 
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWCursorPosCallback;
-import org.lwjgl.glfw.GLFWMouseButtonCallback;
-
 import com.rawad.gamehelpers.client.gamestates.State;
 import com.rawad.gamehelpers.game.entity.Entity;
 import com.rawad.phys.client.Client;
@@ -28,11 +24,6 @@ public class MenuState extends State {
 	
 	private Texture texture;
 	
-	private GLFWMouseButtonCallback mouseButtonCallback;
-	private GLFWCursorPosCallback cursorPosCallback;
-	
-	private boolean dragging;
-	
 	@Override
 	public void init() {
 		
@@ -50,50 +41,14 @@ public class MenuState extends State {
 		crate.getComponent(RenderingComponent.class).setTexture(texture);
 		crate.getComponent(RenderingComponent.class).setModel(loader.loadModel(objFileParser, "cube"));
 		
+		crate.getComponent(TransformComponent.class).setPosition(new Vector3f(0f, 0f, -3.5f));
+		
 		WorldRender worldRender = new WorldRender(camera);
 		
 		masterRender.getRenders().put(worldRender);
 		masterRender.getRenders().put(new DebugRender());
 		
 		gameSystems.put(new RenderingSystem(worldRender));
-		
-		dragging = false;
-		
-		mouseButtonCallback = new GLFWMouseButtonCallback() {
-			@Override
-			public void invoke(long window, int button, int action, int mods) {
-				
-				dragging = button == GLFW.GLFW_MOUSE_BUTTON_LEFT && action == GLFW.GLFW_PRESS;
-				
-			}
-		};
-		
-		cursorPosCallback = new GLFWCursorPosCallback() {
-			
-			private double prevX = 0;
-			private double prevY = 0;
-			
-			@Override
-			public void invoke(long window, double posX, double posY) {
-				
-				if(dragging) {
-					
-					float dx = (float) (posX - prevX);
-					float dy = (float) (posY - prevY);
-					
-					crate.getComponent(TransformComponent.class).getRotation().add(new Vector3f(dy, dx, 0));
-//					worldRender.setModelMatrix(tmRender.getModelMatrix()
-//							.multiply(Matrix4f.rotate(dx, 0, 1, 0)
-//							.multiply(Matrix4f.rotate(dy, 1, 0, 0))));
-					
-				}
-				
-				prevX = posX;
-				prevY = posY;
-				
-			}
-			
-		};
 		
 	}
 	
@@ -104,11 +59,6 @@ public class MenuState extends State {
 	
 	@Override
 	public void onActivate() {
-		
-		Client client = game.getProxies().get(Client.class);
-		
-		GLFW.glfwSetMouseButtonCallback(client.getWindow().getId(), mouseButtonCallback);
-		GLFW.glfwSetCursorPosCallback(client.getWindow().getId(), cursorPosCallback);
 		
 		world.addEntity(camera);
 		world.addEntity(crate);

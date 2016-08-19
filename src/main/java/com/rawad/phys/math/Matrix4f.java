@@ -437,7 +437,26 @@ public class Matrix4f {
 
         return rotation;
     }
-
+    
+    /**
+     * 
+     * @param quaternion
+     * @return Rotation matrix from a four dimensional quaternion rotation vector.
+     */
+    public static Matrix4f quaternionRotation(Vector4f quaternion) {
+    	return 	new Matrix4f(
+    			new Vector4f(quaternion.w, -quaternion.z, quaternion.y, -quaternion.x), 
+    			new Vector4f(quaternion.z, quaternion.w, -quaternion.x, -quaternion.y),
+    			new Vector4f(-quaternion.y, quaternion.x, quaternion.w, -quaternion.z),
+    			new Vector4f(quaternion.x, quaternion.y, quaternion.z, quaternion.w))
+    			.multiply(
+				new Matrix4f(
+				new Vector4f(quaternion.w, -quaternion.z, quaternion.y, quaternion.x),
+				new Vector4f(quaternion.z, quaternion.w, -quaternion.x, quaternion.y),
+				new Vector4f(-quaternion.y, quaternion.x, quaternion.w, quaternion.z),
+				new Vector4f(-quaternion.x, -quaternion.y, -quaternion.z, quaternion.w)));
+    }
+    
     /**
      * Creates a scaling matrix. Similar to {@code glScale(x, y, z)}.
      *

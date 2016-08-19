@@ -22,9 +22,10 @@ public class RenderingSystem extends GameSystem {
 	
 	@Override
 	public void tick() {
-		super.tick();
 		
 		worldRender.getEntities().clear();
+		
+		super.tick();
 		
 	}
 	

@@ -177,7 +177,13 @@ public class Vector4f implements Cloneable {
     public Vector4f lerp(Vector4f other, float alpha) {
         return this.scale(1f - alpha).add(other.scale(alpha));
     }
-
+    
+    public static Vector4f quaternion(Vector3f rotationAxis, float rotation) {
+    	return new Vector4f(rotationAxis.x * (float) Math.sin(rotation / 2), rotationAxis.y 
+				* (float) Math.sin(rotation / 2), rotationAxis.z * (float) Math.sin(rotation / 2), 
+				(float) Math.cos(rotation / 2)).normalize();
+    }
+    
     /**
      * Returns the Buffer representation of this vector.
      *

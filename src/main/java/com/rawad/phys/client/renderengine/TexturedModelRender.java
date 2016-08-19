@@ -75,8 +75,6 @@ public class TexturedModelRender extends LayerRender {
 	@Override
 	public void render() {
 		
-		GL11.glEnable(GL11.GL_CULL_FACE);
-		
 		vao.bind();
 		
 		program.use();

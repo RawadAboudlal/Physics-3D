@@ -7,9 +7,11 @@ public class TransformComponent extends Component {
 	
 	private Vector3f position = new Vector3f();
 	
-	private Vector3f scale = new Vector3f();
+	private Vector3f scale = new Vector3f(1f, 1f, 1f);
 	
-	private Vector3f rotation = new Vector3f();
+	private Vector3f rotationAxis = new Vector3f(1f, 1f, 1f);
+	
+	private float rotation = 0f;
 	
 	/**
 	 * @return the position
@@ -40,16 +42,30 @@ public class TransformComponent extends Component {
 	}
 	
 	/**
+	 * @return the rotationAxis
+	 */
+	public Vector3f getRotationAxis() {
+		return rotationAxis;
+	}
+	
+	/**
+	 * @param rotationAxis the rotationAxis to set
+	 */
+	public void setRotationAxis(Vector3f rotationAxis) {
+		this.rotationAxis = rotationAxis;
+	}
+	
+	/**
 	 * @return the rotation
 	 */
-	public Vector3f getRotation() {
+	public float getRotation() {
 		return rotation;
 	}
 	
 	/**
 	 * @param rotation the rotation to set
 	 */
-	public void setRotation(Vector3f rotation) {
+	public void setRotation(float rotation) {
 		this.rotation = rotation;
 	}
 	
@@ -62,7 +78,8 @@ public class TransformComponent extends Component {
 			
 			transformComp.setPosition(getPosition().clone());
 			transformComp.setScale(getScale().clone());
-			transformComp.setRotation(getRotation().clone());
+			transformComp.setRotationAxis(getRotationAxis().clone());
+			transformComp.setRotation(getRotation());
 			
 			return transformComp;
 			
