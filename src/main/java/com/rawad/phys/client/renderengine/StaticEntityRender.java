@@ -14,7 +14,6 @@ import com.rawad.phys.entity.RenderingComponent;
 import com.rawad.phys.entity.TransformComponent;
 import com.rawad.phys.math.Matrix4f;
 import com.rawad.phys.math.Vector3f;
-import com.rawad.phys.math.Vector4f;
 
 public class StaticEntityRender extends Render {
 	
@@ -73,20 +72,17 @@ public class StaticEntityRender extends Render {
 		float rotation = transformComp.getRotation();
 		Vector3f position = transformComp.getPosition();
 		
-		Vector4f quaternion = Vector4f.quaternion(rotationAxis, rotation);
-		
-		Matrix4f rotationMatrix = Matrix4f.quaternionRotation(quaternion);
-		
 		shader.setUniform("model", 
 				Matrix4f.translate(position.x, position.y, position.z)
 				.multiply(
-//						Matrix4f.rotate(rotation, rotationAxis.x, rotationAxis.y, rotationAxis.z)
-						rotationMatrix
+						Matrix4f.rotate(rotation, rotationAxis)
 						)
 				.multiply(
 						Matrix4f.scale(scale.x, scale.y, scale.z)
 						)
 				);
+		
+		transformComp.setRotation(rotation + 0.5f);
 		
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);// Note: GL_TEXTURE# -> # has to equal value given to setUniform
 		shader.setUniform("modelTexture", 0);
@@ -98,7 +94,7 @@ public class StaticEntityRender extends Render {
 		
 		GL11.glDrawElements(GL11.GL_TRIANGLES, model.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 		
-		GL11.glDisable(GL11.GL_CULL_FACE);
+		GL11.glEnable(GL11.GL_CULL_FACE);
 		
 	}
 	

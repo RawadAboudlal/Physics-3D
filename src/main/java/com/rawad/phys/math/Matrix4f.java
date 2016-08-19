@@ -400,8 +400,8 @@ public class Matrix4f {
     }
 
     /**
-     * Creates a rotation matrix. Similar to
-     * {@code glRotate(angle, x, y, z)}.
+     * Creates a rotation matrix. Similar to {@code glRotate(angle, x, y, z)}. Converts a quaternion into a rotation 
+     * matrix.
      *
      * @param angle Angle of rotation in degrees
      * @param x     x coordinate of the rotation vector
@@ -436,25 +436,29 @@ public class Matrix4f {
         rotation.m22 = z * z * (1f - c) + c;
 
         return rotation;
+        
+//        return 	new Matrix4f(
+//    			new Vector4f(quaternion.w, -quaternion.z, quaternion.y, -quaternion.x), 
+//    			new Vector4f(quaternion.z, quaternion.w, -quaternion.x, -quaternion.y),
+//    			new Vector4f(-quaternion.y, quaternion.x, quaternion.w, -quaternion.z),
+//    			new Vector4f(quaternion.x, quaternion.y, quaternion.z, quaternion.w))
+//    			.multiply(
+//				new Matrix4f(
+//				new Vector4f(quaternion.w, -quaternion.z, quaternion.y, quaternion.x),
+//				new Vector4f(quaternion.z, quaternion.w, -quaternion.x, quaternion.y),
+//				new Vector4f(-quaternion.y, quaternion.x, quaternion.w, quaternion.z),
+//				new Vector4f(-quaternion.x, -quaternion.y, -quaternion.z, quaternion.w)));
+        
+        //  Where quaternion is returned by this:
+        
+//        return new Vector4f(rotationAxis.x * (float) Math.sin(rotation / 2), rotationAxis.y 
+//				* (float) Math.sin(rotation / 2), rotationAxis.z * (float) Math.sin(rotation / 2), 
+//				(float) Math.cos(rotation / 2)).normalize();
+        
     }
     
-    /**
-     * 
-     * @param quaternion
-     * @return Rotation matrix from a four dimensional quaternion rotation vector.
-     */
-    public static Matrix4f quaternionRotation(Vector4f quaternion) {
-    	return 	new Matrix4f(
-    			new Vector4f(quaternion.w, -quaternion.z, quaternion.y, -quaternion.x), 
-    			new Vector4f(quaternion.z, quaternion.w, -quaternion.x, -quaternion.y),
-    			new Vector4f(-quaternion.y, quaternion.x, quaternion.w, -quaternion.z),
-    			new Vector4f(quaternion.x, quaternion.y, quaternion.z, quaternion.w))
-    			.multiply(
-				new Matrix4f(
-				new Vector4f(quaternion.w, -quaternion.z, quaternion.y, quaternion.x),
-				new Vector4f(quaternion.z, quaternion.w, -quaternion.x, quaternion.y),
-				new Vector4f(-quaternion.y, quaternion.x, quaternion.w, quaternion.z),
-				new Vector4f(-quaternion.x, -quaternion.y, -quaternion.z, quaternion.w)));
+    public static Matrix4f rotate(float rotation, Vector3f rotationAxis) {
+    	return Matrix4f.rotate(rotation, rotationAxis.x, rotationAxis.y, rotationAxis.z);
     }
     
     /**

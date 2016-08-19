@@ -39,9 +39,12 @@ public class MenuState extends State {
 		texture = loader.loadTexture("unknown");
 		
 		crate.getComponent(RenderingComponent.class).setTexture(texture);
-		crate.getComponent(RenderingComponent.class).setModel(loader.loadModel(objFileParser, "cube"));
+		crate.getComponent(RenderingComponent.class).setModel(loader.loadModel(objFileParser, "sphere"));
+		// TODO: Properly export monkey model.
 		
-		crate.getComponent(TransformComponent.class).setPosition(new Vector3f(0f, 0f, -3.5f));
+		TransformComponent crateTransform = crate.getComponent(TransformComponent.class);
+		crateTransform.setPosition(new Vector3f(0f, 0f, -3.5f));
+		crateTransform.setRotationAxis(new Vector3f(1f, 1f, 0));
 		
 		WorldRender worldRender = new WorldRender(camera);
 		
