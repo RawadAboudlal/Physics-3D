@@ -36,11 +36,11 @@ public class MenuState extends State {
 		
 		ObjFileParser objFileParser = client.getFileParsers().get(ObjFileParser.class);
 		
-		texture = loader.loadTexture("unknown");
+		texture = loader.loadTexture("monkey");
 		
 		crate.getComponent(RenderingComponent.class).setTexture(texture);
-		crate.getComponent(RenderingComponent.class).setModel(loader.loadModel(objFileParser, "sphere"));
-		// TODO: Properly export monkey model.
+		crate.getComponent(RenderingComponent.class).setModel(loader.loadModel(objFileParser, "monkey"));
+		// TODO: Properly export monkey model. Add key callback for moving model (wasd -> move, urdl arrows -> rotate)
 		
 		TransformComponent crateTransform = crate.getComponent(TransformComponent.class);
 		crateTransform.setPosition(new Vector3f(0f, 0f, -3.5f));
