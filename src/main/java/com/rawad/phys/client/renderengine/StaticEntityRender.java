@@ -82,19 +82,19 @@ public class StaticEntityRender extends Render {
 						)
 				);
 		
-		transformComp.setRotation(rotation + 0.5f);
-		
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);// Note: GL_TEXTURE# -> # has to equal value given to setUniform
 		shader.setUniform("modelTexture", 0);
 		
 		ibo.uploadData(model.getIndices(), GL15.GL_STATIC_DRAW);
 		vbo.uploadData(model.getData(), GL15.GL_STATIC_DRAW);
 		
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		
 		GL11.glDrawElements(GL11.GL_TRIANGLES, model.getVertexCount(), GL11.GL_UNSIGNED_INT, 0);
 		
-		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glDisable(GL11.GL_CULL_FACE);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		
 	}
 	

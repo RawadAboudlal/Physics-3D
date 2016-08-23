@@ -11,6 +11,7 @@ import static org.lwjgl.glfw.GLFW.glfwWindowHint;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWKeyCallbackI;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.glfw.GLFWWindowCloseCallbackI;
 import org.lwjgl.glfw.GLFWWindowSizeCallback;
@@ -80,6 +81,10 @@ public class Window {
 	
 	public GLFWWindowCloseCallbackI setCloseCallback(GLFWWindowCloseCallbackI callback) {
 		return GLFW.glfwSetWindowCloseCallback(id, callback);
+	}
+	
+	public GLFWKeyCallbackI setKeyCallback(GLFWKeyCallbackI callback) {
+		return GLFW.glfwSetKeyCallback(id, callback);
 	}
 	
 	public void setTitle(CharSequence title) {
