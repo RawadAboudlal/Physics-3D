@@ -8,7 +8,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWWindowCloseCallbackI;
 import org.lwjgl.opengl.GL11;
 
-import com.rawad.gamehelpers.client.gamestates.IStateChangeListener;
+import com.rawad.gamehelpers.client.gamestates.StateChangeListener;
 import com.rawad.gamehelpers.client.gamestates.State;
 import com.rawad.gamehelpers.client.gamestates.StateChangeRequest;
 import com.rawad.gamehelpers.client.gamestates.StateManager;
@@ -27,7 +27,7 @@ import com.rawad.phys.entity.UserViewComponent;
 import com.rawad.phys.fileparser.ObjFileParser;
 import com.rawad.phys.loader.Loader;
 
-public class Client extends Proxy implements IRenderable, IStateChangeListener {
+public class Client extends Proxy implements IRenderable, StateChangeListener {
 	
 	private static final int WIDTH = 640;
 	private static final int HEIGHT = 480;

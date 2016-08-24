@@ -190,6 +190,11 @@ public class Vector4f implements Cloneable {
         return buffer;
     }
     
+	@Override
+	public String toString() {
+		return "(" + x + ", " + y + ", " + z + ", " + w + ")";
+	}
+	
     @Override
     protected Vector4f clone() {
     	return new Vector4f(x, y, z, w);

@@ -5,10 +5,12 @@ import com.rawad.phys.math.Vector2f;
 import com.rawad.phys.math.Vector3f;
 
 public class TexturedModelShader extends ShaderProgram {
+
+	private static final String[] SHADER_NAMES = {"texturedModel", "texturedModel"};
+	private static final ShaderType[] SHADER_TYPES = {ShaderType.VERTEX, ShaderType.FRAGMENT};
 	
 	public TexturedModelShader() {
-		super();
-		
+		super(SHADER_NAMES, SHADER_TYPES);
 	}
 	
 	@Override
@@ -29,11 +31,6 @@ public class TexturedModelShader extends ShaderProgram {
 		pointVertexAttribute(location_textureCoords, Vector2f.SIZE, stride, (Vector3f.SIZE + Vector3f.SIZE) * 
 				Float.BYTES);
 		
-	}
-	
-	@Override
-	protected String getShaderName() {
-		return "texturedModel";
 	}
 	
 }

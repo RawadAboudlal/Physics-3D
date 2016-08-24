@@ -20,6 +20,9 @@ public class Physics3DStart {
 	// OpenGL, the ultimate guide: https://www.opengl.org/registry/doc/glspec45.core.withchanges.pdf
 	// OpenGL, semi(?)-ultimate guide: https://open.gl
 	
+	// Good point about interesting games:
+	//http://gamedev.stackexchange.com/questions/128775/how-to-avoid-players-getting-lost-in-and-or-bored-by-the-meta-game
+	
 	/*/ Rendering best practice:
 	
 	initialization:

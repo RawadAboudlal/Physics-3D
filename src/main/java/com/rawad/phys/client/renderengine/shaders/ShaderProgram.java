@@ -1,5 +1,9 @@
 package com.rawad.phys.client.renderengine.shaders;
 
+import java.nio.IntBuffer;
+import java.util.ArrayList;
+
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
@@ -16,19 +20,27 @@ public abstract class ShaderProgram {
 	
 	protected final int id;
 	
-	protected final int vertexShader;
-	protected final int fragmentShader;
+	protected final String[] shaderNames;
+	protected final ShaderType[] shaderTypes;
 	
-	public ShaderProgram() {
+	public ShaderProgram(String[] shaderNames, ShaderType[] shaderTypes) {
 		super();
 		
-		id = GL20.glCreateProgram();
+		this.id = GL20.glCreateProgram();
 		
-		vertexShader = this.loadShader(GL20.GL_VERTEX_SHADER);
-		fragmentShader = this.loadShader(GL20.GL_FRAGMENT_SHADER);
+		this.shaderNames = shaderNames;
+		this.shaderTypes = shaderTypes;
 		
-		this.attachShader(vertexShader);
-		this.attachShader(fragmentShader);
+		for(int i = 0; i < shaderNames.length; i++)  {
+			
+			String shaderName = shaderNames[i];
+			ShaderType shaderType = shaderTypes[i];
+			
+			int shaderId = this.loadShader(shaderName, shaderType);
+			
+			this.attachShader(shaderId);
+			
+		}
 		
 		this.link();
 		
@@ -123,31 +135,46 @@ public abstract class ShaderProgram {
 	
 	private void checkStatus() {
 		int status = GL20.glGetProgrami(id, GL20.GL_LINK_STATUS);
-		if(status != GL11.GL_TRUE)
-			throw new RuntimeException(Util.getStringFromLines(Util.NL, false, GL20.glGetShaderInfoLog(vertexShader), 
-					GL20.glGetShaderInfoLog(fragmentShader)));
+		if(status != GL11.GL_TRUE) {
+			
+			ArrayList<String> infoLogs = new ArrayList<String>();
+			
+			IntBuffer shaders = getAttachedShaders();
+			
+			for(int shader = shaders.get(); shaders.hasRemaining(); shader = shaders.get())
+				infoLogs.add(GL20.glGetShaderInfoLog(shader));
+			
+			throw new RuntimeException(Util.getStringFromLines(Util.NL, false, infoLogs));
+			
+		}
 	}
 	
 	public final int getId() {
 		return id;
 	}
 	
-	protected final int loadShader(int type) {
+	protected final IntBuffer getAttachedShaders() {
 		
-		CharSequence source = Loader.loadShaderSource(getClass(), this.getShaderName(), type);
+		IntBuffer buff = BufferUtils.createIntBuffer(shaderNames.length);
 		
-		int id = GL20.glCreateShader(type);
+		GL20.glGetAttachedShaders(id, null, buff);
+		
+		buff.flip();
+		
+		return buff;
+		
+	}
+	
+	protected final int loadShader(CharSequence name, ShaderType type) {
+		
+		CharSequence source = Loader.loadShaderSource(this.getClass(), name, type);
+		
+		int id = GL20.glCreateShader(type.getType());
 		GL20.glShaderSource(id, source);
 		GL20.glCompileShader(id);
 		
 		return id;
 		
 	}
-	
-	/**
-	 * Base name of this {@code ShaderProgram}.
-	 * @return
-	 */
-	protected abstract String getShaderName();
 	
 }

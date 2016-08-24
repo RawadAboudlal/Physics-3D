@@ -19,6 +19,7 @@ import com.rawad.gamehelpers.resources.ALoader;
 import com.rawad.gamehelpers.utils.Util;
 import com.rawad.phys.client.model.Model;
 import com.rawad.phys.client.renderengine.Texture;
+import com.rawad.phys.client.renderengine.shaders.ShaderType;
 import com.rawad.phys.entity.EEntity;
 import com.rawad.phys.fileparser.ObjFileParser;
 
@@ -100,13 +101,13 @@ public class Loader extends ALoader {
 		
 	}
 	
-	public static String loadShaderSource(Class<? extends Object> clazz, String shaderName, int type) {
+	public static String loadShaderSource(Class<? extends Object> clazz, CharSequence shaderName, ShaderType shaderType) {
 		
 		StringBuilder builder = new StringBuilder();
 		
-		String name = shaderName + REGEX_EXTENSION + ShaderType.getByInt(type).getExtensionName();
+		String name = shaderName + REGEX_EXTENSION + shaderType.getExtensionName();
 		
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(clazz.getResourceAsStream(name)))) {
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(clazz.getgetResourceAsStream(name)))) {
 			
 			String line = null;
 			
@@ -115,7 +116,8 @@ public class Loader extends ALoader {
 			}
 			
 		} catch(Exception ex) {
-			throw new RuntimeException("Failed to load shader file." + System.lineSeparator() + ex.getMessage());
+			throw new RuntimeException("Failed to load shader " + shaderName + " of type " + shaderType + ". "
+					+ System.lineSeparator() + ex.getMessage());
 		}
 		
 		return builder.toString();

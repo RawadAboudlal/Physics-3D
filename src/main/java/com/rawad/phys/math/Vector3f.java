@@ -208,6 +208,11 @@ public class Vector3f implements Cloneable {
 	}
 	
 	@Override
+	public String toString() {
+		return "(" + x + ", " + y + ", " + z + ")";
+	}
+	
+	@Override
 	public Vector3f clone() {
 		return new Vector3f(x, y, z);
 	}

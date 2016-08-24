@@ -6,6 +6,13 @@ import com.rawad.phys.math.Vector3f;
 
 public class StaticEntityShader extends ShaderProgram {
 	
+	private static final String[] SHADER_NAMES = {"staticEntity", "staticEntity"};
+	private static final ShaderType[] SHADER_TYPES = {ShaderType.VERTEX, ShaderType.FRAGMENT};
+	
+	public StaticEntityShader() {
+		super(SHADER_NAMES, SHADER_TYPES);
+	}
+	
 	@Override
 	public void initVertexAttributes() {
 		
@@ -24,11 +31,6 @@ public class StaticEntityShader extends ShaderProgram {
 		pointVertexAttribute(location_textureCoords, Vector2f.SIZE, stride, (Vector3f.SIZE + Vector3f.SIZE) * 
 				Float.BYTES);
 		
-	}
-	
-	@Override
-	protected String getShaderName() {
-		return "staticEntity";
 	}
 	
 }

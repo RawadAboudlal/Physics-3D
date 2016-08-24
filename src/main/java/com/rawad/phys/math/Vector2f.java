@@ -185,6 +185,11 @@ public class Vector2f implements Cloneable {
 	}
 	
 	@Override
+	public String toString() {
+		return "(" + x + ", " + y + ")";
+	}
+	
+	@Override
 	protected Vector2f clone() {
 		return new Vector2f(x, y);
 	}
