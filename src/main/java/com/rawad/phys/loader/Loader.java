@@ -15,7 +15,7 @@ import org.lwjgl.stb.STBImage;
 
 import com.rawad.gamehelpers.fileparser.xml.EntityFileParser;
 import com.rawad.gamehelpers.game.entity.Blueprint;
-import com.rawad.gamehelpers.resources.ALoader;
+import com.rawad.gamehelpers.resources.AbstractLoader;
 import com.rawad.gamehelpers.utils.Util;
 import com.rawad.phys.client.model.Model;
 import com.rawad.phys.client.renderengine.Texture;
@@ -23,7 +23,7 @@ import com.rawad.phys.client.renderengine.shaders.ShaderType;
 import com.rawad.phys.entity.EEntity;
 import com.rawad.phys.fileparser.ObjFileParser;
 
-public class Loader extends ALoader {
+public class Loader extends AbstractLoader {
 	
 	private static final String FOLDER_RES = "res";
 	private static final String FOLDER_ENTITY_BLUEPRINTS = "entities";
@@ -107,7 +107,7 @@ public class Loader extends ALoader {
 		
 		String name = shaderName + REGEX_EXTENSION + shaderType.getExtensionName();
 		
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(clazz.getgetResourceAsStream(name)))) {
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(clazz.getResourceAsStream(name)))) {
 			
 			String line = null;
 			

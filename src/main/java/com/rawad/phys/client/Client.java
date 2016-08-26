@@ -12,7 +12,7 @@ import com.rawad.gamehelpers.client.gamestates.StateChangeListener;
 import com.rawad.gamehelpers.client.gamestates.State;
 import com.rawad.gamehelpers.client.gamestates.StateChangeRequest;
 import com.rawad.gamehelpers.client.gamestates.StateManager;
-import com.rawad.gamehelpers.client.renderengine.IRenderable;
+import com.rawad.gamehelpers.client.renderengine.Renderable;
 import com.rawad.gamehelpers.game.Game;
 import com.rawad.gamehelpers.game.Proxy;
 import com.rawad.gamehelpers.game.entity.Blueprint;
@@ -27,7 +27,7 @@ import com.rawad.phys.entity.UserViewComponent;
 import com.rawad.phys.fileparser.ObjFileParser;
 import com.rawad.phys.loader.Loader;
 
-public class Client extends Proxy implements IRenderable, StateChangeListener {
+public class Client extends Proxy implements Renderable, StateChangeListener {
 	
 	private static final int WIDTH = 640;
 	private static final int HEIGHT = 480;

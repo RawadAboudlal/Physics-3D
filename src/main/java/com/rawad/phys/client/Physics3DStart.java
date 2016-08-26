@@ -23,6 +23,9 @@ public class Physics3DStart {
 	// Good point about interesting games:
 	//http://gamedev.stackexchange.com/questions/128775/how-to-avoid-players-getting-lost-in-and-or-bored-by-the-meta-game
 	
+	// Just a different way of handling movement with an entity component system.
+	// http://gamedev.stackexchange.com/questions/34062/handling-movement-in-an-entity-component-system
+	
 	/*/ Rendering best practice:
 	
 	initialization:
