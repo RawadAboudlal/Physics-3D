@@ -8,8 +8,8 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWWindowCloseCallbackI;
 import org.lwjgl.opengl.GL11;
 
-import com.rawad.gamehelpers.client.gamestates.StateChangeListener;
 import com.rawad.gamehelpers.client.gamestates.State;
+import com.rawad.gamehelpers.client.gamestates.StateChangeListener;
 import com.rawad.gamehelpers.client.gamestates.StateChangeRequest;
 import com.rawad.gamehelpers.client.gamestates.StateManager;
 import com.rawad.gamehelpers.client.renderengine.Renderable;
@@ -18,6 +18,9 @@ import com.rawad.gamehelpers.game.Proxy;
 import com.rawad.gamehelpers.game.entity.Blueprint;
 import com.rawad.gamehelpers.game.entity.BlueprintManager;
 import com.rawad.gamehelpers.game.entity.Entity;
+import com.rawad.phys.client.input.InputAction;
+import com.rawad.phys.client.input.InputBindings;
+import com.rawad.phys.client.input.KeyInputCallback;
 import com.rawad.phys.client.states.MenuState;
 import com.rawad.phys.entity.EEntity;
 import com.rawad.phys.entity.MovementComponent;
@@ -38,9 +41,15 @@ public class Client extends Proxy implements Renderable, StateChangeListener {
 	
 	private GLFWWindowCloseCallbackI windowCloseCallback;
 	
+	private InputBindings inputBindings;
+	
 	@Override
 	public void preInit(Game game) {
 		super.preInit(game);
+		
+		inputBindings = new InputBindings();
+		
+		inputBindings.put(InputAction.FORWARD, );
 		
 		sm = new StateManager(game, this);
 		
@@ -74,6 +83,7 @@ public class Client extends Proxy implements Renderable, StateChangeListener {
 		
 		window = new Window(WIDTH, HEIGHT, game.getName(), false);
 		window.setCloseCallback(windowCloseCallback);
+		window.setKeyCallback(KeyInputCallback.instance());
 		
 		GL11.glClearColor(0.5f, 0.5f, 1f, 1f);
 		
