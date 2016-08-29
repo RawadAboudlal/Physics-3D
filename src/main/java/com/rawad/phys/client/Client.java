@@ -21,6 +21,7 @@ import com.rawad.gamehelpers.game.entity.Entity;
 import com.rawad.phys.client.input.InputAction;
 import com.rawad.phys.client.input.InputBindings;
 import com.rawad.phys.client.input.KeyInputCallback;
+import com.rawad.phys.client.input.MouseInputCallback;
 import com.rawad.phys.client.states.MenuState;
 import com.rawad.phys.entity.EEntity;
 import com.rawad.phys.entity.MovementComponent;
@@ -47,9 +48,12 @@ public class Client extends Proxy implements Renderable, StateChangeListener {
 	public void preInit(Game game) {
 		super.preInit(game);
 		
-		inputBindings = new InputBindings();
+		inputBindings = InputBindings.instance();
 		
-		inputBindings.put(InputAction.FORWARD, );
+		inputBindings.put(InputAction.FORWARD, GLFW.GLFW_KEY_W);
+		inputBindings.put(InputAction.BACKWARD, GLFW.GLFW_KEY_S);
+		inputBindings.put(InputAction.RIGHT, GLFW.GLFW_KEY_D);
+		inputBindings.put(InputAction.LEFT, GLFW.GLFW_KEY_A);
 		
 		sm = new StateManager(game, this);
 		
@@ -84,6 +88,7 @@ public class Client extends Proxy implements Renderable, StateChangeListener {
 		window = new Window(WIDTH, HEIGHT, game.getName(), false);
 		window.setCloseCallback(windowCloseCallback);
 		window.setKeyCallback(KeyInputCallback.instance());
+		window.setMouseCallback(MouseInputCallback.instance());
 		
 		GL11.glClearColor(0.5f, 0.5f, 1f, 1f);
 		
