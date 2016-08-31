@@ -69,6 +69,7 @@ public class MenuState extends State {
 	@Override
 	public void terminate() {
 		texture.delete();
+		ballTexture.delete();
 	}
 	
 	@Override
@@ -76,6 +77,7 @@ public class MenuState extends State {
 		
 		world.addEntity(camera);
 		world.addEntity(crate);
+		world.addEntity(ball);
 		
 	}
 	
