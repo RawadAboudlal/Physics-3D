@@ -23,6 +23,7 @@ import com.rawad.phys.client.input.InputBindings;
 import com.rawad.phys.client.input.KeyInputCallback;
 import com.rawad.phys.client.input.MouseInputCallback;
 import com.rawad.phys.client.states.MenuState;
+import com.rawad.phys.entity.ControllerComponent;
 import com.rawad.phys.entity.EEntity;
 import com.rawad.phys.entity.MovementComponent;
 import com.rawad.phys.entity.RenderingComponent;
@@ -42,18 +43,24 @@ public class Client extends Proxy implements Renderable, StateChangeListener {
 	
 	private GLFWWindowCloseCallbackI windowCloseCallback;
 	
+	private KeyInputCallback keyCallback;
+	private MouseInputCallback mouseCallback;
+	
 	private InputBindings inputBindings;
 	
 	@Override
 	public void preInit(Game game) {
 		super.preInit(game);
 		
-		inputBindings = InputBindings.instance();
+		inputBindings = new InputBindings();
 		
 		inputBindings.put(InputAction.FORWARD, GLFW.GLFW_KEY_W);
 		inputBindings.put(InputAction.BACKWARD, GLFW.GLFW_KEY_S);
 		inputBindings.put(InputAction.RIGHT, GLFW.GLFW_KEY_D);
 		inputBindings.put(InputAction.LEFT, GLFW.GLFW_KEY_A);
+		
+		keyCallback = new KeyInputCallback(inputBindings);
+		mouseCallback = new MouseInputCallback(inputBindings);
 		
 		sm = new StateManager(game, this);
 		
@@ -78,6 +85,11 @@ public class Client extends Proxy implements Renderable, StateChangeListener {
 		crate.addComponent(new TransformComponent()).addComponent(new RenderingComponent());
 		BlueprintManager.addBlueprint(EEntity.CRATE, new Blueprint(crate));
 		
+		Entity ball = Entity.createEntity();
+		ball.addComponent(new TransformComponent()).addComponent(new MovementComponent())
+			.addComponent(new ControllerComponent()).addComponent(new RenderingComponent());
+		BlueprintManager.addBlueprint(EEntity.BALL, new Blueprint(ball));
+		
 	}
 	
 	@Override
@@ -87,8 +99,8 @@ public class Client extends Proxy implements Renderable, StateChangeListener {
 		
 		window = new Window(WIDTH, HEIGHT, game.getName(), false);
 		window.setCloseCallback(windowCloseCallback);
-		window.setKeyCallback(KeyInputCallback.instance());
-		window.setMouseCallback(MouseInputCallback.instance());
+		window.setKeyCallback(keyCallback);
+		window.setMouseCallback(mouseCallback);
 		
 		GL11.glClearColor(0.5f, 0.5f, 1f, 1f);
 		
@@ -139,6 +151,10 @@ public class Client extends Proxy implements Renderable, StateChangeListener {
 	
 	public Window getWindow() {
 		return window;
+	}
+	
+	public InputBindings getInputBindings() {
+		return inputBindings;
 	}
 	
 }

@@ -10,6 +10,8 @@ import com.rawad.phys.entity.EEntity;
 import com.rawad.phys.entity.RenderingComponent;
 import com.rawad.phys.entity.TransformComponent;
 import com.rawad.phys.fileparser.ObjFileParser;
+import com.rawad.phys.game.ControlSystem;
+import com.rawad.phys.game.PhysicsSystem;
 import com.rawad.phys.game.RenderingSystem;
 import com.rawad.phys.loader.Loader;
 import com.rawad.phys.math.Vector3f;
@@ -21,8 +23,10 @@ public class MenuState extends State {
 	private Entity camera;
 	
 	private Entity crate;
+	private Entity ball;
 	
 	private Texture texture;
+	private Texture ballTexture;
 	
 	@Override
 	public void init() {
@@ -30,6 +34,7 @@ public class MenuState extends State {
 		camera = Entity.createEntity(EEntity.CAMERA);
 		
 		crate = Entity.createEntity(EEntity.CRATE);
+		ball = Entity.createEntity(EEntity.BALL);
 		
 		Client client = game.getProxies().get(Client.class);
 		Loader loader = client.getLoaders().get(Loader.class);
@@ -37,6 +42,7 @@ public class MenuState extends State {
 		ObjFileParser objFileParser = client.getFileParsers().get(ObjFileParser.class);
 		
 		texture = loader.loadTexture("monkey");
+		ballTexture = loader.loadTexture("unknown");
 		
 		crate.getComponent(RenderingComponent.class).setTexture(texture);
 		crate.getComponent(RenderingComponent.class).setModel(loader.loadModel(objFileParser, "monkey"));
@@ -44,6 +50,12 @@ public class MenuState extends State {
 		TransformComponent crateTransform = crate.getComponent(TransformComponent.class);
 		crateTransform.setPosition(new Vector3f(0f, 0f, -3.5f));
 		crateTransform.setRotationAxis(new Vector3f(1f, 0f, 1f));
+		
+		ball.getComponent(RenderingComponent.class).setTexture(ballTexture);
+		ball.getComponent(RenderingComponent.class).setModel(loader.loadModel(objFileParser, "sphere"));
+		
+		gameSystems.put(new ControlSystem(client.getInputBindings()));
+		gameSystems.put(new PhysicsSystem());
 		
 		WorldRender worldRender = new WorldRender(camera);
 		

@@ -1,16 +1,20 @@
 package com.rawad.phys.game;
 
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWKeyCallbackI;
-
 import com.rawad.gamehelpers.game.GameSystem;
 import com.rawad.gamehelpers.game.entity.Entity;
+import com.rawad.phys.client.input.InputAction;
+import com.rawad.phys.client.input.InputBindings;
 import com.rawad.phys.entity.ControllerComponent;
+import com.rawad.phys.entity.MovementComponent;
 
-public class ControlSystem extends GameSystem implements GLFWKeyCallbackI {
+public class ControlSystem extends GameSystem {
 	
-	public ControlSystem() {
+	private InputBindings inputBindings;
+	
+	public ControlSystem(InputBindings inputBindings) {
 		super();
+		
+		this.inputBindings = inputBindings;
 		
 		compatibleComponentTypes.add(ControllerComponent.class);
 		
@@ -19,12 +23,15 @@ public class ControlSystem extends GameSystem implements GLFWKeyCallbackI {
 	@Override
 	public void tick(Entity e) {
 		
-	}
-	
-	@Override
-	public void invoke(long window, int key, int scancode, int action, int mods) {
+		MovementComponent movementComp = e.getComponent(MovementComponent.class);
 		
-		if(action == GLFW.GLFW_PRESS || action == GLFW.GLFW_REPEAT) {
+		if(movementComp != null) {
+			// Check if proper buttons are being pressed in inputBindings' actions?
+			
+			movementComp.setForward(inputBindings.isAction(InputAction.FORWARD));
+			movementComp.setBackward(inputBindings.isAction(InputAction.BACKWARD));
+			movementComp.setRight(inputBindings.isAction(InputAction.RIGHT));
+			movementComp.setLeft(inputBindings.isAction(InputAction.LEFT));
 			
 		}
 		

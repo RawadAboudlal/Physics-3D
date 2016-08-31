@@ -5,11 +5,11 @@ import com.rawad.gamehelpers.game.entity.Entity;
 import com.rawad.phys.entity.MovementComponent;
 import com.rawad.phys.entity.TransformComponent;
 
-public class MovementSystem extends GameSystem {
+public class PhysicsSystem extends GameSystem {
 	
-	private float gravity = 1f;
+//	private float gravity = 1f;// For use later.
 	
-	public MovementSystem() {
+	public PhysicsSystem() {
 		super();
 		
 		compatibleComponentTypes.add(TransformComponent.class);
@@ -20,7 +20,14 @@ public class MovementSystem extends GameSystem {
 	@Override
 	public void tick(Entity e) {
 		
+		TransformComponent transformComp = e.getComponent(TransformComponent.class);
 		MovementComponent movementComp = e.getComponent(MovementComponent.class);
+		
+		if(movementComp.isForward()) {
+			// TODO: Get direction model is facing, make velcity in that direction and add to translate later.
+		} else if(movementComp.isBackward()) {
+			
+		}
 		
 	}
 	

@@ -6,13 +6,9 @@ import java.util.Map.Entry;
 
 public class InputBindings {
 	
-	private static InputBindings instance;
-	
 	private HashMap<InputAction, Input> inputBindings = new HashMap<InputAction, Input>();
 	
 	private HashMap<InputAction, Boolean> actions = new HashMap<InputAction, Boolean>();
-	
-	private InputBindings() {}
 	
 	public Input put(InputAction action, int button, int... modsArray) {
 		
@@ -46,16 +42,12 @@ public class InputBindings {
 		return inputBindings.get(action);
 	}
 	
-	public HashMap<InputAction, Boolean> getActions() {
-		return actions;
+	public Boolean setAction(InputAction action, Boolean value) {
+		return actions.put(action, value);
 	}
 	
-	public static InputBindings instance() {
-		
-		if(instance == null) instance = new InputBindings();
-		
-		return instance;
-		
+	public Boolean isAction(InputAction action) {
+		return actions.get(action);
 	}
 	
 }
