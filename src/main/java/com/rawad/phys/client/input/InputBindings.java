@@ -47,7 +47,7 @@ public class InputBindings {
 	}
 	
 	public Boolean isAction(InputAction action) {
-		return actions.get(action);
+		return actions.getOrDefault(action, false);
 	}
 	
 }

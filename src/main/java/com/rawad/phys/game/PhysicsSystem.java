@@ -14,7 +14,7 @@ public class PhysicsSystem extends GameSystem {
 	private static final Vector3f FORWARD = new Vector3f(0, 0, 1f);
 	
 	private static final float SPEED_MOVEMENT = 0.5f;
-	private static final float SPEED_TURN = 0.2f;
+	private static final float SPEED_TURN = 1.0f;
 	
 	public PhysicsSystem() {
 		super();
@@ -30,7 +30,7 @@ public class PhysicsSystem extends GameSystem {
 		TransformComponent transformComp = e.getComponent(TransformComponent.class);
 		MovementComponent movementComp = e.getComponent(MovementComponent.class);
 		
-		Vector3f velocity = movementComp.getVelocity();
+		Vector3f velocity = new Vector3f(0, 0, 0);
 		
 		float rotation = transformComp.getRotation();
 		

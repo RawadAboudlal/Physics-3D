@@ -54,6 +54,8 @@ public class MenuState extends State {
 		ball.getComponent(RenderingComponent.class).setTexture(ballTexture);
 		ball.getComponent(RenderingComponent.class).setModel(loader.loadModel(objFileParser, "sphere"));
 		
+		ball.getComponent(TransformComponent.class).setRotationAxis(new Vector3f(0f, 1f, 0f));
+		
 		gameSystems.put(new ControlSystem(client.getInputBindings()));
 		gameSystems.put(new PhysicsSystem());
 		
