@@ -1,6 +1,7 @@
 package com.rawad.phys.entity;
 
 import com.rawad.gamehelpers.game.entity.Component;
+import com.rawad.phys.math.Matrix4f;
 import com.rawad.phys.math.Vector3f;
 
 public class TransformComponent extends Component {
@@ -81,11 +82,15 @@ public class TransformComponent extends Component {
 			transformComp.setRotationAxis(getRotationAxis().clone());
 			transformComp.setRotation(getRotation());
 			
-			return transformComp;
-			
 		}
 		
 		return comp;
+	}
+	
+	public Matrix4f toMatrix4f() {
+		return Matrix4f.translate(position.x, position.y, position.z)
+				.multiply(Matrix4f.rotate(rotation, rotationAxis))
+				.multiply(Matrix4f.scale(scale.x, scale.y, scale.z));
 	}
 	
 }

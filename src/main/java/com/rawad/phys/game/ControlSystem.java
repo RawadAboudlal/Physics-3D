@@ -1,15 +1,20 @@
 package com.rawad.phys.game;
 
+import java.util.ArrayList;
+
 import com.rawad.gamehelpers.game.GameSystem;
+import com.rawad.gamehelpers.game.entity.Component;
 import com.rawad.gamehelpers.game.entity.Entity;
-import com.rawad.phys.client.input.InputAction;
 import com.rawad.phys.client.input.InputBindings;
+import com.rawad.phys.client.input.controller.ComponentController;
+import com.rawad.phys.client.input.controller.MovementController;
 import com.rawad.phys.entity.ControllerComponent;
-import com.rawad.phys.entity.MovementComponent;
 
 public class ControlSystem extends GameSystem {
 	
 	private InputBindings inputBindings;
+	
+	private ArrayList<ComponentController> controllers;
 	
 	public ControlSystem(InputBindings inputBindings) {
 		super();
@@ -18,22 +23,30 @@ public class ControlSystem extends GameSystem {
 		
 		compatibleComponentTypes.add(ControllerComponent.class);
 		
+		controllers = new ArrayList<ComponentController>();
+		
+		addComponentController(new MovementController());
+		
 	}
 	
 	@Override
 	public void tick(Entity e) {
 		
-		MovementComponent movementComp = e.getComponent(MovementComponent.class);
-		
-		if(movementComp != null) {
-			// Check if proper buttons are being pressed in inputBindings' actions?
+		for(ComponentController controller: controllers) {
 			
-			movementComp.setForward(inputBindings.isAction(InputAction.FORWARD));
-			movementComp.setBackward(inputBindings.isAction(InputAction.BACKWARD));
-			movementComp.setRight(inputBindings.isAction(InputAction.RIGHT));
-			movementComp.setLeft(inputBindings.isAction(InputAction.LEFT));
+			Component comp = e.getComponent(controller.getComponentType());
+			
+			if(comp != null) controller.control(inputBindings, comp);
 			
 		}
+		
+	}
+	
+	public ControlSystem addComponentController(ComponentController controller) {
+		
+		controllers.add(controller);
+		
+		return this;
 		
 	}
 	

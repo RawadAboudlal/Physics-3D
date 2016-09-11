@@ -9,7 +9,7 @@ public class Physics3DStart {
 	// http://gamedev.stackexchange.com/questions/2116/multi-threaded-game-engine-design-resources
 	// In depth explanation of multi-threading models:
 	// http://www.gamasutra.com/view/feature/130247/multithreaded_game_engine_.php?print=1
-	// Use Compute Shaders to keep particles on GPU.
+	// Use Compute (Geometry) Shaders to keep particles on GPU.
 	
 	// OpenGL Resources: https://www.opengl.org/documentation/books/ and http://openglbook.com/the-book.html
 	// http://gamedev.stackexchange.com/questions/32876/good-resources-for-learning-modern-opengl-3-0-or-later
@@ -19,6 +19,7 @@ public class Physics3DStart {
 	// Detailed explanation of rendering vertices in OpenGL: https://www.opengl.org/wiki/Vertex_Specification
 	// OpenGL, the ultimate guide: https://www.opengl.org/registry/doc/glspec45.core.withchanges.pdf
 	// OpenGL, semi(?)-ultimate guide: https://open.gl
+	// Fairly modern tutorial with nicest website design: http://learnopengl.com
 	
 	// Good point about interesting games:
 	//http://gamedev.stackexchange.com/questions/128775/how-to-avoid-players-getting-lost-in-and-or-bored-by-the-meta-game

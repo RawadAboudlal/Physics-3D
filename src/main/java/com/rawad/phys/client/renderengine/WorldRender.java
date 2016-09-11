@@ -22,7 +22,7 @@ public class WorldRender extends LayerRender {
 		
 		entities = new ArrayList<Entity>();
 		
-		entityRender = new StaticEntityRender();
+		entityRender = new StaticEntityRender(camera);
 		
 	}
 	

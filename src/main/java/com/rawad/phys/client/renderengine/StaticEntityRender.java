@@ -13,7 +13,6 @@ import com.rawad.phys.client.renderengine.shaders.StaticEntityShader;
 import com.rawad.phys.entity.RenderingComponent;
 import com.rawad.phys.entity.TransformComponent;
 import com.rawad.phys.math.Matrix4f;
-import com.rawad.phys.math.Vector3f;
 
 public class StaticEntityRender extends Render {
 	
@@ -26,7 +25,9 @@ public class StaticEntityRender extends Render {
 	
 	private Matrix4f projection;
 	
-	public StaticEntityRender() {
+	private TransformComponent cameraTransform;
+	
+	public StaticEntityRender(Entity camera) {// TODO: Implement -> set view.
 		super();
 		
 		vao = new VertexArrayObject();
@@ -45,6 +46,9 @@ public class StaticEntityRender extends Render {
 		
 		shader.use();
 		shader.initVertexAttributes();
+		
+		cameraTransform = camera.getComponent(TransformComponent.class);
+		
 	}
 	
 	public void start() {
@@ -54,7 +58,7 @@ public class StaticEntityRender extends Render {
 		shader.use();
 		
 		shader.setUniform("projection", projection);
-		shader.setUniform("view", new Matrix4f());
+		shader.setUniform("view", cameraTransform.toMatrix4f());
 		
 	}
 	
@@ -67,20 +71,7 @@ public class StaticEntityRender extends Render {
 		
 		Model model = renderingComp.getModel();
 		
-		Vector3f scale = transformComp.getScale();
-		Vector3f rotationAxis = transformComp.getRotationAxis();
-		float rotation = transformComp.getRotation();
-		Vector3f position = transformComp.getPosition();
-		
-		shader.setUniform("model", 
-				Matrix4f.translate(position.x, position.y, position.z)
-				.multiply(
-						Matrix4f.rotate(rotation, rotationAxis)
-						)
-				.multiply(
-						Matrix4f.scale(scale.x, scale.y, scale.z)
-						)
-				);
+		shader.setUniform("model", transformComp.toMatrix4f());
 		
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);// Note: GL_TEXTURE# -> # has to equal value given to setUniform
 		shader.setUniform("modelTexture", 0);

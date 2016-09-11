@@ -10,6 +10,8 @@ import com.rawad.phys.math.Vector4f;
 
 public class PhysicsSystem extends GameSystem {
 	
+	// TODO: Implement jumping -> MAX_JUMP_VELOCITY should turn off jumping until next time ground is hit (or something)
+	
 //	private Vector3f gravity = new Vector3f(0, -1f, 0);// For use later.
 	private static final Vector3f FORWARD = new Vector3f(0, 0, 1f);
 	

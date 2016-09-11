@@ -6,10 +6,12 @@ import com.rawad.phys.client.Client;
 import com.rawad.phys.client.renderengine.DebugRender;
 import com.rawad.phys.client.renderengine.Texture;
 import com.rawad.phys.client.renderengine.WorldRender;
+import com.rawad.phys.entity.AttachmentComponent;
 import com.rawad.phys.entity.EEntity;
 import com.rawad.phys.entity.RenderingComponent;
 import com.rawad.phys.entity.TransformComponent;
 import com.rawad.phys.fileparser.ObjFileParser;
+import com.rawad.phys.game.CameraFollowSystem;
 import com.rawad.phys.game.ControlSystem;
 import com.rawad.phys.game.PhysicsSystem;
 import com.rawad.phys.game.RenderingSystem;
@@ -44,6 +46,11 @@ public class MenuState extends State {
 		texture = loader.loadTexture("monkey");
 		ballTexture = loader.loadTexture("unknown");
 		
+		AttachmentComponent attachmentComp = new AttachmentComponent();
+		attachmentComp.setAttachedTo(ball);
+		
+		camera.addComponent(attachmentComp);
+		
 		crate.getComponent(RenderingComponent.class).setTexture(texture);
 		crate.getComponent(RenderingComponent.class).setModel(loader.loadModel(objFileParser, "monkey"));
 		
@@ -58,6 +65,7 @@ public class MenuState extends State {
 		
 		gameSystems.put(new ControlSystem(client.getInputBindings()));
 		gameSystems.put(new PhysicsSystem());
+		gameSystems.put(new CameraFollowSystem());
 		
 		WorldRender worldRender = new WorldRender(camera);
 		

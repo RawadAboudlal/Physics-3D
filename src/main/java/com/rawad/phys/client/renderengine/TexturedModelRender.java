@@ -107,7 +107,7 @@ public class TexturedModelRender extends LayerRender {
 		return modelMatrix;
 	}
 	
-	public void dispose() {// TODO: Add this somewhere.
+	public void dispose() {// TODO: Use this somewhere meaningful.
 		
 		program.delete();
 		

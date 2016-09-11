@@ -1,6 +1,6 @@
 #version 400 core
 
-const vec3 lightPosition = vec3(0.0, 0.0, -1.0);
+const vec3 lightPosition = vec3(0.0, 0.0, 0.0);
 
 layout (location = 0) in vec3 position;// Matches glEnableVertexAttribArray(0).
 layout (location = 1) in vec3 normal;

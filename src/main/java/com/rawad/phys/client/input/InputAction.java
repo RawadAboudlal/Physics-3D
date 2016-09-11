@@ -5,6 +5,8 @@ public enum InputAction {
 	FORWARD,
 	BACKWARD,
 	RIGHT,
-	LEFT;
+	LEFT,
+	
+	JUMP;
 	
 }

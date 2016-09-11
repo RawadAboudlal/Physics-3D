@@ -46,7 +46,7 @@ public class RenderingComponent extends Component {
 			
 			RenderingComponent renderingComp = (RenderingComponent) comp;
 			
-			return renderingComp;
+			renderingComp.setTexture(getTexture());
 			
 		}
 		

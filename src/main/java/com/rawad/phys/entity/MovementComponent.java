@@ -106,13 +106,13 @@ public class MovementComponent extends Component {
 			MovementComponent movementComp = (MovementComponent) comp;
 			
 			movementComp.setVelocity(getVelocity().clone());
+			
 			movementComp.setForward(isForward());
 			movementComp.setBackward(isBackward());
 			movementComp.setRight(isRight());
 			movementComp.setLeft(isLeft());
-			movementComp.setGravity(hasGravity());
 			
-			return movementComp;
+			movementComp.setGravity(hasGravity());
 			
 		}
 		
