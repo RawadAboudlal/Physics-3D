@@ -24,9 +24,11 @@ import com.rawad.phys.client.input.KeyInputCallback;
 import com.rawad.phys.client.input.MouseInputCallback;
 import com.rawad.phys.client.states.MenuState;
 import com.rawad.phys.entity.ControllerComponent;
+import com.rawad.phys.entity.DirectionComponent;
 import com.rawad.phys.entity.EEntity;
 import com.rawad.phys.entity.MovementComponent;
 import com.rawad.phys.entity.RenderingComponent;
+import com.rawad.phys.entity.RollingComponent;
 import com.rawad.phys.entity.TransformComponent;
 import com.rawad.phys.entity.UserViewComponent;
 import com.rawad.phys.fileparser.ObjFileParser;
@@ -58,6 +60,7 @@ public class Client extends Proxy implements Renderable, StateChangeListener {
 		inputBindings.put(InputAction.BACKWARD, GLFW.GLFW_KEY_S);
 		inputBindings.put(InputAction.RIGHT, GLFW.GLFW_KEY_D);
 		inputBindings.put(InputAction.LEFT, GLFW.GLFW_KEY_A);
+		inputBindings.put(InputAction.JUMP, GLFW.GLFW_KEY_SPACE);
 		
 		keyCallback = new KeyInputCallback(inputBindings);
 		mouseCallback = new MouseInputCallback(inputBindings);
@@ -77,8 +80,8 @@ public class Client extends Proxy implements Renderable, StateChangeListener {
 		};
 		
 		Entity camera = Entity.createEntity();
-		camera.addComponent(new TransformComponent()).addComponent(new MovementComponent())
-				.addComponent(new UserViewComponent());
+		camera.addComponent(new TransformComponent()).addComponent(new UserViewComponent())
+				.addComponent(new DirectionComponent());
 		BlueprintManager.addBlueprint(EEntity.CAMERA, new Blueprint(camera));
 		
 		Entity crate = Entity.createEntity();
@@ -87,6 +90,7 @@ public class Client extends Proxy implements Renderable, StateChangeListener {
 		
 		Entity ball = Entity.createEntity();
 		ball.addComponent(new TransformComponent()).addComponent(new MovementComponent())
+			.addComponent(new DirectionComponent()).addComponent(new RollingComponent())
 			.addComponent(new ControllerComponent()).addComponent(new RenderingComponent());
 		BlueprintManager.addBlueprint(EEntity.BALL, new Blueprint(ball));
 		

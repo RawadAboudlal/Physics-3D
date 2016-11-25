@@ -12,6 +12,7 @@ import com.rawad.phys.client.renderengine.buffers.VertexBufferObject;
 import com.rawad.phys.client.renderengine.shaders.StaticEntityShader;
 import com.rawad.phys.entity.RenderingComponent;
 import com.rawad.phys.entity.TransformComponent;
+import com.rawad.phys.game.RenderingSystem;
 import com.rawad.phys.math.Matrix4f;
 
 public class StaticEntityRender extends Render {
@@ -58,7 +59,7 @@ public class StaticEntityRender extends Render {
 		shader.use();
 		
 		shader.setUniform("projection", projection);
-		shader.setUniform("view", cameraTransform.toMatrix4f());
+		shader.setUniform("view", RenderingSystem.transformToMatrix4f(cameraTransform));
 		
 	}
 	
@@ -71,7 +72,7 @@ public class StaticEntityRender extends Render {
 		
 		Model model = renderingComp.getModel();
 		
-		shader.setUniform("model", transformComp.toMatrix4f());
+		shader.setUniform("model", RenderingSystem.transformToMatrix4f(transformComp));
 		
 		GL13.glActiveTexture(GL13.GL_TEXTURE0);// Note: GL_TEXTURE# -> # has to equal value given to setUniform
 		shader.setUniform("modelTexture", 0);

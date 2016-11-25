@@ -18,6 +18,7 @@
 package com.rawad.phys.math;
 
 import java.nio.FloatBuffer;
+
 import org.lwjgl.BufferUtils;
 
 /**
@@ -27,13 +28,16 @@ import org.lwjgl.BufferUtils;
  */
 public class Vector3f implements Cloneable {
 	
+	
 	/**
 	 * Represents the number of components a {@code Vector3f} holds (a.k.a number of tuples).
 	 */
 	public static final int SIZE = 3;
 	
 	public float x;
+	
 	public float y;
+	
 	public float z;
 	
 	/**
@@ -62,6 +66,19 @@ public class Vector3f implements Cloneable {
 		this(0f, 0f, 0f);
 	}
 	
+	public Vector3f set(Vector3f other) {
+		return this.set(other.x, other.y, other.z);
+	}
+	
+	public Vector3f set(float x, float y, float z) {
+		
+		this.x = x;
+		this.y = y;
+		this.z = z;
+		
+		return this;
+	}
+	
 	/**
 	 * Calculates the squared length of the vector.
 	 *
@@ -87,6 +104,8 @@ public class Vector3f implements Cloneable {
 	 */
 	public Vector3f normalize() {
 		float length = length();
+		if (length == 0)
+			length = 1f;
 		return divide(length);
 	}
 	
@@ -135,11 +154,17 @@ public class Vector3f implements Cloneable {
 	 * @return Scalar product of this * scalar
 	 */
 	public Vector3f scale(float scalar) {
-		float x = this.x * scalar;
-		float y = this.y * scalar;
-		float z = this.z * scalar;
-		return new Vector3f(x, y, z);
+		return scale(scalar, scalar, scalar);
 	}
+	
+	public Vector3f scale(Vector3f vector) {
+		return scale(vector.x, vector.y, vector.z);
+	}
+	
+	public Vector3f scale(float x, float y, float z) {
+		return new Vector3f(this.x * x, this.y * y, this.z * z);
+	}
+	
 	
 	/**
 	 * Divides a vector by a scalar.
@@ -162,11 +187,11 @@ public class Vector3f implements Cloneable {
 	 * @return Dot product of this * other
 	 */
 	public float dot(Vector3f other) {
-		return (this.x * other.x) + (this.y * other.y) + (this.z * other.z);
+		return this.x * other.x + this.y * other.y + this.z * other.z;
 	}
 	
 	/**
-	 * Calculates the dot product of this vector with another vector.
+	 * Calculates the crosss product of this vector with another vector.
 	 *
 	 * @param other
 	 *            The other vector
@@ -220,7 +245,7 @@ public class Vector3f implements Cloneable {
 	@Override
 	public boolean equals(Object obj) {
 		
-		if(obj instanceof Vector3f) {
+		if (obj instanceof Vector3f) {
 			
 			Vector3f vec3 = (Vector3f) obj;
 			

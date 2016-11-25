@@ -5,6 +5,8 @@ import com.rawad.phys.game.Physics3D;
 
 public class Physics3DStart {
 	
+	// Book on using LWJGL 3: https://lwjglgamedev.gitbooks.io/3d-game-development-with-lwjgl/content/
+	
 	// Game Development (Multi-threading): 2nd answer
 	// http://gamedev.stackexchange.com/questions/2116/multi-threaded-game-engine-design-resources
 	// In depth explanation of multi-threading models:

@@ -15,7 +15,9 @@ import com.rawad.phys.game.CameraFollowSystem;
 import com.rawad.phys.game.ControlSystem;
 import com.rawad.phys.game.PhysicsSystem;
 import com.rawad.phys.game.RenderingSystem;
+import com.rawad.phys.game.RollingSystem;
 import com.rawad.phys.loader.Loader;
+import com.rawad.phys.math.Quaternionf;
 import com.rawad.phys.math.Vector3f;
 
 public class MenuState extends State {
@@ -56,15 +58,16 @@ public class MenuState extends State {
 		
 		TransformComponent crateTransform = crate.getComponent(TransformComponent.class);
 		crateTransform.setPosition(new Vector3f(0f, 0f, -3.5f));
-		crateTransform.setRotationAxis(new Vector3f(1f, 0f, 1f));
+		crateTransform.setRotation(new Quaternionf(0f, 1f, 0f, 1f));
 		
 		ball.getComponent(RenderingComponent.class).setTexture(ballTexture);
 		ball.getComponent(RenderingComponent.class).setModel(loader.loadModel(objFileParser, "sphere"));
 		
-		ball.getComponent(TransformComponent.class).setRotationAxis(new Vector3f(0f, 1f, 0f));
+		ball.getComponent(TransformComponent.class).setRotation(new Quaternionf(0f, 0f, 0f, 0f));
 		
 		gameSystems.put(new ControlSystem(client.getInputBindings()));
 		gameSystems.put(new PhysicsSystem());
+		gameSystems.put(new RollingSystem());
 		gameSystems.put(new CameraFollowSystem());
 		
 		WorldRender worldRender = new WorldRender(camera);

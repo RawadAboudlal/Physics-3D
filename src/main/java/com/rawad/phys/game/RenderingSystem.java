@@ -5,6 +5,7 @@ import com.rawad.gamehelpers.game.entity.Entity;
 import com.rawad.phys.client.renderengine.WorldRender;
 import com.rawad.phys.entity.RenderingComponent;
 import com.rawad.phys.entity.TransformComponent;
+import com.rawad.phys.math.Matrix4f;
 
 public class RenderingSystem extends GameSystem {
 	
@@ -34,6 +35,12 @@ public class RenderingSystem extends GameSystem {
 		
 		worldRender.getEntities().add(e);
 		
+	}
+	
+	public static Matrix4f transformToMatrix4f(TransformComponent comp) {
+		return Matrix4f.translate(comp.getPosition())
+				.multiply(Matrix4f.rotate(comp.getRotation()))
+				.multiply(Matrix4f.scale(comp.getScale()));
 	}
 	
 }

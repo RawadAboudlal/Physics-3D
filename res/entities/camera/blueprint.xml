@@ -3,9 +3,9 @@
 <Entity xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	<comp xsi:type="transformComponent">
 		<scale>
-			<x>1</x>
-			<y>1</y>
-			<z>1</z>
+			<x>1.0f</x>
+			<y>1.0f</y>
+			<z>1.0f</z>
 		</scale>
 	</comp>
 	<comp xsi:type="userViewComp"></comp>

@@ -135,14 +135,16 @@ public abstract class ShaderProgram {
 	
 	private void checkStatus() {
 		int status = GL20.glGetProgrami(id, GL20.GL_LINK_STATUS);
+		
 		if(status != GL11.GL_TRUE) {
 			
 			ArrayList<String> infoLogs = new ArrayList<String>();
 			
 			IntBuffer shaders = getAttachedShaders();
 			
-			for(int shader = shaders.get(); shaders.hasRemaining(); shader = shaders.get())
+			for(int shader = shaders.get(); shaders.hasRemaining(); shader = shaders.get()) {
 				infoLogs.add(GL20.glGetShaderInfoLog(shader));
+			}
 			
 			throw new RuntimeException(Util.getStringFromLines(Util.NL, false, infoLogs));
 			
@@ -155,9 +157,12 @@ public abstract class ShaderProgram {
 	
 	protected final IntBuffer getAttachedShaders() {
 		
+		IntBuffer count = BufferUtils.createIntBuffer(1);
+		count.put(shaderNames.length).flip();
+		
 		IntBuffer buff = BufferUtils.createIntBuffer(shaderNames.length);
 		
-		GL20.glGetAttachedShaders(id, null, buff);
+		GL20.glGetAttachedShaders(id, count, buff);
 		
 		buff.flip();
 		

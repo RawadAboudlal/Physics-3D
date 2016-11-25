@@ -31,6 +31,7 @@ public class Vector2f implements Cloneable {
 	public static final int SIZE = 2;
 	
 	public float x;
+	
 	public float y;
 	
 	/**
@@ -197,7 +198,7 @@ public class Vector2f implements Cloneable {
 	@Override
 	public boolean equals(Object obj) {
 		
-		if(obj instanceof Vector2f) {
+		if (obj instanceof Vector2f) {
 			
 			Vector2f vec2 = (Vector2f) obj;
 			

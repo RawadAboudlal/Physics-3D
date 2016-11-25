@@ -1,7 +1,7 @@
 package com.rawad.phys.entity;
 
 import com.rawad.gamehelpers.game.entity.Component;
-import com.rawad.phys.math.Matrix4f;
+import com.rawad.phys.math.Quaternionf;
 import com.rawad.phys.math.Vector3f;
 
 public class TransformComponent extends Component {
@@ -10,9 +10,7 @@ public class TransformComponent extends Component {
 	
 	private Vector3f scale = new Vector3f(1f, 1f, 1f);
 	
-	private Vector3f rotationAxis = new Vector3f(1f, 1f, 1f);
-	
-	private float rotation = 0f;
+	private Quaternionf rotation = new Quaternionf(0f, 0f, 1f, 0f);
 	
 	/**
 	 * @return the position
@@ -43,30 +41,16 @@ public class TransformComponent extends Component {
 	}
 	
 	/**
-	 * @return the rotationAxis
-	 */
-	public Vector3f getRotationAxis() {
-		return rotationAxis;
-	}
-	
-	/**
-	 * @param rotationAxis the rotationAxis to set
-	 */
-	public void setRotationAxis(Vector3f rotationAxis) {
-		this.rotationAxis = rotationAxis;
-	}
-	
-	/**
 	 * @return the rotation
 	 */
-	public float getRotation() {
+	public Quaternionf getRotation() {
 		return rotation;
 	}
 	
 	/**
 	 * @param rotation the rotation to set
 	 */
-	public void setRotation(float rotation) {
+	public void setRotation(Quaternionf rotation) {
 		this.rotation = rotation;
 	}
 	
@@ -79,18 +63,12 @@ public class TransformComponent extends Component {
 			
 			transformComp.setPosition(getPosition().clone());
 			transformComp.setScale(getScale().clone());
-			transformComp.setRotationAxis(getRotationAxis().clone());
-			transformComp.setRotation(getRotation());
+			transformComp.setRotation(getRotation().clone());
 			
 		}
 		
 		return comp;
-	}
-	
-	public Matrix4f toMatrix4f() {
-		return Matrix4f.translate(position.x, position.y, position.z)
-				.multiply(Matrix4f.rotate(rotation, rotationAxis))
-				.multiply(Matrix4f.scale(scale.x, scale.y, scale.z));
+		
 	}
 	
 }
