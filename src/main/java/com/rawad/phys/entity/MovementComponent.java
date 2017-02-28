@@ -5,7 +5,8 @@ import com.rawad.phys.math.Vector3f;
 
 public class MovementComponent extends Component {
 	
-	private Vector3f velocity = new Vector3f();// With our movement system, + = forward, - = backwards. 
+	private Vector3f acceleration = new Vector3f();
+	private Vector3f velocity = new Vector3f();
 	
 	private boolean forward = false;
 	private boolean backward = false;
@@ -13,6 +14,20 @@ public class MovementComponent extends Component {
 	private boolean left = false;
 	
 	private boolean gravity = true;
+	
+	/**
+	 * @return the acceleration
+	 */
+	public Vector3f getAcceleration() {
+		return acceleration;
+	}
+	
+	/**
+	 * @param acceleration the acceleration to set
+	 */
+	public void setAcceleration(Vector3f acceleration) {
+		this.acceleration = acceleration;
+	}
 	
 	/**
 	 * @return the velocity

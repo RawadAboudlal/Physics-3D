@@ -23,9 +23,11 @@ import com.rawad.phys.client.input.InputBindings;
 import com.rawad.phys.client.input.KeyInputCallback;
 import com.rawad.phys.client.input.MouseInputCallback;
 import com.rawad.phys.client.states.MenuState;
+import com.rawad.phys.entity.CollisionComponent;
 import com.rawad.phys.entity.ControllerComponent;
 import com.rawad.phys.entity.DirectionComponent;
 import com.rawad.phys.entity.EEntity;
+import com.rawad.phys.entity.JumpingComponent;
 import com.rawad.phys.entity.MovementComponent;
 import com.rawad.phys.entity.RenderingComponent;
 import com.rawad.phys.entity.RollingComponent;
@@ -91,7 +93,8 @@ public class Client extends Proxy implements Renderable, StateChangeListener {
 		Entity ball = Entity.createEntity();
 		ball.addComponent(new TransformComponent()).addComponent(new MovementComponent())
 			.addComponent(new DirectionComponent()).addComponent(new RollingComponent())
-			.addComponent(new ControllerComponent()).addComponent(new RenderingComponent());
+			.addComponent(new ControllerComponent()).addComponent(new RenderingComponent())
+			.addComponent(new CollisionComponent()).addComponent(new JumpingComponent());
 		BlueprintManager.addBlueprint(EEntity.BALL, new Blueprint(ball));
 		
 	}

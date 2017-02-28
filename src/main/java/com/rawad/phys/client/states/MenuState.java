@@ -12,8 +12,10 @@ import com.rawad.phys.entity.RenderingComponent;
 import com.rawad.phys.entity.TransformComponent;
 import com.rawad.phys.fileparser.ObjFileParser;
 import com.rawad.phys.game.CameraFollowSystem;
-import com.rawad.phys.game.ControlSystem;
-import com.rawad.phys.game.PhysicsSystem;
+import com.rawad.phys.game.CollisionSystem;
+import com.rawad.phys.game.InputControlSystem;
+import com.rawad.phys.game.JumpingSystem;
+import com.rawad.phys.game.MovementSystem;
 import com.rawad.phys.game.RenderingSystem;
 import com.rawad.phys.game.RollingSystem;
 import com.rawad.phys.loader.Loader;
@@ -65,8 +67,10 @@ public class MenuState extends State {
 		
 		ball.getComponent(TransformComponent.class).setRotation(new Quaternionf(0f, 0f, 0f, 0f));
 		
-		gameSystems.put(new ControlSystem(client.getInputBindings()));
-		gameSystems.put(new PhysicsSystem());
+		gameSystems.put(new InputControlSystem(client.getInputBindings()));
+		gameSystems.put(new JumpingSystem());
+		gameSystems.put(new MovementSystem());
+		gameSystems.put(new CollisionSystem());
 		gameSystems.put(new RollingSystem());
 		gameSystems.put(new CameraFollowSystem());
 		

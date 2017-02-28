@@ -3,12 +3,12 @@
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Game Helpers"/>
 	<classpathentry kind="lib" path="lib/lwjgl/jar/lwjgl.jar" sourcepath="lib/lwjgl/src.zip">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/Physics-3D/lib/lwjgl/doc/javadoc.zip!/"/>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Physics-3D/lib/lwjgl/native"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/Game Helpers"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

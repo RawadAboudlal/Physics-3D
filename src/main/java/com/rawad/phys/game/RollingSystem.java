@@ -30,7 +30,7 @@ public class RollingSystem extends GameSystem {
 		
 		Vector3f velocity = movementComp.getVelocity();
 		
-		Vector3f right = PhysicsSystem.UP.cross(velocity.normalize());// Normalize to prevent weird jittering.
+		Vector3f right = MovementSystem.UP.cross(velocity.normalize());// Normalize to prevent weird jittering.
 		
 		float rollSpeed = velocity.length() * SPEED_TO_ROLL;
 		float roll = rollSpeed;
